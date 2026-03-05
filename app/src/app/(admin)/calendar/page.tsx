@@ -6,6 +6,7 @@ import MiniCalendar from "@/components/calendar/MiniCalendar";
 import PrioritySection from "@/components/calendar/PrioritySection";
 import TaskDetailPanel from "@/components/calendar/TaskDetailPanel";
 import type { Task, ReplyComment } from "@/components/calendar/TaskCard";
+import CycleBanner from "@/components/calendar/CycleBanner";
 import { supabase } from "@/lib/supabase";
 import { UserIcon, AiIcon, BoltIcon, CheckLineIcon, CheckCircleIcon, PaperPlaneIcon, PencilIcon, CloseLineIcon } from "@/icons";
 
@@ -1384,6 +1385,7 @@ export default function CalendarPage() {
 
       {/* ── Scrollable tasks body ── */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-1 pb-3">
+        <CycleBanner brandId={DEMO_BRAND_ID} />
         {/* Status Tabs (Segmented) — task-filter-tabs-refined token */}
         <div
           className="flex items-center pt-3 pb-2"
