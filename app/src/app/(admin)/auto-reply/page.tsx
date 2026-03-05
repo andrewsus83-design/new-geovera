@@ -227,7 +227,6 @@ export default function AutoReplyPage() {
                 className="flex items-center gap-1.5 px-4 py-2.5 text-[13px] font-semibold transition-all relative"
                 style={{
                   color: isActive ? "var(--gv-color-primary-600)" : "var(--gv-color-neutral-500)",
-                  borderBottom: isActive ? "2px solid var(--gv-color-primary-600)" : "2px solid transparent",
                   marginBottom: -1,
                   background: "none", border: "none",
                   borderBottom: isActive ? "2px solid var(--gv-color-primary-600)" : "2px solid transparent",
