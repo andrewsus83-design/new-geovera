@@ -6,7 +6,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="h-screen" style={{ background: "var(--gv-color-bg-base)" }}>
       {children}
     </div>
   );

@@ -325,7 +325,7 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
   return (
     <div className="flex flex-col items-center gap-2">
       <svg width="96" height="96" viewBox="0 0 96 96">
-        <circle cx="48" cy="48" r={r} fill="none" stroke="#F3F4F6" strokeWidth="8" />
+        <circle cx="48" cy="48" r={r} fill="none" stroke="var(--gv-color-neutral-100)" strokeWidth="8" />
         <circle
           cx="48" cy="48" r={r} fill="none"
           stroke="url(#pg)" strokeWidth="8"
@@ -339,10 +339,10 @@ function ProgressRing({ done, total }: { done: number; total: number }) {
             <stop offset="100%" stopColor="#5F8F8B" />
           </linearGradient>
         </defs>
-        <text x="48" y="44" textAnchor="middle" fontSize="18" fontWeight="700" fill="#111827">{done}</text>
+        <text x="48" y="44" textAnchor="middle" fontSize="18" fontWeight="700" fill="var(--gv-color-neutral-900)">{done}</text>
         <text x="48" y="60" textAnchor="middle" fontSize="11" fill="#9CA3AF">of {total}</text>
       </svg>
-      <p className="text-[13px] font-bold text-[#374151]">{Math.round(pct)}% Complete</p>
+      <p className="text-[13px] font-bold text-[var(--gv-color-neutral-700)]">{Math.round(pct)}% Complete</p>
     </div>
   );
 }
@@ -365,12 +365,12 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
       {/* Why this platform */}
       <div className="rounded-[16px] p-5" style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}>
         <p className="text-[12px] font-bold uppercase tracking-widest text-[#16A34A] mb-2">Why {guide.platform}?</p>
-        <p className="text-[14px] text-[#374151] leading-relaxed">{guide.why}</p>
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">{guide.why}</p>
       </div>
 
       {/* Step-by-step */}
       <div>
-        <p className="text-[14px] font-bold text-[#111827] mb-4">Step-by-step setup guide</p>
+        <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)] mb-4">Step-by-step setup guide</p>
         <div className="flex flex-col gap-3">
           {guide.steps.map((step, i) => (
             <div key={i} className="flex gap-3">
@@ -380,7 +380,7 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
               >
                 {i + 1}
               </div>
-              <p className="text-[13px] text-[#374151] leading-relaxed">{step}</p>
+              <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed">{step}</p>
             </div>
           ))}
         </div>
@@ -392,7 +392,7 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
         {guide.tips.map((tip, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[#D97706] text-[12px] mt-0.5">⚡</span>
-            <p className="text-[13px] text-[#374151]">{tip}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{tip}</p>
           </div>
         ))}
       </div>
@@ -478,7 +478,7 @@ function ConnectGuide({ connectedCount = 0 }: { connectedCount?: number }) {
 
       <div className="rounded-[16px] p-5" style={{ background: "#F0F9FF", border: "1px solid #BAE6FD" }}>
         <p className="text-[13px] font-bold text-[#0369A1] mb-1">Why connect your platforms?</p>
-        <p className="text-[14px] text-[#374151] leading-relaxed">
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Connecting your platforms lets GeoVera's AI agents publish, monitor, and reply on your behalf — turning your social presence into a 24/7 automated marketing machine. Semakin banyak platform terhubung, semakin akurat Deep Research GeoVera.
         </p>
       </div>
@@ -547,12 +547,12 @@ function FAQBuilder({
         <div className="flex items-center gap-2 mb-2">
           <Chip label={meta.title} color={meta.color} />
         </div>
-        <p className="text-[14px] text-[#374151] leading-relaxed">{meta.desc}</p>
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">{meta.desc}</p>
       </div>
 
       {/* Example questions */}
       <div>
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-3">Suggested Questions — click to add</p>
+        <p className="text-[12px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-3">Suggested Questions — click to add</p>
         <div className="flex flex-wrap gap-2">
           {meta.examples.map((ex) => (
             <button
@@ -560,8 +560,8 @@ function FAQBuilder({
               onClick={() => addExample(ex)}
               className="rounded-full px-3 py-1.5 text-[12px] font-medium transition-all"
               style={{
-                background: pairs.find(p => p.q === ex) ? meta.color + "20" : "#F3F4F6",
-                color: pairs.find(p => p.q === ex) ? meta.color : "#374151",
+                background: pairs.find(p => p.q === ex) ? meta.color + "20" : "var(--gv-color-neutral-100)",
+                color: pairs.find(p => p.q === ex) ? meta.color : "var(--gv-color-neutral-700)",
                 border: `1px solid ${pairs.find(p => p.q === ex) ? meta.color + "40" : "transparent"}`,
               }}
             >
@@ -577,14 +577,14 @@ function FAQBuilder({
           <div key={i} className="rounded-[16px] p-4" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
             <div className="flex items-start justify-between gap-2 mb-3">
               <span className="text-[12px] font-bold" style={{ color: meta.color }}>Q{i + 1}</span>
-              <button onClick={() => removePair(i)} className="text-[#9CA3AF] hover:text-[#EF4444] text-[12px] transition-colors">✕</button>
+              <button onClick={() => removePair(i)} className="text-[var(--gv-color-neutral-400)] hover:text-[#EF4444] text-[12px] transition-colors">✕</button>
             </div>
             <input
               value={pair.q}
               onChange={e => updatePair(i, "q", e.target.value)}
               placeholder="Question…"
               className="w-full rounded-[10px] px-3 py-2.5 text-[13px] font-semibold mb-2"
-              style={{ background: "white", border: "1.5px solid #E5E7EB", outline: "none", color: "#111827" }}
+              style={{ background: "var(--gv-color-bg-surface)", border: "1.5px solid var(--gv-color-neutral-200)", outline: "none", color: "var(--gv-color-neutral-900)" }}
             />
             <textarea
               value={pair.a}
@@ -592,7 +592,7 @@ function FAQBuilder({
               placeholder="Answer… (write in complete sentences for best AI indexing)"
               rows={3}
               className="w-full rounded-[10px] px-3 py-2.5 text-[13px] resize-none"
-              style={{ background: "white", border: "1.5px solid #E5E7EB", outline: "none", color: "#374151", lineHeight: 1.5 }}
+              style={{ background: "var(--gv-color-bg-surface)", border: "1.5px solid var(--gv-color-neutral-200)", outline: "none", color: "var(--gv-color-neutral-700)", lineHeight: 1.5 }}
             />
           </div>
         ))}
@@ -610,7 +610,7 @@ function FAQBuilder({
       {type === "geo" && (
         <div className="rounded-[16px] p-4" style={{ background: "#FFFBEB", border: "1px solid #FDE68A" }}>
           <p className="text-[12px] font-bold text-[#D97706] mb-1">GEO Tip: Write for AI, not humans</p>
-          <p className="text-[13px] text-[#374151] leading-relaxed">
+          <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed">
             Always start your answers with your brand name as the subject. Example: "GeoVera is an AI-powered marketing platform that…" — AI search engines quote this verbatim in their answers.
           </p>
         </div>
@@ -655,11 +655,11 @@ function BrandProfileGuide() {
         { title: "Contact & Location", items: ["Official website URL", "Business address (if applicable)", "Primary contact email", "Operating hours"] },
       ].map((section) => (
         <div key={section.title} className="rounded-[16px] p-4" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
-          <p className="text-[13px] font-bold text-[#111827] mb-3">{section.title}</p>
+          <p className="text-[13px] font-bold text-[var(--gv-color-neutral-900)] mb-3">{section.title}</p>
           {section.items.map((item) => (
             <div key={item} className="flex items-center gap-2 mt-2">
               <span className="text-[11px] text-[#3D6B68]">✓</span>
-              <p className="text-[13px] text-[#374151]">{item}</p>
+              <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
             </div>
           ))}
         </div>
@@ -683,7 +683,7 @@ function BuildTrainingGuide() {
       {/* Header */}
       <div className="rounded-[16px] p-5" style={{ background: "linear-gradient(135deg, #F5F3FF, #FFF7ED)", border: "1px solid #C4B5FD" }}>
         <p className="text-[12px] font-bold uppercase tracking-widest text-[#7C3AED] mb-1">Build & Train Your Brand AI</p>
-        <p className="text-[14px] text-[#374151] leading-relaxed">
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Feed your brand's voice, assets, and style into two AI systems — <strong>Cloudflare Llama</strong> for text intelligence and <strong>KIE Flux 2 Pro</strong> for visual consistency. Your brand AI gets smarter every cycle.
         </p>
         <div className="flex flex-wrap gap-2 mt-3">
@@ -697,30 +697,30 @@ function BuildTrainingGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[20px]">🦙</span>
-          <p className="text-[14px] font-bold text-[#111827]">1. Brand Voice Training — Cloudflare Llama</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">1. Brand Voice Training — Cloudflare Llama</p>
         </div>
-        <p className="text-[11px] font-bold text-[#9CA3AF] mb-3">Llama 3.3-70B · Edge-deployed · Private inference</p>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[11px] font-bold text-[var(--gv-color-neutral-400)] mb-3">Llama 3.3-70B · Edge-deployed · Private inference</p>
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           GeoVera uses your FAQ content, brand profile, and sample posts to fine-tune a <strong>Llama model on Cloudflare Workers AI</strong> — running at the edge for speed and privacy. This powers your CEO & CMO agents' writing voice.
         </p>
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-2">Training Data Sources</p>
+        <p className="text-[12px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-2">Training Data Sources</p>
         {[
           { icon: "❓", label: "General FAQ", desc: "Brand personality, tone, and contact information" },
           { icon: "📦", label: "Product/Service FAQ", desc: "Pricing, features, objection handling language" },
           { icon: "🤖", label: "GEO-Optimized FAQ", desc: "AI-structured sentences — the highest signal for LLM tone" },
           { icon: "🏷️", label: "Brand Profile", desc: "Mission, values, target audience, unique positioning" },
         ].map((item) => (
-          <div key={item.label} className="flex items-start gap-3 mt-3 rounded-[10px] p-3" style={{ background: "white", border: "1px solid #F3F4F6" }}>
+          <div key={item.label} className="flex items-start gap-3 mt-3 rounded-[10px] p-3" style={{ background: "var(--gv-color-bg-surface)", border: "1px solid var(--gv-color-neutral-100)" }}>
             <span className="text-[16px] flex-shrink-0">{item.icon}</span>
             <div>
-              <p className="text-[12px] font-bold text-[#374151]">{item.label}</p>
-              <p className="text-[11px] text-[#9CA3AF]">{item.desc}</p>
+              <p className="text-[12px] font-bold text-[var(--gv-color-neutral-700)]">{item.label}</p>
+              <p className="text-[11px] text-[var(--gv-color-neutral-400)]">{item.desc}</p>
             </div>
           </div>
         ))}
         <div className="mt-3 rounded-[10px] px-3 py-2" style={{ background: "#F5F3FF", border: "1px solid #DDD6FE" }}>
           <p className="text-[12px] font-bold text-[#7C3AED]">Output: Your Brand AI Agent</p>
-          <p className="text-[11px] text-[#6B7280] mt-1">CEO agent writes strategy memos in your brand voice. CMO agent generates captions that sound like you — not generic AI.</p>
+          <p className="text-[11px] text-[var(--gv-color-neutral-500)] mt-1">CEO agent writes strategy memos in your brand voice. CMO agent generates captions that sound like you — not generic AI.</p>
         </div>
       </div>
 
@@ -728,14 +728,14 @@ function BuildTrainingGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[20px]">⚡</span>
-          <p className="text-[14px] font-bold text-[#111827]">2. Visual Asset Training — KIE Flux 2 Pro</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">2. Visual Asset Training — KIE Flux 2 Pro</p>
         </div>
-        <p className="text-[11px] font-bold text-[#9CA3AF] mb-3">LoRA fine-tuning · 1,000 training steps · Flux 2 Pro base</p>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[11px] font-bold text-[var(--gv-color-neutral-400)] mb-3">LoRA fine-tuning · 1,000 training steps · Flux 2 Pro base</p>
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           Upload photos of your products or brand character to train a custom <strong>LoRA model on Flux 2 Pro</strong>. Once trained, GeoVera can generate unlimited consistent product images for any platform — Instagram, TikTok, YouTube thumbnails.
         </p>
 
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-2">Training Types</p>
+        <p className="text-[12px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-2">Training Types</p>
         {[
           {
             type: "Product LoRA",
@@ -768,7 +768,7 @@ function BuildTrainingGuide() {
             {t.steps.map((s, i) => (
               <div key={i} className="flex items-start gap-2 mt-1.5">
                 <span className="text-[11px] font-bold w-4 flex-shrink-0 mt-0.5" style={{ color: t.color }}>{i + 1}.</span>
-                <p className="text-[12px] text-[#374151]">{s}</p>
+                <p className="text-[12px] text-[var(--gv-color-neutral-700)]">{s}</p>
               </div>
             ))}
           </div>
@@ -796,8 +796,8 @@ function BuildTrainingGuide() {
               {row.step}
             </div>
             <div>
-              <p className="text-[12px] font-bold text-[#374151]">{row.label}</p>
-              <p className="text-[11px] text-[#9CA3AF]">{row.desc}</p>
+              <p className="text-[12px] font-bold text-[var(--gv-color-neutral-700)]">{row.label}</p>
+              <p className="text-[11px] text-[var(--gv-color-neutral-400)]">{row.desc}</p>
             </div>
           </div>
         ))}
@@ -822,7 +822,7 @@ function TasksIdeationGuide() {
       {/* Header */}
       <div className="rounded-[16px] p-5" style={{ background: "linear-gradient(135deg, #FAF5FF, #FFF7ED)", border: "1px solid #DDD6FE" }}>
         <p className="text-[12px] font-bold uppercase tracking-widest text-[#7C3AED] mb-1">What is Tasks Ideation?</p>
-        <p className="text-[14px] text-[#374151] leading-relaxed">
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Before executing tasks, GeoVera synthesizes your Deep Research results, current trends, and business priorities to generate a focused, ranked task list — so you always work on what matters most.
         </p>
         <div className="flex flex-wrap gap-2 mt-3">
@@ -836,9 +836,9 @@ function TasksIdeationGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">🔍</span>
-          <p className="text-[14px] font-bold text-[#111827]">1. Deep Research Results</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">1. Deep Research Results</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           GeoVera pulls insights from your latest Deep Research cycle — SEO gaps, GEO opportunities, and social performance — and converts them into actionable tasks.
         </p>
         {[
@@ -850,7 +850,7 @@ function TasksIdeationGuide() {
         ].map((item, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[11px] font-bold text-[#3D6B68] w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -859,9 +859,9 @@ function TasksIdeationGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">📈</span>
-          <p className="text-[14px] font-bold text-[#111827]">2. Trend Alignments</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">2. Trend Alignments</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           GeoVera cross-references your brand niche with trending topics on TikTok, Instagram Reels, YouTube Shorts, and AI search — surfacing trends you can authentically align with this cycle.
         </p>
         {[
@@ -873,7 +873,7 @@ function TasksIdeationGuide() {
         ].map((item, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[11px] font-bold text-[#8E6FD8] w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -882,9 +882,9 @@ function TasksIdeationGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">🎯</span>
-          <p className="text-[14px] font-bold text-[#111827]">3. Priority Tasks Filter</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">3. Priority Tasks Filter</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           All generated tasks are scored by impact × effort. Your AI agents surface only the highest-ROI tasks first — so you never waste time on low-impact work.
         </p>
         {[
@@ -893,9 +893,9 @@ function TasksIdeationGuide() {
           { label: "🟢 Medium", desc: "Content creation, FAQ updates, platform optimization & A/B tests" },
           { label: "⚪ Low", desc: "Nice-to-have improvements, long-term experiments, and backlog items" },
         ].map((priority, i) => (
-          <div key={i} className="flex items-start gap-3 mt-3 rounded-[10px] p-3" style={{ background: "white", border: "1px solid #F3F4F6" }}>
+          <div key={i} className="flex items-start gap-3 mt-3 rounded-[10px] p-3" style={{ background: "var(--gv-color-bg-surface)", border: "1px solid var(--gv-color-neutral-100)" }}>
             <p className="text-[12px] font-bold w-20 flex-shrink-0 mt-0.5">{priority.label}</p>
-            <p className="text-[12px] text-[#6B7280] leading-relaxed">{priority.desc}</p>
+            <p className="text-[12px] text-[var(--gv-color-neutral-500)] leading-relaxed">{priority.desc}</p>
           </div>
         ))}
       </div>
@@ -912,7 +912,7 @@ function TasksIdeationGuide() {
         ].map((item) => (
           <div key={item} className="flex items-start gap-2 mt-2">
             <span className="text-[#7C3AED]">✓</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -936,7 +936,7 @@ function TasksAuditGuide() {
       {/* Header */}
       <div className="rounded-[16px] p-5" style={{ background: "linear-gradient(135deg, #FFF7ED, #FEF2F2)", border: "1px solid #FED7AA" }}>
         <p className="text-[12px] font-bold uppercase tracking-widest text-[#EA580C] mb-1">Tasks Audit — End of Cycle Scoring</p>
-        <p className="text-[14px] text-[#374151] leading-relaxed">
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Before your biweekly/monthly report, GeoVera uses <strong>Claude</strong> to score how many tasks were completed, analyze the implications of what was done (and what wasn't), and predict the impact on your next research cycle's results.
         </p>
         <div className="flex flex-wrap gap-2 mt-3">
@@ -950,9 +950,9 @@ function TasksAuditGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">📊</span>
-          <p className="text-[14px] font-bold text-[#111827]">1. Completion Scoring</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">1. Completion Scoring</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           GeoVera tallies all tasks generated in the previous Tasks Ideation cycle and calculates your completion rate across each category.
         </p>
         {[
@@ -962,9 +962,9 @@ function TasksAuditGuide() {
           { label: "Social Tasks", example: "14 / 14 done (100%)" },
           { label: "Overall Score", example: "54 / 69 done (78%)" },
         ].map((row) => (
-          <div key={row.label} className="flex items-center justify-between mt-2 rounded-[10px] px-3 py-2" style={{ background: "white", border: "1px solid #F3F4F6" }}>
-            <p className="text-[13px] font-semibold text-[#374151]">{row.label}</p>
-            <span className="text-[12px] font-bold text-[#6B7280]">{row.example}</span>
+          <div key={row.label} className="flex items-center justify-between mt-2 rounded-[10px] px-3 py-2" style={{ background: "var(--gv-color-bg-surface)", border: "1px solid var(--gv-color-neutral-100)" }}>
+            <p className="text-[13px] font-semibold text-[var(--gv-color-neutral-700)]">{row.label}</p>
+            <span className="text-[12px] font-bold text-[var(--gv-color-neutral-500)]">{row.example}</span>
           </div>
         ))}
       </div>
@@ -973,9 +973,9 @@ function TasksAuditGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">✅</span>
-          <p className="text-[14px] font-bold text-[#111827]">2. Completed Tasks — Impact on Results</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">2. Completed Tasks — Impact on Results</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           Claude analyzes which completed tasks already impacted your metrics — and projects how they'll improve your next Deep Research score.
         </p>
         {[
@@ -987,7 +987,7 @@ function TasksAuditGuide() {
         ].map((item, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[#16A34A]">✓</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -996,9 +996,9 @@ function TasksAuditGuide() {
       <div className="rounded-[16px] p-5" style={{ background: "#FEF2F2", border: "1px solid #FECACA" }}>
         <div className="flex items-center gap-2 mb-3">
           <span className="text-[20px]">⚠️</span>
-          <p className="text-[14px] font-bold text-[#111827]">3. Incomplete Tasks — Missed Opportunities</p>
+          <p className="text-[14px] font-bold text-[var(--gv-color-neutral-900)]">3. Incomplete Tasks — Missed Opportunities</p>
         </div>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-3">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-3">
           Claude flags what you skipped and quantifies the cost — carried-over tasks get re-prioritized as Critical in the next ideation cycle.
         </p>
         {[
@@ -1009,7 +1009,7 @@ function TasksAuditGuide() {
         ].map((item, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[#EF4444]">✕</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
         <div className="mt-3 rounded-[10px] px-3 py-2" style={{ background: "#FEE2E2", border: "1px solid #FECACA" }}>
@@ -1020,7 +1020,7 @@ function TasksAuditGuide() {
       {/* Claude Analysis */}
       <div className="rounded-[16px] p-4" style={{ background: "linear-gradient(135deg, #FAF5FF, #F0FDF4)", border: "1px solid #DDD6FE" }}>
         <p className="text-[13px] font-bold text-[#7C3AED] mb-2">🤖 Claude — Cycle Impact Summary</p>
-        <p className="text-[13px] text-[#374151] leading-relaxed mb-2">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed mb-2">
           At the end of each cycle, Claude generates a written impact summary:
         </p>
         {[
@@ -1032,7 +1032,7 @@ function TasksAuditGuide() {
         ].map((item) => (
           <div key={item} className="flex items-start gap-2 mt-2">
             <span className="text-[#7C3AED]">✦</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -1054,8 +1054,8 @@ function LlmLearningGuide() {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <p className="text-[22px] font-bold text-[#111827] leading-tight">LLM Learning Process</p>
-        <p className="text-[13px] text-[#6B7280] mt-1 leading-relaxed">
+        <p className="text-[22px] font-bold text-[var(--gv-color-neutral-900)] leading-tight">LLM Learning Process</p>
+        <p className="text-[13px] text-[var(--gv-color-neutral-500)] mt-1 leading-relaxed">
           At the end of each cycle, GeoVera re-trains its understanding of your brand using three AI layers — so every next cycle is smarter than the last.
         </p>
       </div>
@@ -1093,14 +1093,14 @@ function LlmLearningGuide() {
               <p className="text-[13px] font-bold" style={{ color: tool.color }}>{tool.label}</p>
               <span className="text-[11px] font-medium px-2 py-0.5 rounded-full" style={{ background: "white", color: tool.color, border: `1px solid ${tool.border}` }}>{tool.sub}</span>
             </div>
-            <p className="text-[12px] text-[#374151] leading-relaxed">{tool.desc}</p>
+            <p className="text-[12px] text-[var(--gv-color-neutral-700)] leading-relaxed">{tool.desc}</p>
           </div>
         ))}
       </div>
 
       {/* What feeds the re-training */}
       <div className="rounded-[16px] p-4" style={{ background: "#F9FAFB", border: "1px solid #E5E7EB" }}>
-        <p className="text-[13px] font-bold text-[#111827] mb-3">Data Inputs Per Cycle</p>
+        <p className="text-[13px] font-bold text-[var(--gv-color-neutral-900)] mb-3">Data Inputs Per Cycle</p>
         <div className="space-y-2">
           {[
             { label: "Daily Trend Updates", source: "Perplexity", desc: "Keyword shifts, viral formats, AI search spikes" },
@@ -1112,8 +1112,8 @@ function LlmLearningGuide() {
             <div key={row.label} className="flex items-start gap-3">
               <div className="mt-0.5 h-1.5 w-1.5 rounded-full flex-shrink-0" style={{ background: "#3D6B68", marginTop: "6px" }} />
               <div>
-                <p className="text-[12px] font-semibold text-[#111827]">{row.label} <span className="font-normal text-[#6B7280]">— {row.source}</span></p>
-                <p className="text-[11px] text-[#6B7280]">{row.desc}</p>
+                <p className="text-[12px] font-semibold text-[var(--gv-color-neutral-900)]">{row.label} <span className="font-normal text-[var(--gv-color-neutral-500)]">— {row.source}</span></p>
+                <p className="text-[11px] text-[var(--gv-color-neutral-500)]">{row.desc}</p>
               </div>
             </div>
           ))}
@@ -1132,7 +1132,7 @@ function LlmLearningGuide() {
         ].map((item, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[#16A34A] text-[12px]">✓</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -1217,9 +1217,9 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
       {/* Header */}
       <div className="rounded-[16px] p-5" style={{ background: "linear-gradient(135deg, #F0FDF4, #F0F9FF)", border: "1px solid #BAE6FD" }}>
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[22px] font-bold text-[#111827]">Step 8 — Monthly Deep Research</span>
+          <span className="text-[22px] font-bold text-[var(--gv-color-neutral-900)]">Step 8 — Monthly Deep Research</span>
         </div>
-        <p className="text-[14px] text-[#374151] leading-relaxed">
+        <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           A comprehensive monthly audit powered by <strong>Late API</strong>, <strong>Apify</strong>, <strong>Gemini</strong>, <strong>Claude</strong>, <strong>SerpAPI</strong>, and <strong>Firecrawl</strong> — generating your to-do list for the next 30 days.
         </p>
         <div className="flex items-center gap-2 mt-3">
@@ -1232,7 +1232,7 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
 
       {/* Tech stack */}
       <div>
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-3">Research Stack</p>
+        <p className="text-[12px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-3">Research Stack</p>
         <div className="grid grid-cols-2 gap-2" style={{ gridTemplateColumns: "1fr 1fr" }}>
           {[
             { icon: "🔗", name: "Late API",          desc: "Social listening & comment monitoring" },
@@ -1247,9 +1247,9 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
             <div key={tool.name} className="rounded-[12px] p-3" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[16px]">{tool.icon}</span>
-                <p className="text-[12px] font-bold text-[#111827]">{tool.name}</p>
+                <p className="text-[12px] font-bold text-[var(--gv-color-neutral-900)]">{tool.name}</p>
               </div>
-              <p className="text-[11px] text-[#6B7280] leading-relaxed">{tool.desc}</p>
+              <p className="text-[11px] text-[var(--gv-color-neutral-500)] leading-relaxed">{tool.desc}</p>
             </div>
           ))}
         </div>
@@ -1257,19 +1257,19 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
 
       {/* SEO — 10 points */}
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
-        <p className="text-[13px] font-bold text-[#111827] mb-3">🔍 SEO Audit — 10 Check Points</p>
+        <p className="text-[13px] font-bold text-[var(--gv-color-neutral-900)] mb-3">🔍 SEO Audit — 10 Check Points</p>
         {seoPoints.map((pt, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[11px] font-bold text-[#3D6B68] w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="text-[13px] text-[#374151]">{pt}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{pt}</p>
           </div>
         ))}
       </div>
 
       {/* GEO — 9 points */}
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
-        <p className="text-[13px] font-bold text-[#111827] mb-1">✦ GEO Audit — Q&A + Reverse Engineering</p>
-        <p className="text-[11px] text-[#9CA3AF] mb-1">We ask AI engines about your brand, then reverse-engineer what content changes would make them cite you more</p>
+        <p className="text-[13px] font-bold text-[var(--gv-color-neutral-900)] mb-1">✦ GEO Audit — Q&A + Reverse Engineering</p>
+        <p className="text-[11px] text-[var(--gv-color-neutral-400)] mb-1">We ask AI engines about your brand, then reverse-engineer what content changes would make them cite you more</p>
         <div className="flex flex-wrap gap-2 mb-3">
           <span className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: "#3D6B6820", color: "#3D6B68" }}>Basic: 200 QA/month</span>
           <span className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-bold" style={{ background: "#8E6FD820", color: "#8E6FD8" }}>Premium: 300 QA/month</span>
@@ -1278,19 +1278,19 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
         {geoPoints.map((pt, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[11px] font-bold text-[#8E6FD8] w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="text-[13px] text-[#374151]">{pt}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{pt}</p>
           </div>
         ))}
       </div>
 
       {/* Social Search */}
       <div className="rounded-[16px] p-5" style={{ background: "#F9FAFB", border: "1px solid #F3F4F6" }}>
-        <p className="text-[13px] font-bold text-[#111827] mb-1">📱 Social Search — Content Scoring</p>
-        <p className="text-[11px] text-[#9CA3AF] mb-3">AI scores your social content and generates suggestions aligned with your SEO + GEO goals</p>
+        <p className="text-[13px] font-bold text-[var(--gv-color-neutral-900)] mb-1">📱 Social Search — Content Scoring</p>
+        <p className="text-[11px] text-[var(--gv-color-neutral-400)] mb-3">AI scores your social content and generates suggestions aligned with your SEO + GEO goals</p>
         {socialPoints.map((pt, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
             <span className="text-[11px] font-bold text-[#F59E0B] w-5 flex-shrink-0">{i + 1}.</span>
-            <p className="text-[13px] text-[#374151]">{pt}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{pt}</p>
           </div>
         ))}
       </div>
@@ -1298,7 +1298,7 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
       {/* Llama + Cloudflare */}
       <div className="rounded-[16px] p-4" style={{ background: "#FFFBEB", border: "1px solid #FDE68A" }}>
         <p className="text-[13px] font-bold text-[#D97706] mb-1">🦙 Llama on Cloudflare Workers AI</p>
-        <p className="text-[13px] text-[#374151] leading-relaxed">
+        <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Your brand's dataset, mindset, and skillset are used to fine-tune a <strong>Llama</strong> model via <strong>Cloudflare Workers AI</strong> — running at the edge for speed and privacy. Every monthly research cycle updates your model so your AI agents get smarter and more brand-accurate over time.
         </p>
         <div className="flex gap-2 mt-3">
@@ -1320,7 +1320,7 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
         ].map((item) => (
           <div key={item} className="flex items-start gap-2 mt-2">
             <span className="text-[#16A34A]">✓</span>
-            <p className="text-[13px] text-[#374151]">{item}</p>
+            <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{item}</p>
           </div>
         ))}
       </div>
@@ -1373,7 +1373,7 @@ function ResearchTrigger({ onLaunch, connectedCount = 0 }: { onLaunch: () => voi
           ? "✓ Deep Research Launched — Check Analytics for Results"
           : "🚀 Launch Monthly Deep Research"}
       </button>
-      <p className="text-center text-[12px] text-[#9CA3AF]">
+      <p className="text-center text-[12px] text-[var(--gv-color-neutral-400)]">
         {platformsReady
           ? "Results will appear in Analytics → Report within 2-5 minutes"
           : `Minimal ${MIN_PLATFORMS_BASIC} platform diperlukan untuk Deep Research optimal`}
@@ -1751,9 +1751,9 @@ export default function GettingStartedPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[24px]">{centerItem.icon}</span>
-                  <h2 className="text-[20px] font-bold text-[#111827]">{centerItem.title}</h2>
+                  <h2 className="text-[20px] font-bold text-[var(--gv-color-neutral-900)]">{centerItem.title}</h2>
                 </div>
-                <p className="text-[14px] text-[#6B7280]">{centerItem.subtitle}</p>
+                <p className="text-[14px] text-[var(--gv-color-neutral-500)]">{centerItem.subtitle}</p>
               </div>
               <button
                 onClick={() => markDoneAndNext(centerItem.id)}

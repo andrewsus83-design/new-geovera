@@ -184,7 +184,7 @@ export default function AutoReplyPage() {
       <div className="flex-shrink-0 px-6 pt-5 pb-0">
         <div className="flex items-center justify-between mb-1">
           <div>
-            <h1 className="text-[20px] font-bold" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>
+            <h1 className="text-[22px] font-bold" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "Georgia, serif" }}>
               Auto Reply
             </h1>
             <p className="text-[12px] mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>

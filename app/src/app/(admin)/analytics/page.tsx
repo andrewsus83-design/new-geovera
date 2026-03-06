@@ -1653,10 +1653,10 @@ export default function AnalyticsPage() {
                 </span>
 
                 {/* Title */}
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2" style={{ fontFamily: "Georgia, serif" }}>
+                <h2 className="text-[22px] font-bold mb-2" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "Georgia, serif" }}>
                   Analytics Dashboard
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed">
+                <p className="text-sm mb-8 leading-relaxed" style={{ color: "var(--gv-color-neutral-500)" }}>
                   Unlock deep performance insights across SEO, GEO visibility, and Social Algorithm — available exclusively for Partner tier members.
                 </p>
 

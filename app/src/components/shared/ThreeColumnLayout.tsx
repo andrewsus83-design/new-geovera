@@ -63,14 +63,17 @@ export default function ThreeColumnLayout({
           <div
             className="absolute left-0 top-0 bottom-0 w-[280px] overflow-y-auto flex flex-col"
             style={{
-              background: "white",
-              boxShadow: "0 24px 48px rgba(0,0,0,0.12)",
+              background: "var(--gv-color-bg-surface)",
+              boxShadow: "var(--gv-shadow-modal)",
             }}
           >
             {/* Close button */}
             <button
               onClick={() => setMobileLeftOpen(false)}
-              className="absolute top-4 right-4 z-10 h-9 w-9 flex items-center justify-center rounded-xl text-[#9CA3AF] hover:bg-[#F3F4F6] transition-colors"
+              className="absolute top-4 right-4 z-10 h-9 w-9 flex items-center justify-center rounded-xl transition-colors"
+              style={{ color: "var(--gv-color-neutral-400)" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "var(--gv-color-neutral-100)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
               aria-label="Close"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -104,7 +107,10 @@ export default function ThreeColumnLayout({
           style={{ borderBottom: "1px solid var(--gv-color-neutral-200)" }}>
           <button
             onClick={() => setMobileLeftOpen(true)}
-            className="h-9 w-9 flex items-center justify-center rounded-xl text-[#6B7280] hover:bg-[#F3F4F6] transition-colors"
+            className="h-9 w-9 flex items-center justify-center rounded-xl transition-colors"
+              style={{ color: "var(--gv-color-neutral-500)" }}
+              onMouseEnter={e => (e.currentTarget.style.background = "var(--gv-color-neutral-100)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
             aria-label="Open menu"
           >
             {/* Hamburger */}
@@ -123,8 +129,8 @@ export default function ThreeColumnLayout({
             className="flex-shrink-0 rounded-lg"
           />
           <span
-            className="text-[15px] font-bold text-[#1F2428]"
-            style={{ fontFamily: "Georgia, serif" }}
+            className="text-[15px] font-bold"
+            style={{ fontFamily: "Georgia, serif", color: "var(--gv-color-neutral-900)" }}
           >
             GeoVera
           </span>
@@ -159,7 +165,7 @@ export default function ThreeColumnLayout({
       {mobileRightOpen && (
         <div
           className="lg:hidden fixed inset-0 z-[50] flex flex-col overflow-hidden"
-          style={{ background: "white" }}
+          style={{ background: "var(--gv-color-bg-surface)" }}
         >
           {/* Back bar */}
           <div

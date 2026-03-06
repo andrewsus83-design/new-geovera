@@ -185,24 +185,24 @@ function NavItem({
 // ── BillingToggle ──────────────────────────────────────────────────────────
 function BillingToggle({ yearly, onChange }: { yearly: boolean; onChange: (v: boolean) => void }) {
   return (
-    <div className="flex items-center justify-between rounded-[12px] bg-[#F9FAFB] border border-[#F3F4F6] px-4 py-3">
+    <div className="flex items-center justify-between rounded-[12px] bg-[var(--gv-color-neutral-50)] border border-[var(--gv-color-neutral-100)] px-4 py-3">
       <div>
-        <p className="text-[12px] font-semibold text-[#1F2428]">Billing cycle</p>
-        <p className="text-[11px] text-[#9CA3AF] mt-0.5">
+        <p className="text-[12px] font-semibold text-[var(--gv-color-neutral-900)]">Billing cycle</p>
+        <p className="text-[11px] text-[var(--gv-color-neutral-400)] mt-0.5">
           {yearly ? "Yearly — pay 11 months, get 1 free" : "Monthly billing"}
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <span className={`text-[11px] font-medium ${!yearly ? "text-[#1F2428]" : "text-[#9CA3AF]"}`}>Monthly</span>
+        <span className={`text-[11px] font-medium ${!yearly ? "text-[var(--gv-color-neutral-900)]" : "text-[var(--gv-color-neutral-400)]"}`}>Monthly</span>
         <button
           onClick={() => onChange(!yearly)}
-          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${yearly ? "bg-[#5F8F8B]" : "bg-[#D1D5DB]"}`}
+          className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${yearly ? "bg-[var(--gv-color-primary-500)]" : "bg-[var(--gv-color-neutral-300)]"}`}
         >
           <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform ${yearly ? "translate-x-4.5" : "translate-x-0.5"}`} />
         </button>
-        <span className={`text-[11px] font-medium ${yearly ? "text-[#4E7C78]" : "text-[#9CA3AF]"}`}>
+        <span className={`text-[11px] font-medium ${yearly ? "text-[var(--gv-color-primary-600)]" : "text-[var(--gv-color-neutral-400)]"}`}>
           Yearly
-          {yearly && <span className="ml-1 rounded-full bg-[#EDF5F4] px-1.5 py-0.5 text-[9px] font-semibold text-[#3D6562]">1 mo free</span>}
+          {yearly && <span className="ml-1 rounded-full bg-[var(--gv-color-primary-50)] px-1.5 py-0.5 text-[9px] font-semibold text-[var(--gv-color-primary-700)]">1 mo free</span>}
         </span>
       </div>
     </div>
@@ -218,9 +218,9 @@ function SubscriptionPanel({
 }) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Subscription Plans</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">Choose the plan that fits your brand</p>
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Subscription Plans</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Choose the plan that fits your brand</p>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-3">
         <BillingToggle yearly={billingYearly} onChange={onBillingChange} />
@@ -276,9 +276,9 @@ function BillingPanel({ brandId }: { brandId: string }) {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Billing</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Billing</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">
           {sub ? `Next billing: ${nextBilling}` : loading ? "Loading…" : "No active subscription"}
         </p>
       </div>
@@ -286,22 +286,22 @@ function BillingPanel({ brandId }: { brandId: string }) {
         {loading && <div className="flex items-center justify-center py-8"><div className="h-6 w-6 rounded-full border-2 border-brand-200 border-t-brand-500 animate-spin" /></div>}
         {!loading && (
           <>
-            <div className="rounded-[12px] border border-[#E5E7EB] overflow-hidden">
-              <div className="px-4 py-2.5 bg-[#F9FAFB] border-b border-[#F3F4F6]">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Current Subscription</p>
+            <div className="rounded-[12px] border border-[var(--gv-color-neutral-200)] overflow-hidden">
+              <div className="px-4 py-2.5 bg-[var(--gv-color-neutral-50)] border-b border-[var(--gv-color-neutral-100)]">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">Current Subscription</p>
               </div>
               <table className="w-full text-xs">
                 <tbody className="divide-y divide-[#F3F4F6]">
                   {[
-                    { label: "Plan", value: sub ? <span className="inline-flex items-center rounded-full bg-[#EDF5F4] px-2 py-0.5 text-[10px] font-semibold text-[#3D6562]">{PLAN_LABEL[planKey] ?? planKey}</span> : "—" },
+                    { label: "Plan", value: sub ? <span className="inline-flex items-center rounded-full bg-[var(--gv-color-primary-50)] px-2 py-0.5 text-[10px] font-semibold text-[var(--gv-color-primary-700)]">{PLAN_LABEL[planKey] ?? planKey}</span> : "—" },
                     { label: "Price", value: sub ? idrPrice + (cycle === "yearly" ? " / yr" : " / bln") : "—" },
                     { label: "Billing Cycle", value: sub ? (cycle === "yearly" ? "Yearly" : "Monthly") : "—" },
                     { label: "Next Billing", value: nextBilling },
-                    { label: "Status", value: sub ? <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${sub.status === "active" ? "bg-[#ECFDF3] text-[#047857]" : "bg-[#F3F4F6] text-[#6B7280]"}`}>{sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}</span> : <span className="text-[#9CA3AF]">No subscription</span> },
+                    { label: "Status", value: sub ? <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${sub.status === "active" ? "bg-[#ECFDF3] text-[#047857]" : "bg-[#F3F4F6] text-[var(--gv-color-neutral-500)]"}`}>{sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}</span> : <span className="text-[var(--gv-color-neutral-400)]">No subscription</span> },
                   ].map(({ label, value }) => (
                     <tr key={label}>
-                      <td className="px-4 py-2.5 text-[12px] text-[#9CA3AF] w-1/3">{label}</td>
-                      <td className="px-4 py-2.5 text-[12px] text-[#1F2428] font-medium">{value}</td>
+                      <td className="px-4 py-2.5 text-[12px] text-[var(--gv-color-neutral-400)] w-1/3">{label}</td>
+                      <td className="px-4 py-2.5 text-[12px] text-[var(--gv-color-neutral-900)] font-medium">{value}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -309,9 +309,9 @@ function BillingPanel({ brandId }: { brandId: string }) {
             </div>
 
             {sub && (
-              <div className="rounded-[12px] border border-[#E5E7EB] overflow-hidden">
-                <div className="px-4 py-2.5 bg-[#F9FAFB] border-b border-[#F3F4F6]">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Payment Method · Xendit</p>
+              <div className="rounded-[12px] border border-[var(--gv-color-neutral-200)] overflow-hidden">
+                <div className="px-4 py-2.5 bg-[var(--gv-color-neutral-50)] border-b border-[var(--gv-color-neutral-100)]">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">Payment Method · Xendit</p>
                 </div>
                 <table className="w-full text-xs">
                   <tbody className="divide-y divide-[#F3F4F6]">
@@ -321,8 +321,8 @@ function BillingPanel({ brandId }: { brandId: string }) {
                       { label: "Currency", value: "IDR (Indonesian Rupiah)" },
                     ].map(({ label, value }) => (
                       <tr key={label}>
-                        <td className="px-4 py-2.5 text-[12px] text-[#9CA3AF] w-1/3">{label}</td>
-                        <td className="px-4 py-2.5 text-[12px] text-[#1F2428] font-medium">{value}</td>
+                        <td className="px-4 py-2.5 text-[12px] text-[var(--gv-color-neutral-400)] w-1/3">{label}</td>
+                        <td className="px-4 py-2.5 text-[12px] text-[var(--gv-color-neutral-900)] font-medium">{value}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -330,31 +330,31 @@ function BillingPanel({ brandId }: { brandId: string }) {
               </div>
             )}
 
-            <div className="rounded-[12px] border border-[#E5E7EB] overflow-hidden">
-              <div className="px-4 py-2.5 bg-[#F9FAFB] border-b border-[#F3F4F6]">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Invoice History</p>
+            <div className="rounded-[12px] border border-[var(--gv-color-neutral-200)] overflow-hidden">
+              <div className="px-4 py-2.5 bg-[var(--gv-color-neutral-50)] border-b border-[var(--gv-color-neutral-100)]">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">Invoice History</p>
               </div>
               {invoices.length === 0 ? (
-                <p className="px-4 py-5 text-[12px] text-[#9CA3AF] text-center">No invoices yet</p>
+                <p className="px-4 py-5 text-[12px] text-[var(--gv-color-neutral-400)] text-center">No invoices yet</p>
               ) : (
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-[#F3F4F6]">
-                      <th className="px-4 py-2.5 text-left text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Date</th>
-                      <th className="px-4 py-2.5 text-right text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Amount</th>
-                      <th className="px-4 py-2.5 text-right text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Status</th>
+                    <tr className="border-b border-[var(--gv-color-neutral-100)]">
+                      <th className="px-4 py-2.5 text-left text-[10px] font-semibold text-[var(--gv-color-neutral-400)] uppercase tracking-wider">Date</th>
+                      <th className="px-4 py-2.5 text-right text-[10px] font-semibold text-[var(--gv-color-neutral-400)] uppercase tracking-wider">Amount</th>
+                      <th className="px-4 py-2.5 text-right text-[10px] font-semibold text-[var(--gv-color-neutral-400)] uppercase tracking-wider">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#F3F4F6]">
                     {invoices.map((inv) => (
                       <tr key={inv.id}>
-                        <td className="px-4 py-2.5 text-[12px] text-[#6B7280]">{fmtDate(inv.created_at)}</td>
-                        <td className="px-4 py-2.5 text-right text-[12px] text-[#1F2428] font-medium">{fmtAmt(inv.amount, inv.currency)}</td>
+                        <td className="px-4 py-2.5 text-[12px] text-[var(--gv-color-neutral-500)]">{fmtDate(inv.created_at)}</td>
+                        <td className="px-4 py-2.5 text-right text-[12px] text-[var(--gv-color-neutral-900)] font-medium">{fmtAmt(inv.amount, inv.currency)}</td>
                         <td className="px-4 py-2.5 text-right">
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                             inv.status === "PAID" || inv.status === "SETTLED" ? "bg-[#ECFDF3] text-[#047857]"
                             : inv.status === "PENDING" ? "bg-[#FFFBEB] text-[#B45309]"
-                            : "bg-[#F3F4F6] text-[#6B7280]"
+                            : "bg-[#F3F4F6] text-[var(--gv-color-neutral-500)]"
                           }`}>
                             {inv.status.charAt(0) + inv.status.slice(1).toLowerCase()}
                           </span>
@@ -382,14 +382,14 @@ function ConnectAllPanel({
 }) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Connected Platforms</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">{platforms.filter((p) => p.connected).length} of {platforms.length} connected</p>
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Connected Platforms</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">{platforms.filter((p) => p.connected).length} of {platforms.length} connected</p>
       </div>
-      <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 items-center px-5 py-2.5 border-b border-[#F3F4F6] bg-[#F9FAFB]">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Platform</span>
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] w-16 text-center">Connect</span>
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] w-16 text-center">Auto-Reply</span>
+      <div className="grid grid-cols-[1fr_auto_auto] gap-x-3 items-center px-5 py-2.5 border-b border-[var(--gv-color-neutral-100)] bg-[var(--gv-color-neutral-50)]">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">Platform</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)] w-16 text-center">Connect</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)] w-16 text-center">Auto-Reply</span>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0">
         <div className="divide-y divide-[#F3F4F6]">
@@ -405,21 +405,21 @@ function ConnectAllPanel({
                   </span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <p className="text-[13px] font-medium text-[#1F2428] truncate">{platform.name}</p>
+                      <p className="text-[13px] font-medium text-[var(--gv-color-neutral-900)] truncate">{platform.name}</p>
                       {!accessible && (
                         <span className="rounded-full bg-[#FFF7ED] px-1.5 py-0.5 text-[9px] font-semibold text-[#C2410C] flex-shrink-0">
                           {planLabel[platform.plan]}+
                         </span>
                       )}
                     </div>
-                    {platform.handle && accessible && isConnected && <p className="text-[11px] text-[#9CA3AF] truncate">@{platform.handle}</p>}
-                    {!isConnected && accessible && <p className="text-[11px] text-[#9CA3AF]">Not connected</p>}
+                    {platform.handle && accessible && isConnected && <p className="text-[11px] text-[var(--gv-color-neutral-400)] truncate">@{platform.handle}</p>}
+                    {!isConnected && accessible && <p className="text-[11px] text-[var(--gv-color-neutral-400)]">Not connected</p>}
                   </div>
                 </div>
                 <div className="w-16 flex justify-center">
                   {accessible ? (
                     <button onClick={() => onToggleConnect(platform.id)}
-                      className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors ${isConnected ? "bg-[#5F8F8B]" : "bg-[#D1D5DB]"}`}>
+                      className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors ${isConnected ? "bg-[var(--gv-color-primary-500)]" : "bg-[var(--gv-color-neutral-300)]"}`}>
                       <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform ${isConnected ? "translate-x-5.5" : "translate-x-0.5"}`} />
                     </button>
                   ) : (
@@ -431,7 +431,7 @@ function ConnectAllPanel({
                 <div className="w-16 flex justify-center">
                   {accessible ? (
                     <button onClick={() => onToggleReply(platform.id)} disabled={!isConnected}
-                      className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${replyOn && isConnected ? "bg-[#10B981]" : "bg-[#D1D5DB]"}`}>
+                      className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${replyOn && isConnected ? "bg-[#10B981]" : "bg-[var(--gv-color-neutral-300)]"}`}>
                       <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform ${replyOn && isConnected ? "translate-x-5.5" : "translate-x-0.5"}`} />
                     </button>
                   ) : <span className="text-[11px] text-[#D1D5DB]">—</span>}
@@ -440,8 +440,8 @@ function ConnectAllPanel({
             );
           })}
         </div>
-        <div className="mx-4 mt-3 mb-4 rounded-[12px] border border-[#A8D5CF] bg-[#EDF5F4] p-3">
-          <p className="text-[12px] font-semibold text-[#3D6562]">Late Auto-Reply Limits</p>
+        <div className="mx-4 mt-3 mb-4 rounded-[12px] border border-[#A8D5CF] bg-[var(--gv-color-primary-50)] p-3">
+          <p className="text-[12px] font-semibold text-[var(--gv-color-primary-700)]">Late Auto-Reply Limits</p>
           <p className="text-[11px] text-[#5F8F8B] mt-1">Basic: 50/day · Premium: 100/day · Partner: 150/day</p>
         </div>
       </div>
@@ -469,9 +469,9 @@ function PasswordPanel() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Reset Password</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">Use a strong password with letters, numbers, and symbols</p>
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Reset Password</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Use a strong password with letters, numbers, and symbols</p>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5">
         <div className="space-y-3 max-w-sm">
@@ -487,7 +487,7 @@ function PasswordPanel() {
             </div>
           ))}
           {err  && <p className="text-[12px] text-[#DC2626]">{err}</p>}
-          {saved && <p className="text-[12px] text-[#4E7C78] font-medium">✓ Password updated successfully</p>}
+          {saved && <p className="text-[12px] text-[var(--gv-color-primary-600)] font-medium">✓ Password updated successfully</p>}
           <button onClick={handleSave} className="gv-btn-primary w-full mt-2">Update Password</button>
         </div>
       </div>
@@ -506,32 +506,32 @@ function TwoFAPanel() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Two-Factor Authentication</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">Add an extra layer of security to your account</p>
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Two-Factor Authentication</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Add an extra layer of security to your account</p>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[14px] font-semibold text-[#1F2428]">Two-Factor Auth</p>
-            <p className="text-[12px] text-[#9CA3AF] mt-0.5">{enabled ? "Enabled — your account is protected" : "Disabled — enable for extra security"}</p>
+            <p className="text-[14px] font-semibold text-[var(--gv-color-neutral-900)]">Two-Factor Auth</p>
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">{enabled ? "Enabled — your account is protected" : "Disabled — enable for extra security"}</p>
           </div>
           <button onClick={handleToggle}
-            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${enabled ? "bg-[#5F8F8B]" : "bg-[#D1D5DB]"}`}>
+            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors ${enabled ? "bg-[var(--gv-color-primary-500)]" : "bg-[var(--gv-color-neutral-300)]"}`}>
             <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ${enabled ? "translate-x-5" : "translate-x-0"}`} />
           </button>
         </div>
 
         {enabled && (
-          <div className="rounded-[12px] border border-[#A8D5CF] bg-[#EDF5F4] p-4 space-y-3">
+          <div className="rounded-[12px] border border-[#A8D5CF] bg-[var(--gv-color-primary-50)] p-4 space-y-3">
             <div className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#4E7C78] flex-shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
-              <p className="text-[12px] font-semibold text-[#3D6562]">2FA is enabled on your account</p>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--gv-color-primary-600)] flex-shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
+              <p className="text-[12px] font-semibold text-[var(--gv-color-primary-700)]">2FA is enabled on your account</p>
             </div>
             {showQr && (
               <div>
-                <p className="text-[12px] text-[#6B7280] mb-2">Scan with your authenticator app:</p>
-                <div className="w-28 h-28 rounded-[10px] bg-white border border-[#E5E7EB] flex items-center justify-center mx-auto">
+                <p className="text-[12px] text-[var(--gv-color-neutral-500)] mb-2">Scan with your authenticator app:</p>
+                <div className="w-28 h-28 rounded-[10px] bg-white border border-[var(--gv-color-neutral-200)] flex items-center justify-center mx-auto">
                   <svg viewBox="0 0 100 100" className="w-24 h-24">
                     {[0,30,60].map(x => [0,30,60].map(y => (
                       <rect key={`${x}-${y}`} x={x+2} y={y+2} width="26" height="26" rx="3" fill="none" stroke="#374151" strokeWidth="2"/>
@@ -546,17 +546,17 @@ function TwoFAPanel() {
                     <rect x="8" y="68" width="14" height="14" rx="1" fill="#374151"/>
                   </svg>
                 </div>
-                <p className="text-[10px] text-[#9CA3AF] text-center mt-1">Demo QR — connect real auth in production</p>
+                <p className="text-[10px] text-[var(--gv-color-neutral-400)] text-center mt-1">Demo QR — connect real auth in production</p>
               </div>
             )}
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] mb-2">Recovery Codes</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)] mb-2">Recovery Codes</p>
               <div className="grid grid-cols-2 gap-1.5">
                 {["8F2K-9XPQ", "3M7R-2WNT", "6B4H-5CYL", "1J9V-8ZUE"].map((code) => (
-                  <code key={code} className="rounded-[6px] bg-white border border-[#E5E7EB] px-2 py-1.5 text-[10px] font-mono text-[#1F2428] text-center">{code}</code>
+                  <code key={code} className="rounded-[6px] bg-white border border-[var(--gv-color-neutral-200)] px-2 py-1.5 text-[10px] font-mono text-[var(--gv-color-neutral-900)] text-center">{code}</code>
                 ))}
               </div>
-              <p className="text-[10px] text-[#9CA3AF] mt-1.5">Save these codes in a safe place. Each can only be used once.</p>
+              <p className="text-[10px] text-[var(--gv-color-neutral-400)] mt-1.5">Save these codes in a safe place. Each can only be used once.</p>
             </div>
             <button onClick={() => { setEnabled(false); setShowQr(false); }}
               className="w-full rounded-[10px] border border-[#FCA5A5] py-2 text-[12px] font-semibold text-[#DC2626] hover:bg-[#FEF2F2] transition-colors">
@@ -565,8 +565,8 @@ function TwoFAPanel() {
           </div>
         )}
         {!enabled && (
-          <div className="rounded-[12px] border border-dashed border-[#E5E7EB] p-4 text-center">
-            <p className="text-[12px] text-[#9CA3AF]">2FA is currently <span className="font-semibold text-[#4A545B]">disabled</span>. Enable it above to protect your account.</p>
+          <div className="rounded-[12px] border border-dashed border-[var(--gv-color-neutral-200)] p-4 text-center">
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)]">2FA is currently <span className="font-semibold text-[#4A545B]">disabled</span>. Enable it above to protect your account.</p>
           </div>
         )}
       </div>
@@ -581,27 +581,27 @@ function SessionPanel() {
   ];
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-        <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Active Sessions</h3>
-        <p className="text-[12px] text-[#9CA3AF] mt-0.5">Devices currently signed into your account</p>
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+        <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Active Sessions</h3>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Devices currently signed into your account</p>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 space-y-2">
         {sessions.map((s) => (
-          <div key={s.device} className={`rounded-[12px] border p-3.5 flex items-center justify-between gap-3 ${s.current ? "border-[#A8D5CF] bg-[#EDF5F4]" : "border-[#E5E7EB] bg-white"}`}>
+          <div key={s.device} className={`rounded-[12px] border p-3.5 flex items-center justify-between gap-3 ${s.current ? "border-[#A8D5CF] bg-[var(--gv-color-primary-50)]" : "border-[var(--gv-color-neutral-200)] bg-white"}`}>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <p className="text-[13px] font-medium text-[#1F2428] truncate">{s.device}</p>
-                {s.current && <span className="rounded-full bg-[#5F8F8B] px-1.5 py-0.5 text-[8px] font-bold text-white flex-shrink-0">Now</span>}
+                <p className="text-[13px] font-medium text-[var(--gv-color-neutral-900)] truncate">{s.device}</p>
+                {s.current && <span className="rounded-full bg-[var(--gv-color-primary-500)] px-1.5 py-0.5 text-[8px] font-bold text-white flex-shrink-0">Now</span>}
               </div>
-              <p className="text-[11px] text-[#9CA3AF] mt-0.5">{s.location} · {s.time}</p>
+              <p className="text-[11px] text-[var(--gv-color-neutral-400)] mt-0.5">{s.location} · {s.time}</p>
             </div>
             {!s.current && (
               <button className="flex-shrink-0 text-[11px] font-semibold text-[#DC2626] hover:text-[#B91C1C] transition-colors">Revoke</button>
             )}
           </div>
         ))}
-        <div className="mt-4 rounded-[12px] border border-dashed border-[#E5E7EB] p-3 text-center">
-          <p className="text-[12px] text-[#9CA3AF]">Revoking a session will sign that device out immediately.</p>
+        <div className="mt-4 rounded-[12px] border border-dashed border-[var(--gv-color-neutral-200)] p-3 text-center">
+          <p className="text-[12px] text-[var(--gv-color-neutral-400)]">Revoking a session will sign that device out immediately.</p>
         </div>
       </div>
     </div>
@@ -715,19 +715,19 @@ function AgentConfigCenter({
 
   const FileRow = ({ label, hint, file, onClick }: { label: string; hint: string; file: File | null; onClick: () => void }) => (
     <button type="button" onClick={onClick}
-      className={`w-full flex items-center gap-3 rounded-xl border border-dashed p-2.5 text-left transition-colors ${file ? "border-brand-400 bg-brand-50/40" : "border-[#E5E7EB] hover:border-brand-400"}`}>
+      className={`w-full flex items-center gap-3 rounded-xl border border-dashed p-2.5 text-left transition-colors ${file ? "border-brand-400 bg-brand-50/40" : "border-[var(--gv-color-neutral-200)] hover:border-brand-400"}`}>
       <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${file ? "bg-brand-100" : "bg-[#F3F4F6]"}`}>
         {file ? (
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-brand-500"><polyline points="20 6 9 17 4 12" /></svg>
         ) : (
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#9CA3AF]">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--gv-color-neutral-400)]">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" />
           </svg>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-[12px] font-semibold text-[#4A545B]">{label}</p>
-        <p className={`text-[10px] truncate mt-0.5 ${file ? "text-brand-500" : "text-[#9CA3AF]"}`}>
+        <p className={`text-[10px] truncate mt-0.5 ${file ? "text-brand-500" : "text-[var(--gv-color-neutral-400)]"}`}>
           {file ? file.name : hint}
         </p>
       </div>
@@ -741,14 +741,14 @@ function AgentConfigCenter({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
         <div className="flex items-center gap-2">
           <span className="text-xl">{roleIcon}</span>
           <div>
-            <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>
+            <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>
               Configure {role} Agent
             </h3>
-            <p className="text-[12px] text-[#9CA3AF] mt-0.5">
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">
               {hiredAgent ? "Update your agent persona" : "Set up your AI agent persona"}
             </p>
           </div>
@@ -757,13 +757,13 @@ function AgentConfigCenter({
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 space-y-4">
         {error   && <div className="rounded-[10px] bg-[#FEF2F2] border border-[#FCA5A5] px-3 py-2 text-[12px] text-[#DC2626]">{error}</div>}
-        {success && <div className="rounded-[10px] bg-[#EDF5F4] border border-[#A8D5CF] px-3 py-2 text-[12px] text-[#3D6562] font-medium">{success}</div>}
+        {success && <div className="rounded-[10px] bg-[var(--gv-color-primary-50)] border border-[#A8D5CF] px-3 py-2 text-[12px] text-[var(--gv-color-primary-700)] font-medium">{success}</div>}
 
         {/* Profile photo */}
         <div>
           <label className="block text-[12px] font-semibold text-[#4A545B] mb-2">Profile Photo</label>
           <div onClick={() => profileRef.current?.click()}
-            className="flex items-center gap-3 rounded-[12px] border border-dashed border-[#E5E7EB] p-3 cursor-pointer hover:border-brand-400 transition-colors">
+            className="flex items-center gap-3 rounded-[12px] border border-dashed border-[var(--gv-color-neutral-200)] p-3 cursor-pointer hover:border-brand-400 transition-colors">
             {profilePreview ? (
               <Image src={profilePreview} alt="preview" width={44} height={44} className="w-11 h-11 rounded-full object-cover flex-shrink-0" />
             ) : (
@@ -771,7 +771,7 @@ function AgentConfigCenter({
             )}
             <div>
               <p className="text-[12px] font-semibold text-[#4A545B]">{profileFile ? profileFile.name : "Upload photo"}</p>
-              <p className="text-[10px] text-[#9CA3AF]">JPG, PNG, WebP · max 5MB</p>
+              <p className="text-[10px] text-[var(--gv-color-neutral-400)]">JPG, PNG, WebP · max 5MB</p>
             </div>
           </div>
           <input ref={profileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden"
@@ -802,7 +802,7 @@ function AgentConfigCenter({
 
         {/* Training files */}
         <div>
-          <label className="block text-[12px] font-semibold text-[#4A545B] mb-2">Training Files <span className="font-normal text-[#9CA3AF]">(.json)</span></label>
+          <label className="block text-[12px] font-semibold text-[#4A545B] mb-2">Training Files <span className="font-normal text-[var(--gv-color-neutral-400)]">(.json)</span></label>
           <div className="space-y-1.5">
             <FileRow label="Dataset" hint={hiredAgent?.dataset_url ? "Uploaded ✓" : "Training data · facts, Q&A, references"} file={datasetFile} onClick={() => datasetRef.current?.click()} />
             <FileRow label="Mindset" hint={hiredAgent?.mindset_url ? "Uploaded ✓" : "Thinking patterns · principles · worldview"} file={mindsetFile} onClick={() => mindsetRef.current?.click()} />
@@ -823,8 +823,8 @@ function AgentConfigCenter({
           </div>
           {isPartner ? (
             trainedModels.length === 0 ? (
-              <div className="rounded-[12px] border border-dashed border-[#E5E7EB] p-4 text-center">
-                <p className="text-[12px] text-[#9CA3AF]">No trained characters yet. Train a character in Content Studio first.</p>
+              <div className="rounded-[12px] border border-dashed border-[var(--gv-color-neutral-200)] p-4 text-center">
+                <p className="text-[12px] text-[var(--gv-color-neutral-400)]">No trained characters yet. Train a character in Content Studio first.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-2">
@@ -833,9 +833,9 @@ function AgentConfigCenter({
                   return (
                     <button key={m.id} type="button"
                       onClick={() => setSelectedChar(isSelected ? null : (m.metadata?.lora_model ?? m.id))}
-                      className={`rounded-[12px] border p-2.5 text-left transition-all ${isSelected ? "border-brand-400 bg-brand-50/40" : "border-[#E5E7EB] hover:border-brand-300"}`}>
-                      <p className="text-[12px] font-semibold text-[#1F2428] truncate">{m.dataset_name}</p>
-                      <p className="text-[10px] text-[#9CA3AF] truncate mt-0.5">{m.theme}</p>
+                      className={`rounded-[12px] border p-2.5 text-left transition-all ${isSelected ? "border-brand-400 bg-brand-50/40" : "border-[var(--gv-color-neutral-200)] hover:border-brand-300"}`}>
+                      <p className="text-[12px] font-semibold text-[var(--gv-color-neutral-900)] truncate">{m.dataset_name}</p>
+                      <p className="text-[10px] text-[var(--gv-color-neutral-400)] truncate mt-0.5">{m.theme}</p>
                       {isSelected && <p className="text-[9px] font-semibold text-brand-500 mt-1">Selected</p>}
                     </button>
                   );
@@ -843,8 +843,8 @@ function AgentConfigCenter({
               </div>
             )
           ) : (
-            <div className="rounded-[12px] border border-dashed border-[#E5E7EB] p-4 text-center opacity-50 pointer-events-none">
-              <p className="text-[12px] text-[#9CA3AF]">Upgrade to Partner to assign a trained character to this agent.</p>
+            <div className="rounded-[12px] border border-dashed border-[var(--gv-color-neutral-200)] p-4 text-center opacity-50 pointer-events-none">
+              <p className="text-[12px] text-[var(--gv-color-neutral-400)]">Upgrade to Partner to assign a trained character to this agent.</p>
             </div>
           )}
         </div>
@@ -852,7 +852,7 @@ function AgentConfigCenter({
         {saving && uploadStep && <p className="text-[10px] text-brand-500 text-center">{uploadStep}</p>}
       </div>
 
-      <div className="flex-shrink-0 px-5 py-4 border-t border-[#F3F4F6]">
+      <div className="flex-shrink-0 px-5 py-4 border-t border-[var(--gv-color-neutral-100)]">
         <button onClick={handleSave} disabled={saving || !personaName.trim()}
           className="gv-btn-primary w-full disabled:opacity-60">
           {saving ? "Saving…" : hiredAgent ? `Update ${role} Agent` : `Hire as ${role}`}
@@ -1110,17 +1110,17 @@ export default function HomePage() {
     <div className="h-full overflow-hidden">
       {profileSub === "brand_dna" && (
         <div className="h-full flex flex-col overflow-hidden">
-          <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-            <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Brand DNA</h3>
-            <p className="text-[12px] text-[#9CA3AF] mt-0.5">Your brand&apos;s story, values, and voice</p>
+          <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+            <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Brand DNA</h3>
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Your brand&apos;s story, values, and voice</p>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 space-y-4">
-            <div className="rounded-[14px] bg-[#F9FAFB] border border-[#F3F4F6] p-4 space-y-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">Brand Story</p>
+            <div className="rounded-[14px] bg-[var(--gv-color-neutral-50)] border border-[var(--gv-color-neutral-100)] p-4 space-y-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">Brand Story</p>
               <p className="text-[13px] text-[#4A545B] leading-relaxed">
                 GeoVera is a marketing intelligence platform built for modern brands navigating the complexity of multi-channel digital growth. Rooted in Jakarta&apos;s vibrant startup ecosystem, GeoVera blends AI-driven automation with human-centric brand storytelling.
               </p>
-              <p className="text-[13px] text-[#6B7280] leading-relaxed">
+              <p className="text-[13px] text-[var(--gv-color-neutral-500)] leading-relaxed">
                 At its core, GeoVera believes that every brand has a unique story worth telling — and that the right intelligence layer can amplify that story across every platform, every audience, and every moment that matters.
               </p>
             </div>
@@ -1131,9 +1131,9 @@ export default function HomePage() {
                 { label: "Core Values", value: "Innovation · Clarity · Results" },
                 { label: "Positioning", value: "AI-Powered Intelligence for Growth" },
               ].map(({ label, value }) => (
-                <div key={label} className="rounded-[12px] border border-[#E5E7EB] p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF]">{label}</p>
-                  <p className="text-[12px] text-[#1F2428] font-medium mt-1">{value}</p>
+                <div key={label} className="rounded-[12px] border border-[var(--gv-color-neutral-200)] p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--gv-color-neutral-400)]">{label}</p>
+                  <p className="text-[12px] text-[var(--gv-color-neutral-900)] font-medium mt-1">{value}</p>
                 </div>
               ))}
             </div>
@@ -1198,22 +1198,22 @@ export default function HomePage() {
       {profileSub === "detail"    && <DesignAssetsEditPanel />}
       {profileSub === "connect"   && (
         <div className="h-full flex flex-col overflow-hidden">
-          <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-            <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Connected</h3>
-            <p className="text-[12px] text-[#9CA3AF] mt-0.5">{connectedCount} of {platforms.length} platforms active</p>
+          <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+            <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Connected</h3>
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">{connectedCount} of {platforms.length} platforms active</p>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-2">
             {platforms.filter(p => p.connected).length === 0 ? (
-              <p className="text-[12px] text-[#9CA3AF] text-center py-8">No platforms connected yet</p>
+              <p className="text-[12px] text-[var(--gv-color-neutral-400)] text-center py-8">No platforms connected yet</p>
             ) : (
               platforms.filter(p => p.connected).map((p) => (
-                <div key={p.id} className="flex items-center gap-3 rounded-[12px] border border-[#A8D5CF] bg-[#EDF5F4] px-3 py-2.5">
+                <div key={p.id} className="flex items-center gap-3 rounded-[12px] border border-[#A8D5CF] bg-[var(--gv-color-primary-50)] px-3 py-2.5">
                   <PlatformIcon id={p.id} size={20} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-[#1F2428]">{p.name}</p>
-                    {p.handle && <p className="text-[11px] text-[#9CA3AF]">@{p.handle}</p>}
+                    <p className="text-[13px] font-semibold text-[var(--gv-color-neutral-900)]">{p.name}</p>
+                    {p.handle && <p className="text-[11px] text-[var(--gv-color-neutral-400)]">@{p.handle}</p>}
                   </div>
-                  <span className="text-[10px] font-semibold text-[#3D6562] bg-[#C6E3DF] rounded-full px-2 py-0.5">Connected</span>
+                  <span className="text-[10px] font-semibold text-[var(--gv-color-primary-700)] bg-[#C6E3DF] rounded-full px-2 py-0.5">Connected</span>
                 </div>
               ))
             )}
@@ -1235,9 +1235,9 @@ export default function HomePage() {
       )}
       {billingSub === "payment" && (
         <div className="h-full flex flex-col overflow-hidden">
-          <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
-            <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Xendit Payment</h3>
-            <p className="text-[12px] text-[#9CA3AF] mt-0.5">Secure payment gateway · IDR</p>
+          <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
+            <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Xendit Payment</h3>
+            <p className="text-[12px] text-[var(--gv-color-neutral-400)] mt-0.5">Secure payment gateway · IDR</p>
           </div>
           <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-3">
             {[
@@ -1246,11 +1246,11 @@ export default function HomePage() {
               { label: "Methods", value: "Bank Transfer · VA · QRIS · Cards", icon: "💳" },
               { label: "Security", value: "PCI-DSS compliant · Encrypted", icon: "🛡️" },
             ].map(({ label, value, icon }) => (
-              <div key={label} className="rounded-[12px] border border-[#E5E7EB] p-3 flex items-start gap-3">
+              <div key={label} className="rounded-[12px] border border-[var(--gv-color-neutral-200)] p-3 flex items-start gap-3">
                 <span className="text-lg flex-shrink-0">{icon}</span>
                 <div>
-                  <p className="text-[11px] font-semibold text-[#9CA3AF] uppercase tracking-wider">{label}</p>
-                  <p className="text-[13px] text-[#1F2428] font-medium mt-0.5">{value}</p>
+                  <p className="text-[11px] font-semibold text-[var(--gv-color-neutral-400)] uppercase tracking-wider">{label}</p>
+                  <p className="text-[13px] text-[var(--gv-color-neutral-900)] font-medium mt-0.5">{value}</p>
                 </div>
               </div>
             ))}
@@ -1262,16 +1262,16 @@ export default function HomePage() {
 
   const securityRight = (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-[#F3F4F6] px-5 py-4">
+      <div className="flex-shrink-0 border-b border-[var(--gv-color-neutral-100)] px-5 py-4">
         <div className="flex items-center gap-2 mb-1">
           <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-[#FEE2E2]">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[#DC2626]">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <h3 className="text-[16px] font-bold text-[#1F2428]" style={{ fontFamily: "Georgia, serif" }}>Security Tips</h3>
+          <h3 className="text-[16px] font-bold text-[var(--gv-color-neutral-900)]" style={{ fontFamily: "Georgia, serif" }}>Security Tips</h3>
         </div>
-        <p className="text-[12px] text-[#9CA3AF]">Keep your account safe</p>
+        <p className="text-[12px] text-[var(--gv-color-neutral-400)]">Keep your account safe</p>
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-3">
         {[
@@ -1302,7 +1302,7 @@ export default function HomePage() {
     <div className="flex flex-col h-full">
       {saveToast && (
         <div className={`absolute top-4 left-1/2 -translate-x-1/2 z-50 rounded-[12px] px-4 py-3 text-[13px] font-medium shadow-lg ${
-          saveToast.startsWith("✅") ? "bg-[#EDF5F4] text-[#3D6562] border border-[#A8D5CF]" : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FCA5A5]"
+          saveToast.startsWith("✅") ? "bg-[var(--gv-color-primary-50)] text-[var(--gv-color-primary-700)] border border-[#A8D5CF]" : "bg-[#FEF2F2] text-[#B91C1C] border border-[#FCA5A5]"
         }`}>
           {saveToast}
         </div>

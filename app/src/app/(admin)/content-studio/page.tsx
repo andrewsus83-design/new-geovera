@@ -1095,7 +1095,7 @@ function GenerateVideoWizard({
               style={{
                 borderRadius: "var(--gv-radius-sm)",
                 background: videoMode === mode ? "var(--gv-color-primary-500)" : "var(--gv-color-neutral-100)",
-                color: videoMode === mode ? "#fff" : "var(--gv-color-neutral-600)",
+                color: videoMode === mode ? "var(--gv-color-bg-surface)" : "var(--gv-color-neutral-500)",
               }}>
               {mode === "short" ? "⚡ Short Video" : "🎬 YouTube Avatar"}
             </button>
