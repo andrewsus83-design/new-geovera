@@ -37,7 +37,7 @@ export default function AuthCallbackPage() {
         .limit(1);
 
       if (brands && brands.length > 0) {
-        router.replace("/calendar");
+        router.replace("/getting-started");
       } else {
         router.replace("/onboarding");
       }

@@ -942,9 +942,9 @@ function BrandDNAPanel({ brandId }: { brandId: string }) {
         )}
       </div>
 
-      <button onClick={() => router.push("/")} className="w-full py-3 rounded-[14px] text-[14px] font-bold text-white"
+      <button onClick={() => router.push("/calendar")} className="w-full py-3 rounded-[14px] text-[14px] font-bold text-white"
         style={{ background: "var(--gv-color-primary-600)", boxShadow: "0 4px 14px rgba(95,143,139,0.30)" }}>
-        View Full Brand Profile →
+        Go to Tasks →
       </button>
     </div>
   );

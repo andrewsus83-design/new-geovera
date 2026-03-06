@@ -62,7 +62,7 @@ export default function SignInForm() {
           .eq("user_id", session.user.id)
           .limit(1);
         if (brands && brands.length > 0) {
-          router.push("/calendar");
+          router.push("/getting-started");
         } else {
           router.push("/onboarding");
         }
