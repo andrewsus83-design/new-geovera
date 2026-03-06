@@ -371,8 +371,8 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
   return (
     <div className="flex flex-col gap-5 h-full overflow-y-auto pr-1">
       {/* Why this platform */}
-      <div className="rounded-[16px] p-5" style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}>
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#16A34A] mb-2">Why {guide.platform}?</p>
+      <div className="rounded-[16px] p-5" style={{ background: "var(--gv-color-primary-50)", border: "1px solid var(--gv-color-primary-100)" }}>
+        <p className="text-[12px] font-bold uppercase tracking-widest mb-2" style={{ color: "var(--gv-color-primary-600)", letterSpacing: "0.08em" }}>Why {guide.platform}?</p>
         <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">{guide.why}</p>
       </div>
 
@@ -384,7 +384,7 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
             <div key={i} className="flex gap-3">
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0 mt-0.5"
-                style={{ background: guide.color + "18", color: guide.color }}
+                style={{ background: "var(--gv-color-primary-100)", color: "var(--gv-color-primary-700)" }}
               >
                 {i + 1}
               </div>
@@ -395,11 +395,11 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
       </div>
 
       {/* Pro tips */}
-      <div className="rounded-[16px] p-5" style={{ background: "#FFFBEB", border: "1px solid #FDE68A" }}>
-        <p className="text-[12px] font-bold uppercase tracking-widest text-[#D97706] mb-3">Pro Tips</p>
+      <div className="rounded-[16px] p-5" style={{ background: "var(--gv-color-neutral-50)", border: "1px solid var(--gv-color-neutral-200)" }}>
+        <p className="text-[12px] font-bold uppercase tracking-widest mb-3" style={{ color: "var(--gv-color-neutral-500)", letterSpacing: "0.08em" }}>Pro Tips</p>
         {guide.tips.map((tip, i) => (
           <div key={i} className="flex items-start gap-2 mt-2">
-            <span className="text-[#D97706] text-[12px] mt-0.5">⚡</span>
+            <span className="text-[12px] mt-0.5" style={{ color: "var(--gv-color-primary-500)" }}>→</span>
             <p className="text-[13px] text-[var(--gv-color-neutral-700)]">{tip}</p>
           </div>
         ))}
@@ -409,7 +409,7 @@ function PlatformGuide({ itemId, onConnectClick }: { itemId: string; onConnectCl
       <button
         onClick={onConnectClick}
         className="w-full py-3 rounded-[14px] text-[14px] font-bold text-white"
-        style={{ background: `linear-gradient(135deg, ${guide.color}, ${guide.color}CC)` }}
+        style={{ background: "var(--gv-gradient-primary)", boxShadow: "0 4px 14px rgba(95,143,139,0.30)" }}
       >
         I have a {guide.platform} account — Connect it to GeoVera →
       </button>
@@ -449,65 +449,65 @@ function ConnectGuide({ connectedCount = 0 }: { connectedCount?: number }) {
       <div
         className="rounded-[16px] p-4"
         style={{
-          background: platformsMet ? "#F0FDF4" : "#FFFBEB",
-          border: `1.5px solid ${platformsMet ? "#BBF7D0" : "#FDE68A"}`,
+          background: platformsMet ? "var(--gv-color-primary-50)" : "var(--gv-color-neutral-50)",
+          border: `1.5px solid ${platformsMet ? "var(--gv-color-primary-200)" : "var(--gv-color-neutral-200)"}`,
         }}
       >
         <div className="flex items-center justify-between mb-2">
           <p className="text-[12px] font-bold uppercase tracking-widest"
-            style={{ color: platformsMet ? "#16A34A" : "#D97706" }}>
-            {platformsMet ? "✓ Deep Research Ready" : "⚡ Syarat Deep Research"}
+            style={{ color: platformsMet ? "var(--gv-color-primary-600)" : "var(--gv-color-neutral-500)", letterSpacing: "0.08em" }}>
+            {platformsMet ? "✓ Deep Research Ready" : "Platform Required"}
           </p>
           <span className="text-[11px] font-bold rounded-full px-2.5 py-0.5"
             style={{
-              background: platformsMet ? "#DCFCE7" : "#FEF3C7",
-              color: platformsMet ? "#16A34A" : "#D97706",
+              background: platformsMet ? "var(--gv-color-primary-100)" : "var(--gv-color-neutral-200)",
+              color: platformsMet ? "var(--gv-color-primary-700)" : "var(--gv-color-neutral-500)",
             }}>
             {connectedCount} / {MIN_PLATFORMS_BASIC}
           </span>
         </div>
-        <div className="h-1.5 rounded-full bg-white/60 overflow-hidden mb-2">
+        <div className="h-1.5 rounded-full overflow-hidden mb-2" style={{ background: "var(--gv-color-neutral-200)" }}>
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{
               width: `${Math.min((connectedCount / MIN_PLATFORMS_BASIC) * 100, 100)}%`,
-              background: platformsMet
-                ? "linear-gradient(90deg, #16A34A, #22C55E)"
-                : "linear-gradient(90deg, #F59E0B, #FCD34D)",
+              background: "var(--gv-gradient-primary)",
             }}
           />
         </div>
-        <p className="text-[12px]" style={{ color: platformsMet ? "#15803D" : "#92400E" }}>
+        <p className="text-[12px]" style={{ color: platformsMet ? "var(--gv-color-primary-700)" : "var(--gv-color-neutral-500)" }}>
           {platformsMet
             ? "Semua platform sudah terhubung. Deep Research GeoVera siap berjalan penuh."
             : `Plan Basic memerlukan minimal ${MIN_PLATFORMS_BASIC} platform. Hubungkan ${MIN_PLATFORMS_BASIC - connectedCount} lagi agar Deep Research berjalan maksimal.`}
         </p>
       </div>
 
-      <div className="rounded-[16px] p-5" style={{ background: "#F0F9FF", border: "1px solid #BAE6FD" }}>
-        <p className="text-[13px] font-bold text-[#0369A1] mb-1">Why connect your platforms?</p>
+      <div className="rounded-[16px] p-5" style={{ background: "var(--gv-color-primary-50)", border: "1px solid var(--gv-color-primary-100)" }}>
+        <p className="text-[13px] font-bold mb-1" style={{ color: "var(--gv-color-primary-700)" }}>Why connect your platforms?</p>
         <p className="text-[14px] text-[var(--gv-color-neutral-700)] leading-relaxed">
           Connecting your platforms lets GeoVera's AI agents publish, monitor, and reply on your behalf — turning your social presence into a 24/7 automated marketing machine. Semakin banyak platform terhubung, semakin akurat Deep Research GeoVera.
         </p>
       </div>
 
-      <div className="rounded-[16px] p-4" style={{ background: "var(--gv-color-primary-50)", border: "1px solid var(--gv-color-primary-100)" }}>
-        <p className="text-[12px] font-bold mb-3" style={{ color: "var(--gv-color-primary-700)" }}>
-          Platforms supported by Late API — connect once, publish everywhere
+      <div className="rounded-[16px] p-4" style={{ background: "var(--gv-color-bg-surface)", border: "1px solid var(--gv-color-neutral-200)" }}>
+        <p className="text-[12px] font-bold mb-3" style={{ color: "var(--gv-color-neutral-700)", textTransform: "uppercase", letterSpacing: "0.07em" }}>
+          Platforms — connect once, publish everywhere
         </p>
-        {[
-          { icon: "📸", name: "Instagram",              note: "Feed, Reels, Stories" },
-          { icon: "📘", name: "Facebook",               note: "Pages, Reels, Posts" },
-          { icon: "🎵", name: "TikTok",                 note: "Video, Carousel" },
-          { icon: "💼", name: "LinkedIn",               note: "Personal + Company" },
-          { icon: "▶️", name: "YouTube",                note: "Shorts, Videos" },
-          { icon: "𝕏",  name: "X (Twitter)",            note: "Posts, Threads" },
-          { icon: "📌", name: "Pinterest",              note: "Pins, Boards" },
-          { icon: "📍", name: "Google Business Profile",note: "Reviews, Posts" },
-        ].map((p) => (
-          <div key={p.name} className="flex items-center gap-3 mt-2 px-3 py-2 rounded-[10px]"
-            style={{ background: "var(--gv-color-bg-surface)", border: "1px solid var(--gv-color-neutral-200)" }}>
-            <span className="text-[18px] flex-shrink-0">{p.icon}</span>
+        {([
+          { id: "instagram", name: "Instagram",               note: "Feed, Reels, Stories" },
+          { id: "facebook",  name: "Facebook",                note: "Pages, Reels, Posts" },
+          { id: "tiktok",    name: "TikTok",                  note: "Video, Carousel" },
+          { id: "linkedin",  name: "LinkedIn",                note: "Personal + Company" },
+          { id: "youtube",   name: "YouTube",                 note: "Shorts, Videos" },
+          { id: "x",         name: "X (Twitter)",             note: "Posts, Threads" },
+          { id: "pinterest", name: "Pinterest",               note: "Pins, Boards" },
+          { id: "gbp",       name: "Google Business Profile", note: "Reviews, Posts" },
+        ] as const).map((p) => (
+          <div key={p.id} className="flex items-center gap-3 mt-2 px-3 py-2 rounded-[10px]"
+            style={{ background: "var(--gv-color-neutral-50)", border: "1px solid var(--gv-color-neutral-100)" }}>
+            <span className="flex-shrink-0" style={{ filter: "grayscale(1)", opacity: 0.65, display: "flex" }}>
+              <PlatformIcon id={p.id} size={18} />
+            </span>
             <div>
               <p className="text-[13px] font-semibold" style={{ color: "var(--gv-color-neutral-900)" }}>{p.name}</p>
               <p className="text-[11px]" style={{ color: "var(--gv-color-neutral-400)" }}>{p.note}</p>
@@ -519,7 +519,7 @@ function ConnectGuide({ connectedCount = 0 }: { connectedCount?: number }) {
       <button
         onClick={() => router.push("/connect")}
         className="w-full py-3 rounded-[14px] text-[14px] font-bold text-white"
-        style={{ background: "linear-gradient(135deg, #3D6B68, #5F8F8B)" }}
+        style={{ background: "var(--gv-gradient-primary)", boxShadow: "0 4px 14px rgba(95,143,139,0.30)" }}
       >
         Go to Connect Page →
       </button>
@@ -1419,7 +1419,7 @@ function PlatformPopup({ itemId, onClose }: { itemId: string; onClose: () => voi
           <div className="flex items-center gap-3">
             <div
               className="w-11 h-11 rounded-[14px] flex items-center justify-center"
-              style={{ background: `${guide.color}18` }}
+              style={{ background: "var(--gv-color-neutral-100)", border: "1px solid var(--gv-color-neutral-200)" }}
             >
               {PLATFORM_ID_MAP[item.id]
                 ? <PlatformIcon id={PLATFORM_ID_MAP[item.id]} size={26} />
@@ -1449,9 +1449,9 @@ function PlatformPopup({ itemId, onClose }: { itemId: string; onClose: () => voi
         {/* Why this platform */}
         <div
           className="rounded-[14px] p-4"
-          style={{ background: `${guide.color}12`, border: `1.5px solid ${guide.color}30` }}
+          style={{ background: "var(--gv-color-primary-50)", border: "1.5px solid var(--gv-color-primary-100)" }}
         >
-          <p className="text-[11px] font-bold uppercase tracking-widest mb-1.5" style={{ color: guide.color }}>
+          <p className="text-[11px] font-bold uppercase tracking-widest mb-1.5" style={{ color: "var(--gv-color-primary-600)", letterSpacing: "0.08em" }}>
             Mengapa {guide.platform}?
           </p>
           <p className="text-[13px] leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>
@@ -1468,11 +1468,11 @@ function PlatformPopup({ itemId, onClose }: { itemId: string; onClose: () => voi
             <div key={i} className="flex items-start gap-3">
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-bold mt-0.5"
-                style={{ background: `${guide.color}18`, color: guide.color }}
+                style={{ background: "var(--gv-color-primary-100)", color: "var(--gv-color-primary-700)" }}
               >
                 {i + 1}
               </div>
-              <p className="text-[13px] leading-relaxed" style={{ color: "var(--gv-color-neutral-600)" }}>{step}</p>
+              <p className="text-[13px] leading-relaxed" style={{ color: "var(--gv-color-neutral-500)" }}>{step}</p>
             </div>
           ))}
         </div>
@@ -1504,7 +1504,7 @@ function PlatformPopup({ itemId, onClose }: { itemId: string; onClose: () => voi
             target="_blank"
             rel="noopener noreferrer"
             className="w-full py-3.5 rounded-[var(--gv-radius-md)] font-bold text-white text-[14px] text-center transition-all flex items-center justify-center gap-2 hover:opacity-90"
-            style={{ background: `linear-gradient(135deg, ${guide.color}, ${guide.color}CC)` }}
+            style={{ background: "var(--gv-gradient-primary)", boxShadow: "0 4px 14px rgba(95,143,139,0.28)" }}
           >
             Open {guide.platform}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -1737,10 +1737,12 @@ export default function GettingStartedPage() {
                 {/* Row 1: icon + name + status */}
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-9 h-9 rounded-[var(--gv-radius-sm)] flex items-center justify-center flex-shrink-0 text-[16px]"
-                    style={{ background: brand.bg, boxShadow: `0 3px 10px ${brand.shadow}` }}
+                    className="w-9 h-9 rounded-[var(--gv-radius-sm)] flex items-center justify-center flex-shrink-0"
+                    style={{ background: "var(--gv-color-neutral-100)", border: "1px solid var(--gv-color-neutral-200)" }}
                   >
-                    {item.icon}
+                    <span style={{ filter: "grayscale(1)", opacity: 0.7, display: "flex" }}>
+                      <PlatformIcon id={platformId === "x_twitter" ? "x" : platformId === "google_business" ? "gbp" : platformId} size={20} />
+                    </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-semibold truncate" style={{
@@ -1774,9 +1776,9 @@ export default function GettingStartedPage() {
                     onClick={() => setPopupItem(platformId)}
                     className="flex-1 h-7 flex items-center justify-center gap-1.5 rounded-[var(--gv-radius-xs)] text-[11px] font-semibold transition-all hover:opacity-75"
                     style={{
-                      background: "var(--gv-color-bg-surface-elevated, #FAFBFC)",
-                      color: "var(--gv-color-neutral-600)",
-                      border: "1px solid var(--gv-color-neutral-150, #E5E7EB)",
+                      background: "var(--gv-color-neutral-50)",
+                      color: "var(--gv-color-neutral-500)",
+                      border: "1px solid var(--gv-color-neutral-200)",
                     }}
                   >
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -1799,7 +1801,7 @@ export default function GettingStartedPage() {
                         });
                       }}
                       className="flex-1 h-7 flex items-center justify-center gap-1.5 rounded-[var(--gv-radius-xs)] text-[11px] font-semibold text-white transition-all hover:opacity-80"
-                      style={{ background: guide ? `linear-gradient(135deg,${guide.color},${guide.color}BB)` : "var(--gv-gradient-primary)" }}
+                      style={{ background: "var(--gv-gradient-primary)", boxShadow: "0 3px 10px rgba(95,143,139,0.25)" }}
                     >
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
@@ -1948,19 +1950,12 @@ export default function GettingStartedPage() {
           <div className="relative z-10 p-5">
             {/* Platform strip */}
             <div className="flex items-center gap-1.5 mb-5">
-              {([
-                { e:"📸", b:"linear-gradient(135deg,#E1306C,#F56040,#FCAF45)" },
-                { e:"🎵", b:"linear-gradient(135deg,#010101,#2d2d2d)" },
-                { e:"▶️", b:"#FF0000" },
-                { e:"💼", b:"#0A66C2" },
-                { e:"𝕏",  b:"#14171A" },
-                { e:"📘", b:"#1877F2" },
-                { e:"📌", b:"#E60023" },
-                { e:"📍", b:"#4285F4" },
-              ]).map((p,i)=>(
-                <div key={i} className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] flex-shrink-0"
-                  style={{ background:p.b, border:"1.5px solid rgba(255,255,255,0.12)", boxShadow:"0 2px 6px rgba(0,0,0,0.25)" }}>
-                  {p.e}
+              {(["instagram","tiktok","youtube","linkedin","x","facebook","pinterest","gbp"] as const).map((id) => (
+                <div key={id} className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background:"rgba(255,255,255,0.10)", border:"1.5px solid rgba(255,255,255,0.14)", boxShadow:"0 2px 6px rgba(0,0,0,0.20)" }}>
+                  <span style={{ filter:"brightness(0) invert(1)", opacity:0.9, display:"flex" }}>
+                    <PlatformIcon id={id} size={14} />
+                  </span>
                 </div>
               ))}
               <div className="flex-1"/>
@@ -2124,31 +2119,35 @@ export default function GettingStartedPage() {
                 }}>G</div>
 
               {/* Top satellites */}
-              {[
-                { e:"📸", b:"linear-gradient(135deg,#E1306C,#F56040)", l:"3%",  t:"6%"  },
-                { e:"🎵", b:"#111",                                    l:"24%", t:"0%"  },
-                { e:"▶️", b:"#FF0000",                                 l:"50%", t:"-3%", tx:"-50%" },
-                { e:"💼", b:"#0A66C2",                                 r:"24%", t:"0%"  },
-                { e:"𝕏",  b:"#14171A",                                 r:"3%",  t:"6%"  },
-              ].map((p,i)=>(
-                <div key={i} className="absolute w-7 h-7 rounded-full flex items-center justify-center text-[12px]"
-                  style={{ background:p.b, boxShadow:"0 2px 10px rgba(0,0,0,0.45)", border:"1.5px solid rgba(255,255,255,0.1)",
-                    left:(p as any).l, right:(p as any).r, top:(p as any).t,
-                    transform:(p as any).tx ? `translateX(${(p as any).tx})` : undefined }}>
-                  {p.e}
+              {([
+                { id:"instagram", l:"3%",  t:"6%"  },
+                { id:"tiktok",    l:"24%", t:"0%"  },
+                { id:"youtube",   l:"50%", t:"-3%", tx:"-50%" },
+                { id:"linkedin",  r:"24%", t:"0%"  },
+                { id:"x",         r:"3%",  t:"6%"  },
+              ] as Array<{id:string;l?:string;r?:string;t?:string;tx?:string}>).map((p) => (
+                <div key={p.id} className="absolute w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background:"rgba(255,255,255,0.10)", boxShadow:"0 2px 10px rgba(0,0,0,0.35)", border:"1.5px solid rgba(255,255,255,0.14)",
+                    left:p.l, right:p.r, top:p.t,
+                    transform:p.tx ? `translateX(${p.tx})` : undefined }}>
+                  <span style={{ filter:"brightness(0) invert(1)", opacity:0.88, display:"flex" }}>
+                    <PlatformIcon id={p.id} size={15} />
+                  </span>
                 </div>
               ))}
               {/* Bottom satellites */}
-              {[
-                { e:"📘", b:"#1877F2", l:"3%",  b2:"6%"  },
-                { e:"📌", b:"#E60023", l:"24%", b2:"0%"  },
-                { e:"🔴", b:"#FF4500", r:"24%", b2:"0%"  },
-                { e:"📍", b:"#4285F4", r:"3%",  b2:"6%"  },
-              ].map((p,i)=>(
-                <div key={i} className="absolute w-7 h-7 rounded-full flex items-center justify-center text-[12px]"
-                  style={{ background:p.b, boxShadow:"0 2px 10px rgba(0,0,0,0.45)", border:"1.5px solid rgba(255,255,255,0.1)",
-                    left:(p as any).l, right:(p as any).r, bottom:(p as any).b2 }}>
-                  {p.e}
+              {([
+                { id:"facebook",  l:"3%",  b2:"6%"  },
+                { id:"pinterest", l:"24%", b2:"0%"  },
+                { id:"reddit",    r:"24%", b2:"0%"  },
+                { id:"gbp",       r:"3%",  b2:"6%"  },
+              ] as Array<{id:string;l?:string;r?:string;b2?:string}>).map((p) => (
+                <div key={p.id} className="absolute w-7 h-7 rounded-full flex items-center justify-center"
+                  style={{ background:"rgba(255,255,255,0.10)", boxShadow:"0 2px 10px rgba(0,0,0,0.35)", border:"1.5px solid rgba(255,255,255,0.14)",
+                    left:p.l, right:p.r, bottom:p.b2 }}>
+                  <span style={{ filter:"brightness(0) invert(1)", opacity:0.88, display:"flex" }}>
+                    <PlatformIcon id={p.id} size={15} />
+                  </span>
                 </div>
               ))}
             </div>
