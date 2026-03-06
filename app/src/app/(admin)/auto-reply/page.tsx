@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import ThreeColumnLayout from "@/components/shared/ThreeColumnLayout";
 import NavColumn from "@/components/shared/NavColumn";
+import PlatformIcon from "@/components/shared/PlatformIcon";
 
 /* ══════════════════════════════════════════════════════════════════════════
    /auto-reply — GeoVera Auto-Reply Dashboard
@@ -78,17 +79,14 @@ const STATUS_CONFIG: Record<ReplyStatus, { label: string; color: string; bg: str
 };
 
 function PlatformBadge({ platform }: { platform: string }) {
-  const icons: Record<string, string> = {
-    instagram: "📸", tiktok: "🎵", facebook: "📘",
-    twitter: "𝕏", linkedin: "💼", youtube: "▶️",
-  };
   return (
     <span style={{
-      display: "inline-flex", alignItems: "center", gap: 4,
-      fontSize: 11, fontWeight: 600, padding: "2px 7px", borderRadius: 6,
+      display: "inline-flex", alignItems: "center", gap: 5,
+      fontSize: 11, fontWeight: 600, padding: "2px 8px 2px 4px", borderRadius: 6,
       background: "var(--gv-color-neutral-100)", color: "var(--gv-color-neutral-700)",
     }}>
-      {icons[platform.toLowerCase()] || "🔗"} {platform}
+      <PlatformIcon id={platform.toLowerCase()} size={14} />
+      {platform}
     </span>
   );
 }

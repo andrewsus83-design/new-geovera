@@ -6,6 +6,7 @@ import ThreeColumnLayout from "@/components/shared/ThreeColumnLayout";
 import NavColumn from "@/components/shared/NavColumn";
 import type { Platform } from "@/components/connect/PlatformList";
 import PlatformFeatures from "@/components/connect/PlatformFeatures";
+import PlatformIcon from "@/components/shared/PlatformIcon";
 import { supabase } from "@/lib/supabase";
 
 // ── Config ───────────────────────────────────────────────────────────────────
@@ -434,8 +435,8 @@ function ConnectPageInner() {
                   }`}
                 >
                   {/* Icon */}
-                  <span className={`text-lg flex-shrink-0 ${!accessible ? "grayscale" : ""}`}>
-                    {platform.icon}
+                  <span className="flex-shrink-0" style={{ opacity: accessible ? 1 : 0.4, filter: accessible ? "none" : "grayscale(1)" }}>
+                    <PlatformIcon id={platform.id} size={22} />
                   </span>
 
                   {/* Name + badge */}

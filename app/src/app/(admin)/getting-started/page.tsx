@@ -4,7 +4,15 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ThreeColumnLayout from "@/components/shared/ThreeColumnLayout";
 import NavColumn from "@/components/shared/NavColumn";
+import PlatformIcon from "@/components/shared/PlatformIcon";
 import { supabase } from "@/lib/supabase";
+
+const PLATFORM_ID_MAP: Record<string, string> = {
+  instagram: "instagram", tiktok: "tiktok", youtube: "youtube",
+  linkedin: "linkedin", x_twitter: "x", reddit: "reddit",
+  facebook: "facebook", pinterest: "pinterest",
+  google_business: "gbp", website: "website",
+};
 
 /* ══════════════════════════════════════════════════════════════════════════
    /getting-started  — GeoVera Workflow Step 7 + 8
@@ -1410,10 +1418,12 @@ function PlatformPopup({ itemId, onClose }: { itemId: string; onClose: () => voi
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
-              className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[24px]"
+              className="w-11 h-11 rounded-[14px] flex items-center justify-center"
               style={{ background: `${guide.color}18` }}
             >
-              {item.icon}
+              {PLATFORM_ID_MAP[item.id]
+                ? <PlatformIcon id={PLATFORM_ID_MAP[item.id]} size={26} />
+                : <span className="text-[24px]">{item.icon}</span>}
             </div>
             <div>
               <h3 className="text-[17px] font-bold" style={{ color: "var(--gv-color-neutral-900)" }}>
@@ -1645,7 +1655,9 @@ export default function GettingStartedPage() {
                     className="text-[13px] font-semibold truncate"
                     style={{ color: isSelected ? "var(--gv-color-primary-700, #0369A1)" : isDone ? "#16A34A" : "var(--gv-color-neutral-700, #374151)" }}
                   >
-                    {item.icon} {item.title}
+                    {PLATFORM_ID_MAP[item.id]
+                      ? <PlatformIcon id={PLATFORM_ID_MAP[item.id]} size={13} className="inline-block mr-1 align-middle flex-shrink-0" />
+                      : <span className="mr-1">{item.icon}</span>}{item.title}
                   </p>
                   <p className="text-[11px] truncate mt-0.5" style={{ color: "var(--gv-color-neutral-400, #9CA3AF)" }}>
                     {item.subtitle}
