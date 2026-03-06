@@ -110,7 +110,7 @@ export default function NavColumn({ children: _children }: { children?: React.Re
 
   return (
     <nav
-      className="fixed left-4 top-1/2 -translate-y-1/2 z-50 w-[72px] overflow-hidden"
+      className="fixed left-4 top-1/2 -translate-y-1/2 z-50 w-[72px]"
       style={{
         borderRadius: "var(--gv-radius-2xl)",
         border: "1px solid var(--gv-color-glass-border)",
