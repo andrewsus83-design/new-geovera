@@ -5,7 +5,6 @@ import { supabase } from "@/lib/supabase";
 import ThreeColumnLayout from "@/components/shared/ThreeColumnLayout";
 import NavColumn from "@/components/shared/NavColumn";
 import PlatformIcon from "@/components/shared/PlatformIcon";
-import MiniCalendar from "@/components/calendar/MiniCalendar";
 
 /* ══════════════════════════════════════════════════════════════════════════
    /auto-reply — GeoVera Auto-Reply Dashboard
@@ -161,11 +160,16 @@ export default function AutoReplyPage() {
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
-  /* ── minDate: 30 days back ── */
-  const thirtyDaysAgo = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 30);
-    return d.toISOString().slice(0, 10);
+  /* ── 7D window: 3 days back + today + 3 ahead ── */
+  const sevenDays = useMemo(() => {
+    const days: string[] = [];
+    for (let i = -3; i <= 3; i++) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() + i);
+      days.push(d.toISOString().slice(0, 10));
+    }
+    return days;
   }, []);
 
   const countByDate = useMemo(() => {
@@ -202,22 +206,79 @@ export default function AutoReplyPage() {
      CENTER COLUMN — [MiniCalendar + Comment list] | [Header + Reply compose + Submenu]
   ════════════════════════════════════════════════════════════ */
   const center = (
-    <div className="flex h-full">
+    <div className="flex flex-col h-full overflow-hidden">
 
-      {/* ─── LEFT sub-panel: MiniCalendar + filter tabs + comment list ─── */}
-      <div className="flex flex-col flex-shrink-0 border-r overflow-hidden" style={{ width: 272, borderColor: "var(--gv-color-neutral-100)" }}>
-        {/* MiniCalendar */}
-        <div className="flex-shrink-0 p-3">
-          <MiniCalendar
-            taskDates={comments.map(c => c.created_at)}
-            onDateSelect={setSDK}
-            selectedDate={selectedDateKey}
-            minDate={thirtyDaysAgo}
-            maxDate={todayDateKey}
-          />
+      {/* ─── Header: title + 7D date strip ─── */}
+      <div
+        className="flex-shrink-0 px-5 pt-5 pb-4"
+        style={{ borderBottom: "1px solid var(--gv-color-neutral-200)", background: "var(--gv-color-bg-surface)" }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <h1 className="text-[22px] font-bold leading-tight"
+              style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>
+              Reply
+            </h1>
+            <span className="gv-badge"
+              style={{ background: "var(--gv-color-neutral-100)", color: "var(--gv-color-neutral-700)" }}>
+              {filteredComments.length}/{comments.length}
+            </span>
+          </div>
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+            {sevenDays.map((dateStr) => {
+              const d          = new Date(dateStr + "T00:00:00");
+              const isToday    = dateStr === todayDateKey;
+              const isSelected = dateStr === selectedDateKey;
+              const dayName    = d.toLocaleDateString("en", { weekday: "short" });
+              const dayNum     = d.getDate();
+              const monthShort = d.toLocaleDateString("en", { month: "short" }).toUpperCase();
+              const hasDot     = (countByDate[dateStr] ?? 0) > 0;
+              const headerBg   = isSelected
+                ? "linear-gradient(135deg, #3D6562 0%, #5F8F8B 100%)"
+                : isToday ? "var(--gv-gradient-primary)"
+                : "var(--gv-color-neutral-200)";
+              const monthColor = (isSelected || isToday) ? "rgba(255,255,255,0.95)" : "var(--gv-color-neutral-500)";
+              const bodyBg     = isSelected ? "var(--gv-color-primary-100)" : isToday ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)";
+              const dayColor   = isSelected ? "var(--gv-color-primary-900)" : isToday ? "var(--gv-color-primary-700)" : "var(--gv-color-neutral-400)";
+              return (
+                <button
+                  key={dateStr}
+                  onClick={() => setSDK(dateStr)}
+                  className="flex-shrink-0 flex flex-col items-center gap-0.5 transition-all duration-200"
+                  style={{ cursor: "pointer", background: "none", border: "none", padding: 0 }}
+                >
+                  <div style={{ display: "inline-flex", flexDirection: "column", borderRadius: 12, overflow: "hidden", width: 52, userSelect: "none" }}>
+                    <div style={{ background: headerBg, padding: "5px 6px 4px", textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontFamily: "var(--gv-font-heading)", fontWeight: 700, fontSize: 8, color: monthColor, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>
+                        {monthShort}
+                      </span>
+                    </div>
+                    <div style={{ background: bodyBg, padding: "4px 6px 5px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
+                      <span style={{ fontFamily: "var(--gv-font-heading)", fontWeight: 800, fontSize: 22, lineHeight: 1, color: dayColor, letterSpacing: "-0.03em" }}>
+                        {dayNum}
+                      </span>
+                      <span style={{ fontFamily: "var(--gv-font-body)", fontWeight: 500, fontSize: 8, color: "var(--gv-color-neutral-400)", letterSpacing: "0.06em", textTransform: "uppercase" as const }}>
+                        {dayName}
+                      </span>
+                    </div>
+                  </div>
+                  {hasDot && (
+                    <span style={{ width: 4, height: 4, borderRadius: "50%", background: isSelected ? "var(--gv-color-primary-600)" : isToday ? "var(--gv-color-primary-500)" : "var(--gv-color-neutral-300)" }} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        {/* Filter tabs */}
-        <div className="px-3 pb-2 flex-shrink-0 flex gap-1">
+      </div>
+
+      {/* ─── Body: comment list | compose ─── */}
+      <div className="flex flex-1 min-h-0">
+
+        {/* LEFT sub-panel: filter tabs + comment list */}
+        <div className="flex flex-col flex-shrink-0 border-r overflow-hidden" style={{ width: 272, borderColor: "var(--gv-color-neutral-100)" }}>
+          {/* Filter tabs */}
+          <div className="px-3 py-2 flex-shrink-0 flex gap-1">
             {([
               { key: "all",       label: "All" },
               { key: "queue",     label: "AI Queue" },
@@ -300,25 +361,8 @@ export default function AutoReplyPage() {
           </div>
         </div>
 
-        {/* ─── RIGHT sub-panel: header + reply compose + submenu ─── */}
+        {/* ─── RIGHT sub-panel: compose + submenu ─── */}
         <div className="flex flex-col flex-1 min-w-0">
-          {/* Header */}
-          <div className="flex-shrink-0 px-5 pt-5 pb-3 flex items-center justify-between border-b" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
-            <div>
-              <h1 className="text-[22px] font-bold" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "Georgia, serif" }}>Reply</h1>
-              <p className="text-[12px] mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>
-                {todayCount} comments today · {pendingCount} in AI queue · {unreadCount} need review
-              </p>
-            </div>
-            <button onClick={fetchData}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-[12px] font-semibold hover:opacity-80 transition-all"
-              style={{ background: "var(--gv-color-neutral-100)", color: "var(--gv-color-neutral-600)" }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-              </svg>
-              Refresh
-            </button>
-          </div>
           {/* Compose body */}
           <div className="flex-1 overflow-y-auto px-5 py-4 min-h-0">
         {!selectedComment ? (
@@ -516,11 +560,9 @@ export default function AutoReplyPage() {
             );
           })}
         </div>
-        {/* end bottom submenu */}
         </div>
-      {/* end right sub-panel */}
       </div>
-    {/* end outer flex */}
+      </div>
     </div>
 );
 
