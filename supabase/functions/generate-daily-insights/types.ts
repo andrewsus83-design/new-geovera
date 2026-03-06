@@ -64,6 +64,14 @@ export interface InsightTask {
   createdAt?: Date;
   updatedAt?: Date;
   expiresAt?: Date;
+
+  // --- LINKAGE: IDs that connect tasks to source records ---
+  // Set on trend_opportunity tasks generated from gv_trends
+  trend_id?: string;
+  // Set on viral discovery tasks generated from gv_viral_discoveries
+  viral_discovery_id?: string;
+  // Set after auto-article draft is triggered; null until then
+  auto_article_id?: string;
 }
 
 export interface SuccessMetric {

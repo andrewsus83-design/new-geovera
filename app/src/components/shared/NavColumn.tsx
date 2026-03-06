@@ -58,6 +58,21 @@ const AnalyticsIcon = () => (
   </svg>
 );
 
+// AI Chat — neural network / sparkle (brand intelligence)
+const AIChatIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
+    <circle cx="12" cy="4"  r="1.5" />
+    <circle cx="4"  cy="12" r="1.5" />
+    <circle cx="20" cy="12" r="1.5" />
+    <circle cx="12" cy="20" r="1.5" />
+    <circle cx="12" cy="12" r="2.5" />
+    <line x1="12" y1="5.5"  x2="12" y2="9.5"  />
+    <line x1="5.5"  y1="12" x2="9.5"  y2="12" />
+    <line x1="14.5" y1="12" x2="18.5" y2="12" />
+    <line x1="12"   y1="14.5" x2="12" y2="18.5" />
+  </svg>
+);
+
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
     <circle cx="12" cy="12" r="5" />
@@ -93,10 +108,11 @@ const ChevronIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-/* ── Nav items — DS v5.9 ── */
+/* ── Nav items — DS v6.0 ── */
 const navItems = [
   { icon: <HubIcon />,      name: "Start",  path: "/getting-started" },
   { icon: <CalendarIcon />, name: "Tasks",  path: "/calendar"        },
+  { icon: <AIChatIcon />,   name: "Chat",   path: "/ai-chat"         },
   { icon: <ChatIcon />,     name: "Reply",  path: "/auto-reply"      },
   { icon: <StudioIcon />,   name: "Studio", path: "/content-studio"  },
   { icon: <AnalyticsIcon />, name: "Report", path: "/analytics"      },

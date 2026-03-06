@@ -17,8 +17,8 @@ const IMAGE_DAILY_LIMITS: Record<string, number> = { basic: 10, premium: 15, par
 const VIDEO_DAILY_LIMITS: Record<string, number> = { basic: 0, premium: 1, partner: 2 };
 const VIDEO_MAX_DURATION: Record<string, number> = { basic: 0, premium: 10, partner: 25 };
 const TRAINING_LIMITS: Record<string, number>    = { basic: 5, premium: 10, partner: 20 };
-// Partner: 1 YouTube avatar video/month (3 min via HeyGen)
-const VIDEO_AVATAR_MONTHLY: Record<string, number> = { basic: 0, premium: 0, partner: 1 };
+// All paid tiers: 1 avatar video/week (60s via HeyGen)
+const VIDEO_AVATAR_WEEKLY: Record<string, number> = { basic: 0, premium: 0, partner: 1 };
 
 const VIDEO_TOPICS = [
   { id: "podcast",        label: "🎙️ Podcast",               desc: "Conversational, interview style" },
@@ -879,20 +879,20 @@ function GenerateImageWizard({
 // GENERATE VIDEO WIZARD
 // ══════════════════════════════════════════════════════════════════════════════
 function GenerateVideoWizard({
-  brandId, currentTier, videosUsedToday, avatarsUsedThisMonth, trainedModels, historyImages, onResult, onUsed, onGenerateStart,
+  brandId, currentTier, videosUsedToday, avatarsUsedThisWeek, trainedModels, historyImages, onResult, onUsed, onGenerateStart,
 }: {
-  brandId: string; currentTier: string; videosUsedToday: number; avatarsUsedThisMonth: number;
+  brandId: string; currentTier: string; videosUsedToday: number; avatarsUsedThisWeek: number;
   trainedModels: TrainedModel[]; historyImages: GeneratedImage[];
   onResult: (v: GeneratedVideo) => void; onUsed: () => void;
   onGenerateStart?: () => void;
 }) {
   const isPartner = currentTier === "partner";
-  const avatarMonthlyLimit = VIDEO_AVATAR_MONTHLY[currentTier] ?? 0;
+  const avatarWeeklyLimit = VIDEO_AVATAR_WEEKLY[currentTier] ?? 0;
 
   const limit = VIDEO_DAILY_LIMITS[currentTier] ?? 1;
   const maxDuration = VIDEO_MAX_DURATION[currentTier] ?? 8;
   const atLimit = videosUsedToday >= limit;
-  const atAvatarLimit = avatarsUsedThisMonth >= avatarMonthlyLimit;
+  const atAvatarLimit = avatarsUsedThisWeek >= avatarWeeklyLimit;
 
   const [videoMode, setVideoMode] = useState<"short" | "avatar">("short");
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -1108,11 +1108,11 @@ function GenerateVideoWizard({
         {/* ── AVATAR VIDEO FORM (Partner only) ── */}
         {videoMode === "avatar" && (
           <div className="space-y-4">
-            <DailyQuota used={avatarsUsedThisMonth} limit={avatarMonthlyLimit} label="Avatar Videos This Month" />
+            <DailyQuota used={avatarsUsedThisWeek} limit={avatarWeeklyLimit} label="Avatar Videos This Week" />
             {atAvatarLimit && (
               <div className="p-3 text-center" style={{ borderRadius: "var(--gv-radius-xs)", background: "var(--gv-color-danger-50)" }}>
-                <p className="text-xs font-semibold" style={{ color: "var(--gv-color-danger-700)" }}>Monthly limit reached (1 avatar video/month)</p>
-                <p className="text-[10px] mt-0.5" style={{ color: "var(--gv-color-danger-500)" }}>Resets on the 1st of next month.</p>
+                <p className="text-xs font-semibold" style={{ color: "var(--gv-color-danger-700)" }}>Weekly limit reached (1 avatar video/week)</p>
+                <p className="text-[10px] mt-0.5" style={{ color: "var(--gv-color-danger-500)" }}>Resets 7 days after last generation.</p>
               </div>
             )}
             <div>
@@ -1122,12 +1122,12 @@ function GenerateVideoWizard({
               <textarea
                 value={avatarScript}
                 onChange={(e) => setAvatarScript(e.target.value)}
-                placeholder="Write the script your avatar will speak. Up to 3 minutes of content."
+                placeholder="Write the script your avatar will speak. Max 60 seconds (~700 characters)."
                 rows={6}
                 className="w-full px-3 py-2 text-xs outline-none resize-none"
                 style={{ borderRadius: "var(--gv-radius-xs)", border: "1px solid var(--gv-color-neutral-200)", background: "var(--gv-color-neutral-50)", color: "var(--gv-color-neutral-900)" }}
               />
-              <p className="text-[10px] mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>Powered by HeyGen · 16:9 YouTube format · up to 3 minutes</p>
+              <p className="text-[10px] mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>Powered by HeyGen · 16:9 YouTube format · max 60 seconds · 1 video/week</p>
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -1966,7 +1966,7 @@ export default function ContentStudioPage() {
   const [historyImages, setHistoryImages] = useState<GeneratedImage[]>([]);
   const [imagesUsedToday, setImagesUsedToday] = useState(0);
   const [videosUsedToday, setVideosUsedToday] = useState(0);
-  const [avatarsUsedThisMonth, setAvatarsUsedThisMonth] = useState(0);
+  const [avatarsUsedThisWeek, setAvatarsUsedThisWeek] = useState(0);
   const [detailItem, setDetailItem] = useState<DetailItem>(null);
   const [showGeneratingPopup, setShowGeneratingPopup] = useState(false);
   const [historyKey, setHistoryKey] = useState(0);
@@ -1993,7 +1993,7 @@ export default function ContentStudioPage() {
   const refreshUsage = useCallback(() => {
     if (!brandId) return;
     studioFetch({ action: "check_daily_usage", brand_id: brandId })
-      .then((r) => { if (r.success) { setImagesUsedToday(r.images_today ?? 0); setVideosUsedToday(r.videos_today ?? 0); setAvatarsUsedThisMonth(r.avatar_videos_this_month ?? 0); } })
+      .then((r) => { if (r.success) { setImagesUsedToday(r.images_today ?? 0); setVideosUsedToday(r.videos_today ?? 0); setAvatarsUsedThisWeek(r.avatar_videos_this_week ?? 0); } })
       .catch(() => { /* quota display fails silently — non-critical */ });
   }, [brandId]);
 
@@ -2042,7 +2042,7 @@ export default function ContentStudioPage() {
         return (
           <GenerateVideoWizard
             brandId={brandId} currentTier={currentTier} videosUsedToday={videosUsedToday}
-            avatarsUsedThisMonth={avatarsUsedThisMonth}
+            avatarsUsedThisWeek={avatarsUsedThisWeek}
             trainedModels={completedModels} historyImages={historyImages}
             onResult={() => setHistoryKey((k) => k + 1)}
             onUsed={() => setVideosUsedToday((c) => c + 1)}

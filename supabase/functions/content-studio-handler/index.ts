@@ -196,9 +196,8 @@ Deno.serve(async (req) => {
     // ── CHECK DAILY USAGE ────────────────────────────────────────────────────
     if (action === "check_daily_usage") {
       const midnight = todayISO();
-      // First day of current month (UTC)
-      const now = new Date();
-      const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)).toISOString();
+      // 7 days ago (weekly window for HeyGen quota)
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       const [imgRes, vidRes, avatarRes] = await Promise.all([
         supabase.from("gv_image_generations")
           .select("id", { count: "exact", head: true })
@@ -215,10 +214,9 @@ Deno.serve(async (req) => {
           .select("id", { count: "exact", head: true })
           .eq("brand_id", brand_id)
           .eq("ai_model", "heygen-avatar")
-          .gte("created_at", monthStart)
-          .not("video_status", "in", '("failed","error","cancelled")'),
+          .gte("created_at", weekAgo),  // counts ALL attempts (no retry = quota consumed even on fail)
       ]);
-      return json({ success: true, images_today: imgRes.count ?? 0, videos_today: vidRes.count ?? 0, avatar_videos_this_month: avatarRes.count ?? 0 });
+      return json({ success: true, images_today: imgRes.count ?? 0, videos_today: vidRes.count ?? 0, avatar_videos_this_week: avatarRes.count ?? 0 });
     }
 
     // ── GENERATE SMART PROMPT (OpenAI + history learning) ────────────────────
@@ -542,7 +540,29 @@ Return ONLY a valid JSON array of ${count} prompt strings. No explanation, no ma
       return json({ success: true, task_id, video_url, status, db_id: inserted?.id ?? null });
     }
 
-    // ── GENERATE AVATAR VIDEO (HeyGen — Partner only, up to 3 min YouTube) ──
+    // ── LIST HEYGEN AVATARS ───────────────────────────────────────────────────
+    if (action === "list_avatars") {
+      if (!HEYGEN_API_KEY) return json({ error: "HEYGEN_API_KEY not configured" }, 503);
+      const res = await fetch(`${HEYGEN_BASE}/v2/avatars`, {
+        headers: { "x-api-key": HEYGEN_API_KEY },
+      });
+      if (!res.ok) throw new Error(`HeyGen list_avatars error ${res.status}`);
+      const d = await res.json();
+      return json({ success: true, avatars: d.data?.avatars ?? d.avatars ?? d.data ?? [] });
+    }
+
+    // ── LIST HEYGEN VOICES ────────────────────────────────────────────────────
+    if (action === "list_voices") {
+      if (!HEYGEN_API_KEY) return json({ error: "HEYGEN_API_KEY not configured" }, 503);
+      const res = await fetch(`${HEYGEN_BASE}/v2/voices`, {
+        headers: { "x-api-key": HEYGEN_API_KEY },
+      });
+      if (!res.ok) throw new Error(`HeyGen list_voices error ${res.status}`);
+      const d = await res.json();
+      return json({ success: true, voices: d.data?.voices ?? d.voices ?? d.data ?? [] });
+    }
+
+    // ── GENERATE AVATAR VIDEO (HeyGen — 1/week, max 60s, no retry) ───────────
     if (action === "generate_avatar_video") {
       const {
         prompt,
@@ -550,17 +570,38 @@ Return ONLY a valid JSON array of ${count} prompt strings. No explanation, no ma
         voice_id = "default",
       } = data;
       if (!prompt) return json({ error: "prompt is required" }, 400);
+      if (!HEYGEN_API_KEY) return json({ error: "HEYGEN_API_KEY not configured" }, 503);
 
-      const heyRes = await heygenGenerateAvatar(String(prompt), String(avatar_id), String(voice_id));
+      // ── Weekly quota check (1 video/week, no retry — counts all attempts) ──
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const { count: weeklyCount } = await supabase.from("gv_video_generations")
+        .select("id", { count: "exact", head: true })
+        .eq("brand_id", brand_id)
+        .eq("ai_model", "heygen-avatar")
+        .gte("created_at", weekAgo);
 
+      if ((weeklyCount ?? 0) >= 1) {
+        return json({
+          success: false,
+          error: "Weekly HeyGen avatar video limit reached (1 video/week)",
+          code: "WEEKLY_QUOTA_EXCEEDED",
+          weekly_used: weeklyCount,
+          weekly_limit: 1,
+        }, 429);
+      }
+
+      // ── Cap prompt at 700 chars ≈ 60 seconds of speech ───────────────────
+      const cappedPrompt = String(prompt).slice(0, 700);
+
+      // ── Insert to DB FIRST (no-retry: quota consumed even if HeyGen fails) ─
       const { data: inserted, error: insertErr } = await supabase.from("gv_video_generations").insert({
         brand_id,
         target_platform: "youtube",
-        hook: prompt,
+        hook: cappedPrompt,
         ai_model: "heygen-avatar",
         status: "processing",
         generation_mode: "heygen",
-        runway_task_id: heyRes.video_id,
+        runway_task_id: null,
         video_url: null,
         video_thumbnail_url: null,
         video_aspect_ratio: "16:9",
@@ -568,7 +609,29 @@ Return ONLY a valid JSON array of ${count} prompt strings. No explanation, no ma
       }).select("id").single();
       if (insertErr) console.error("generate_avatar_video DB insert failed:", insertErr.message);
 
-      return json({ success: true, task_id: heyRes.video_id, status: "processing", db_id: inserted?.id ?? null });
+      // ── Call HeyGen API ───────────────────────────────────────────────────
+      let heygenVideoId: string | null = null;
+      try {
+        const heyRes = await heygenGenerateAvatar(cappedPrompt, String(avatar_id), String(voice_id));
+        heygenVideoId = heyRes.video_id;
+        // Update DB with task ID
+        if (inserted?.id) {
+          await supabase.from("gv_video_generations")
+            .update({ runway_task_id: heygenVideoId })
+            .eq("id", inserted.id);
+        }
+      } catch (heyErr) {
+        // Still return success=false but quota is already consumed
+        const errMsg = heyErr instanceof Error ? heyErr.message : "HeyGen API failed";
+        if (inserted?.id) {
+          await supabase.from("gv_video_generations")
+            .update({ video_status: "failed", status: "failed" })
+            .eq("id", inserted.id);
+        }
+        return json({ success: false, error: errMsg, code: "HEYGEN_FAILED", db_id: inserted?.id ?? null }, 500);
+      }
+
+      return json({ success: true, task_id: heygenVideoId, status: "processing", db_id: inserted?.id ?? null });
     }
 
     // ── CHECK TASK STATUS ────────────────────────────────────────────────────

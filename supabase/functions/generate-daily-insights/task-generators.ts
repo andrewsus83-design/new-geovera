@@ -57,6 +57,7 @@ export async function generateRadarTasks(
     if (previousRanking) {
       const rankDrop = latestRanking.rank_position - previousRanking.rank_position;
       if (rankDrop >= 3) {
+        const deadline = new Date(today.getTime() + 1 * 24 * 60 * 60 * 1000);
         tasks.push({
           brand_id: brandId,
           title: `Mindshare Ranking Dropped by ${rankDrop} positions`,
@@ -64,7 +65,9 @@ export async function generateRadarTasks(
           category: 'performance_decline',
           priority: 'urgent',
           priorityScore: 90 + rankDrop * 2,
-          deadline: new Date(today.getTime() + 1 * 24 * 60 * 60 * 1000),
+          deadline,
+          // ENFORCE: task expires at deadline (24H)
+          expiresAt: deadline,
           expectedDuration: 120,
           expectedOutcome: 'Root cause analysis and action plan to recover ranking position',
           successMetrics: [
@@ -87,9 +90,11 @@ export async function generateRadarTasks(
     }
   }
 
-  // Task Type 3: Viral Trend Opportunity
+  // Task Type 3: Viral Trend Opportunity (72H window)
   for (const trend of radarData.activeTrends.slice(0, 3)) {
     if (trend.status === 'rising') {
+      // deadline: 72H from now — trend windows are strict
+      const deadline = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
       tasks.push({
         brand_id: brandId,
         title: `Jump on rising trend: ${trend.trend_name}`,
@@ -97,7 +102,9 @@ export async function generateRadarTasks(
         category: 'trend_opportunity',
         priority: 'high',
         priorityScore: 75 + (trend.growth_rate || 0) * 0.3,
-        deadline: new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000),
+        deadline,
+        // ENFORCE: task expires when the 72H window closes
+        expiresAt: deadline,
         expectedDuration: 240,
         expectedOutcome: 'Create and publish 2-3 pieces of content aligned with this trend',
         successMetrics: [
@@ -111,6 +118,7 @@ export async function generateRadarTasks(
           trendHashtag: trend.trend_hashtag,
           totalPosts: trend.total_posts,
           growthRate: trend.growth_rate,
+          keywords: trend.keywords || [],
         },
         sourceType: 'radar',
         sourceData: {
@@ -119,6 +127,8 @@ export async function generateRadarTasks(
           dataAge: 24,
         },
         actionStatus: 'pending',
+        // Link to source trend record for auto-article trigger
+        trend_id: trend.id,
       });
     }
   }
@@ -203,6 +213,8 @@ export async function generateRadarTasks(
 
   if (viralDiscoveries && viralDiscoveries.length > 0) {
     for (const discovery of viralDiscoveries) {
+      // deadline: 48H — viral windows close fast
+      const deadline = new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000);
       tasks.push({
         brand_id: brandId,
         title: `Capitalize on viral discovery: ${discovery.topic_title}`,
@@ -210,7 +222,9 @@ export async function generateRadarTasks(
         category: 'trend_opportunity',
         priority: 'high',
         priorityScore: 78 + discovery.authority_score * 10,
-        deadline: new Date(today.getTime() + 2 * 24 * 60 * 60 * 1000),
+        deadline,
+        // ENFORCE: 48H expiry matches the viral window
+        expiresAt: deadline,
         expectedDuration: 150,
         expectedOutcome: 'Publish authoritative content leveraging this viral trend',
         successMetrics: [
@@ -223,7 +237,7 @@ export async function generateRadarTasks(
           estimatedReach: discovery.estimated_reach,
           authorityScore: discovery.authority_score,
           platforms: discovery.social_platforms,
-          keywords: discovery.trending_keywords,
+          keywords: discovery.trending_keywords || [],
         },
         sourceType: 'radar',
         sourceData: {
@@ -233,6 +247,8 @@ export async function generateRadarTasks(
           dataAge: Math.floor((Date.now() - new Date(discovery.discovery_date).getTime()) / (24 * 60 * 60 * 1000)),
         },
         actionStatus: 'pending',
+        // Link to source viral discovery record for auto-article trigger
+        viral_discovery_id: discovery.id,
       });
     }
   }

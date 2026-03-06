@@ -787,25 +787,25 @@ function BrandDNAPanel({ brandId }: { brandId: string }) {
           <p className="text-[13px] font-bold" style={{ color: "var(--gv-color-primary-700)" }}>Brand Overview</p>
         </div>
         <div className="p-5 flex flex-col gap-3" style={{ background: "var(--gv-color-bg-surface)" }}>
-          {essence.brand_name && (
+          {!!essence.brand_name && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-1">Brand Name</p>
               <p className="text-[15px] font-bold text-[var(--gv-color-neutral-900)]">{essence.brand_name as string}</p>
             </div>
           )}
-          {essence.tagline && (
+          {!!essence.tagline && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-1">Tagline</p>
               <p className="text-[14px] italic text-[var(--gv-color-neutral-700)]">&ldquo;{essence.tagline as string}&rdquo;</p>
             </div>
           )}
-          {essence.mission && (
+          {!!essence.mission && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-1">Mission</p>
               <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed">{essence.mission as string}</p>
             </div>
           )}
-          {(essence.unique_value_prop || essence.unique_proposition) && (
+          {!!(essence.unique_value_prop || essence.unique_proposition) && (
             <div>
               <p className="text-[11px] font-bold uppercase tracking-widest text-[var(--gv-color-neutral-400)] mb-1">Unique Value Proposition</p>
               <p className="text-[13px] text-[var(--gv-color-neutral-700)] leading-relaxed">

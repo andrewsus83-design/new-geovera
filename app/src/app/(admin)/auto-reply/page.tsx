@@ -197,6 +197,101 @@ export default function AutoReplyPage() {
   const todayDateKey    = new Date().toISOString().slice(0, 10);
   const todayCount      = countByDate[todayDateKey] || 0;
 
+  const [sending, setSending] = useState(false);
+
+  /* ── Send AI reply (auto draft) ── */
+  const handleSendAI = useCallback(async () => {
+    if (!selectedComment || sending) return;
+    const replyText = selectedComment.ai_reply_draft || selectedComment.ai_suggestion;
+    if (!replyText) return;
+    setSending(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/social-auto-reply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token ?? ""}`,
+          },
+          body: JSON.stringify({
+            action: "send_single",
+            brand_id: DEMO_BRAND_ID,
+            queue_id: selectedComment.id,
+            reply_text: replyText,
+            source: selectedComment.source,
+          }),
+        }
+      );
+      if (res.ok) {
+        setComments(prev => prev.filter(c => c.id !== selectedComment.id));
+        setSelectedId(null);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        console.error("[auto-reply] Send AI failed:", err);
+      }
+    } finally {
+      setSending(false);
+    }
+  }, [selectedComment, sending]);
+
+  /* ── Send manual reply ── */
+  const handleSendManual = useCallback(async () => {
+    if (!selectedComment || !manualReply.trim() || sending) return;
+    setSending(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/social-auto-reply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.access_token ?? ""}`,
+          },
+          body: JSON.stringify({
+            action: "send_single",
+            brand_id: DEMO_BRAND_ID,
+            queue_id: selectedComment.id,
+            reply_text: manualReply.trim(),
+            source: selectedComment.source,
+          }),
+        }
+      );
+      if (res.ok) {
+        setManualReply("");
+        setComments(prev => prev.filter(c => c.id !== selectedComment.id));
+        setSelectedId(null);
+      }
+    } finally {
+      setSending(false);
+    }
+  }, [selectedComment, manualReply, sending]);
+
+  /* ── Skip (mark as skipped) ── */
+  const handleSkip = useCallback(async () => {
+    if (!selectedComment || sending) return;
+    setSending(true);
+    try {
+      if (selectedComment.source === "queue") {
+        await supabase
+          .from("gv_reply_queue")
+          .update({ status: "skipped", updated_at: new Date().toISOString() })
+          .eq("id", selectedComment.id);
+      } else {
+        await supabase
+          .from("gv_attention_queue")
+          .update({ is_resolved: true, resolved_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+          .eq("id", selectedComment.id);
+      }
+      setComments(prev => prev.filter(c => c.id !== selectedComment.id));
+      setSelectedId(null);
+    } finally {
+      setSending(false);
+    }
+  }, [selectedComment, sending]);
+
   /* ════════════════════════════════════════════════════════════
      LEFT COLUMN — NavColumn only (88px pill)
   ════════════════════════════════════════════════════════════ */
@@ -449,14 +544,15 @@ export default function AutoReplyPage() {
                       {manualReply.length}/280
                     </span>
                     <button
-                      disabled={!manualReply.trim()}
+                      disabled={!manualReply.trim() || sending}
+                      onClick={handleSendManual}
                       className="px-5 py-2 rounded-[12px] text-[13px] font-bold text-white transition-all"
                       style={{
-                        background: manualReply.trim() ? "var(--gv-color-primary-600)" : "var(--gv-color-neutral-200)",
-                        cursor: manualReply.trim() ? "pointer" : "not-allowed",
+                        background: manualReply.trim() && !sending ? "var(--gv-color-primary-600)" : "var(--gv-color-neutral-200)",
+                        cursor: manualReply.trim() && !sending ? "pointer" : "not-allowed",
                       }}
                     >
-                      Send Reply →
+                      {sending ? "Sending…" : "Send Reply →"}
                     </button>
                   </div>
                 </div>
@@ -481,17 +577,27 @@ export default function AutoReplyPage() {
                       </p>
                     </div>
                     <div className="flex gap-2 mt-3">
-                      <button className="flex-1 py-2.5 rounded-[12px] text-[13px] font-bold text-white transition-all hover:opacity-85"
-                        style={{ background: "var(--gv-color-primary-600)", boxShadow: "0 3px 10px rgba(61,107,104,0.25)" }}>
-                        ✓ Send AI Reply
+                      <button
+                        onClick={handleSendAI}
+                        disabled={sending}
+                        className="flex-1 py-2.5 rounded-[12px] text-[13px] font-bold text-white transition-all hover:opacity-85"
+                        style={{
+                          background: sending ? "var(--gv-color-neutral-300)" : "var(--gv-color-primary-600)",
+                          boxShadow: sending ? "none" : "0 3px 10px rgba(61,107,104,0.25)",
+                          cursor: sending ? "not-allowed" : "pointer",
+                        }}>
+                        {sending ? "Sending…" : "✓ Send AI Reply"}
                       </button>
                       <button className="px-4 py-2.5 rounded-[12px] text-[13px] font-semibold transition-all hover:opacity-80"
                         onClick={() => { setManualReply(selectedComment.ai_reply_draft || selectedComment.ai_suggestion || ""); setReplyMode("manual"); }}
                         style={{ background: "var(--gv-color-neutral-100)", color: "var(--gv-color-neutral-700)" }}>
                         Edit
                       </button>
-                      <button className="px-4 py-2.5 rounded-[12px] text-[13px] font-semibold transition-all hover:opacity-80"
-                        style={{ background: "#FEE2E2", color: "#DC2626" }}>
+                      <button
+                        onClick={handleSkip}
+                        disabled={sending}
+                        className="px-4 py-2.5 rounded-[12px] text-[13px] font-semibold transition-all hover:opacity-80"
+                        style={{ background: "#FEE2E2", color: "#DC2626", cursor: sending ? "not-allowed" : "pointer" }}>
                         Skip
                       </button>
                     </div>

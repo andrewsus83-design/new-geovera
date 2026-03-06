@@ -71,13 +71,13 @@ export async function POST(request: NextRequest) {
 
   if (!cycle) {
     // No active cycle — trigger fresh cycle instead
-    const fnRes = await fetch(`${SUPABASE_FUNCTIONS_URL}/intelligence-72h`, {
+    const fnRes = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-daily-insights`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ brand_id, tier, force: false }),
+      body: JSON.stringify({ brandId: brand_id, tier, forceRegenerate: false }),
     });
     const fnData = await fnRes.json().catch(() => ({}));
     return NextResponse.json({
@@ -118,15 +118,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to update cycle" }, { status: 500 });
   }
 
-  // Trigger intelligence-72h with force=true (skip existing cycle check)
-  // Lightweight: skip Firecrawl scraping for refresh (faster ~30s vs ~90s)
-  const fnRes = await fetch(`${SUPABASE_FUNCTIONS_URL}/intelligence-72h`, {
+  // Trigger generate-daily-insights with forceRegenerate=true (skip cache)
+  // Lightweight: faster ~30s refresh pass
+  const fnRes = await fetch(`${SUPABASE_FUNCTIONS_URL}/generate-daily-insights`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ brand_id, tier, force: true }),
+    body: JSON.stringify({ brandId: brand_id, tier, forceRegenerate: true }),
   });
 
   const fnData = await fnRes.json().catch(() => ({}));
