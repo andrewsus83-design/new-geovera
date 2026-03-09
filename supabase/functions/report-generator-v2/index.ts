@@ -54,6 +54,206 @@ interface Step3Output {
   };
 }
 
+// ─── Step 2a/2b: Firecrawl + Gemini enrichment types ─────────────────────────
+
+interface FirecrawlResult {
+  url: string;
+  markdown: string;
+  title: string | null;
+  description: string | null;
+}
+
+interface FirecrawlContext {
+  results: FirecrawlResult[];
+  combinedMarkdown: string;
+  urlsScraped: string[];
+  urlsFailed: string[];
+}
+
+interface GeminiEnrichedSummary {
+  brand_overview: string;
+  key_claims: string[];
+  product_details: string;
+  visual_identity_signals: string;
+  consumer_sentiment: string;
+  competitive_signals: string;
+  credibility_indicators: string[];
+  content_gaps: string[];
+  raw_enriched_text: string;
+}
+
+// Parse up to 3 scrapeable URLs from Step 0 Perplexity output
+function parseUrlsFromPerplexityOutput(
+  perplexityText: string,
+  step1Data: Step1Output
+): string[] {
+  const urls: Set<string> = new Set();
+  const SKIP_DOMAINS = ["instagram.com","tiktok.com","facebook.com","twitter.com","x.com","youtube.com"];
+
+  // 1. Brand website from Step 1 (highest confidence)
+  if (step1Data.official_website && step1Data.official_website !== "Not Found") {
+    try { new URL(step1Data.official_website); urls.add(step1Data.official_website); } catch { /* skip */ }
+  }
+
+  // 2. Backlinks in Step 0 output — "1. [Title] - [Source] - [URL]"
+  const backlinkPattern = /\d+\.\s+.+?-\s+.+?-\s+(https?:\/\/[^\s\n]+)/g;
+  let m: RegExpExecArray | null;
+  while ((m = backlinkPattern.exec(perplexityText)) !== null) {
+    try { new URL(m[1]); urls.add(m[1]); } catch { /* skip */ }
+  }
+
+  // 3. Bare https:// URLs in the text (fallback)
+  const bareUrlPattern = /https?:\/\/[^\s\n\]"')>]+/g;
+  while ((m = bareUrlPattern.exec(perplexityText)) !== null) {
+    const cleaned = m[0].replace(/[.,;:!?]+$/, "");
+    try {
+      const parsed = new URL(cleaned);
+      if (!SKIP_DOMAINS.includes(parsed.hostname.replace("www.", ""))) {
+        urls.add(cleaned);
+      }
+    } catch { /* skip */ }
+  }
+
+  // Prioritise brand website first, then others
+  const ordered = Array.from(urls);
+  const website = ordered.find(u => step1Data.official_website && u.startsWith(step1Data.official_website.replace(/\/$/, "")));
+  const rest = ordered.filter(u => u !== website);
+  return [website, ...rest].filter(Boolean).slice(0, 3) as string[];
+}
+
+// Step 2a: Firecrawl — scrape up to 3 URLs in parallel (15s timeout each)
+async function step2_firecrawl_scrape(urls: string[]): Promise<FirecrawlContext> {
+  const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
+  const FIRECRAWL_BASE    = "https://api.firecrawl.dev/v1";
+
+  if (!FIRECRAWL_API_KEY || urls.length === 0) {
+    console.log("[step2a_firecrawl] Skipping — no API key or no URLs");
+    return { results: [], combinedMarkdown: "", urlsScraped: [], urlsFailed: [] };
+  }
+
+  console.log(`[step2a_firecrawl] Scraping ${urls.length} URL(s): ${urls.join(", ")}`);
+
+  const scrapeOne = async (url: string): Promise<FirecrawlResult> => {
+    const res = await fetch(`${FIRECRAWL_BASE}/scrape`, {
+      method:  "POST",
+      headers: { "Authorization": `Bearer ${FIRECRAWL_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ url, formats: ["markdown"], onlyMainContent: true, timeout: 12000 }),
+      signal: AbortSignal.timeout(15000),
+    });
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Firecrawl HTTP ${res.status}: ${body.slice(0, 200)}`);
+    }
+
+    const data = await res.json();
+    if (!data.success) throw new Error(`Firecrawl error: ${data.error || JSON.stringify(data)}`);
+
+    return {
+      url,
+      markdown:    (data.data?.markdown || "").slice(0, 8000),
+      title:       data.data?.metadata?.title       || null,
+      description: data.data?.metadata?.description || null,
+    };
+  };
+
+  const settled = await Promise.allSettled(urls.map(u => scrapeOne(u)));
+  const results: FirecrawlResult[] = [];
+  const urlsScraped: string[] = [];
+  const urlsFailed:  string[] = [];
+
+  for (let i = 0; i < settled.length; i++) {
+    const outcome = settled[i];
+    if (outcome.status === "fulfilled") {
+      results.push(outcome.value);
+      urlsScraped.push(urls[i]);
+      console.log(`[step2a_firecrawl] OK: ${urls[i]} (${outcome.value.markdown.length} chars)`);
+    } else {
+      urlsFailed.push(urls[i]);
+      console.warn(`[step2a_firecrawl] FAILED: ${urls[i]} — ${(outcome as PromiseRejectedResult).reason?.message}`);
+    }
+  }
+
+  const combinedMarkdown = results
+    .map(r => `## SOURCE: ${r.url}\n${r.title ? `Title: ${r.title}\n` : ""}${r.markdown}`)
+    .join("\n\n---\n\n");
+
+  return { results, combinedMarkdown, urlsScraped, urlsFailed };
+}
+
+// Step 2b: Gemini — index combined Perplexity + Firecrawl into structured summary
+async function step2b_gemini_index(
+  brandName: string,
+  country: string,
+  perplexityResearch: string,
+  firecrawlContext: FirecrawlContext
+): Promise<GeminiEnrichedSummary> {
+  const GOOGLE_AI_API_KEY = Deno.env.get("GOOGLE_AI_API_KEY");
+
+  if (!GOOGLE_AI_API_KEY || firecrawlContext.results.length === 0) {
+    console.log("[step2b_gemini] Skipping enrichment — no API key or no Firecrawl data");
+    return {
+      brand_overview: "", key_claims: [], product_details: "",
+      visual_identity_signals: "", consumer_sentiment: "", competitive_signals: "",
+      credibility_indicators: [], content_gaps: [], raw_enriched_text: perplexityResearch,
+    };
+  }
+
+  const prompt = `You are a brand intelligence indexer. Synthesize two data sources for ${brandName} (${country}) into a structured JSON summary.
+
+=== SOURCE 1: PERPLEXITY SURFACE RESEARCH ===
+${perplexityResearch.slice(0, 4000)}
+
+=== SOURCE 2: FIRECRAWL WEB SCRAPE (${firecrawlContext.urlsScraped.length} pages) ===
+${firecrawlContext.combinedMarkdown.slice(0, 6000)}
+
+Return ONLY valid JSON:
+{
+  "brand_overview": "<2-3 sentence synthesized overview>",
+  "key_claims": ["<verified claim from scraped content>"],
+  "product_details": "<specific product names, SKUs, pricing tiers, packaging details>",
+  "visual_identity_signals": "<colors, fonts, imagery style, logo description>",
+  "consumer_sentiment": "<aggregated sentiment from reviews, testimonials, social mentions>",
+  "competitive_signals": "<competitors mentioned, positioning vs competitors>",
+  "credibility_indicators": ["<cert/award/trust signal>"],
+  "content_gaps": ["<topic the brand website lacks that competitors likely cover>"],
+  "raw_enriched_text": "<300-word narrative combining the best insights from both sources>"
+}`;
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key=${GOOGLE_AI_API_KEY}`,
+      {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0.1, maxOutputTokens: 2048 },
+        }),
+        signal: AbortSignal.timeout(20000),
+      }
+    );
+
+    if (!res.ok) throw new Error(`Gemini HTTP ${res.status}`);
+
+    const data   = await res.json();
+    const raw    = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!raw) throw new Error("Empty Gemini response");
+
+    const parsed: GeminiEnrichedSummary = JSON.parse(raw);
+    console.log(`[step2b_gemini] Indexed ${firecrawlContext.urlsScraped.length} pages into enriched summary`);
+    return parsed;
+
+  } catch (err) {
+    console.warn(`[step2b_gemini] Error: ${(err as Error).message} — falling back to raw Perplexity text`);
+    return {
+      brand_overview: "", key_claims: [], product_details: "",
+      visual_identity_signals: "", consumer_sentiment: "", competitive_signals: "",
+      credibility_indicators: [], content_gaps: [], raw_enriched_text: perplexityResearch,
+    };
+  }
+}
+
 // NEW STEP 0: Perplexity Deep Research FIRST
 async function step0_perplexity_discovery(brandName: string, country: string): Promise<string> {
   const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY')!;
@@ -251,12 +451,21 @@ IMPORTANT: Return ONLY valid JSON, no markdown formatting, no explanations.`
   return JSON.parse(jsonText);
 }
 
-async function step2_perplexity(brandName: string, geminiData: Step1Output): Promise<string> {
+async function step2_perplexity(
+  brandName: string,
+  geminiData: Step1Output,
+  firecrawlContext?: FirecrawlContext
+): Promise<string> {
   const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY')!;
+
+  // Inject Firecrawl scraped content to enrich Perplexity's search context
+  const firecrawlEnrichment = (firecrawlContext && firecrawlContext.results.length > 0)
+    ? `\n\nADDITIONAL CONTEXT FROM SCRAPED BRAND PAGES (${firecrawlContext.urlsScraped.length} URLs scraped):\n${firecrawlContext.combinedMarkdown.slice(0, 3000)}\n\nUse the above first-hand scraped content to enrich your research with accurate data from the brand's own website. Cross-reference with your live search findings.`
+    : "";
 
   const prompt = `Conduct comprehensive deep research on ${brandName} brand. Use the following indexed data as starting point:
 
-${JSON.stringify(geminiData, null, 2)}
+${JSON.stringify(geminiData, null, 2)}${firecrawlEnrichment}
 
 Perform deep research covering:
 
@@ -375,15 +584,24 @@ Provide comprehensive research with specific data points, real consumer quotes, 
   return data.choices[0].message.content;
 }
 
-async function step3_claude(brandName: string, perplexityResearch: string): Promise<Step3Output> {
+async function step3_claude(
+  brandName: string,
+  perplexityResearch: string,
+  enrichedSummary?: GeminiEnrichedSummary
+): Promise<Step3Output> {
   const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
+
+  // Inject Gemini-indexed enrichment when available
+  const enrichmentBlock = (enrichedSummary && enrichedSummary.raw_enriched_text !== perplexityResearch && enrichedSummary.brand_overview)
+    ? `\n\n**ENRICHED INTELLIGENCE (Gemini-indexed from scraped brand pages)**:\nOverview: ${enrichedSummary.brand_overview}\nProduct details: ${enrichedSummary.product_details}\nVisual identity: ${enrichedSummary.visual_identity_signals}\nConsumer sentiment: ${enrichedSummary.consumer_sentiment}\nCompetitor signals: ${enrichedSummary.competitive_signals}\nCredibility: ${enrichedSummary.credibility_indicators.join(", ")}\nContent gaps: ${enrichedSummary.content_gaps.join(", ")}`
+    : "";
 
   const prompt = `You are a strategic brand analyst using reverse engineering methodology to extract deep insights.
 
 **Brand**: ${brandName}
 
 **Deep Research Data**:
-${perplexityResearch}
+${perplexityResearch}${enrichmentBlock}
 
 **Your Task**: Perform reverse engineering analysis to extract:
 
@@ -1476,14 +1694,25 @@ Deno.serve(async (req) => {
     const step1Data = await step1_gemini(brand_name, country, step0Data);
     console.log('✅ Step 1 Complete\n');
 
-    // Step 2: Perplexity Deep Research
-    console.log('🔍 Step 2: Perplexity Deep Market Research...');
-    const step2Data = await step2_perplexity(brand_name, step1Data);
+    // Step 2a: Firecrawl — scrape brand website + top backlinks in parallel
+    console.log('🕷️ Step 2a: Firecrawl URL scraping...');
+    const urlsToScrape = parseUrlsFromPerplexityOutput(step0Data, step1Data);
+    const firecrawlCtx = await step2_firecrawl_scrape(urlsToScrape);
+    console.log(`✅ Step 2a Complete — scraped: ${firecrawlCtx.urlsScraped.length}, failed: ${firecrawlCtx.urlsFailed.length}\n`);
+
+    // Step 2: Perplexity Surface Research (now Firecrawl-enriched)
+    console.log('🔍 Step 2: Perplexity Deep Market Research (Firecrawl-enriched)...');
+    const step2Data = await step2_perplexity(brand_name, step1Data, firecrawlCtx);
     console.log('✅ Step 2 Complete\n');
 
-    // Step 3: Claude Reverse Engineering
+    // Step 2b: Gemini index combined Perplexity + Firecrawl into structured summary
+    console.log('🧬 Step 2b: Gemini Enrichment Indexing...');
+    const enrichedSummary = await step2b_gemini_index(brand_name, country, step2Data, firecrawlCtx);
+    console.log('✅ Step 2b Complete\n');
+
+    // Step 3: Claude Reverse Engineering (enrichment-aware)
     console.log('🧠 Step 3: Claude Strategic Analysis...');
-    const step3Data = await step3_claude(brand_name, step2Data);
+    const step3Data = await step3_claude(brand_name, step2Data, enrichedSummary);
     console.log('✅ Step 3 Complete\n');
 
     // Step 4: OpenAI Compelling Report

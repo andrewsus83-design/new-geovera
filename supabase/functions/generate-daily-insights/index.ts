@@ -17,6 +17,50 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
+// ─── Auto-article trigger helpers ─────────────────────────────────────────────
+
+// A task qualifies for auto-draft when it's a trend/content radar task with high score
+function isAutoArticleEligible(task: InsightTask): boolean {
+  return (
+    (task.category === "trend_opportunity" || task.category === "content_creation") &&
+    task.sourceType === "radar" &&
+    task.priorityScore >= 70
+  );
+}
+
+// Fire-and-forget: trigger generate-article for a qualifying task.
+// Errors are swallowed so article generation failures never block the insights response.
+function triggerAutoDraft(
+  supabaseUrl: string,
+  serviceKey: string,
+  brandId: string,
+  task: InsightTask
+): void {
+  const body = JSON.stringify({
+    brand_id: brandId,
+    topic: task.title,
+    task_id: task.id ?? null,
+    trend_id: task.parameters?.trendId ?? task.trend_id ?? null,
+    viral_discovery_id: task.parameters?.discoveryId ?? task.viral_discovery_id ?? null,
+    keywords: task.parameters?.keywords ?? [],
+    target_platforms: ["linkedin", "website"],
+    mode: "auto_draft",
+  });
+
+  fetch(`${supabaseUrl}/functions/v1/generate-article`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${serviceKey}`,
+      // Sentinel header: generate-article checks this to bypass auth/quota
+      "X-Service-Call": "true",
+    },
+    body,
+  }).catch((err) => {
+    console.error(`[Insights] Auto-draft trigger failed for task "${task.title}":`, err);
+  });
+}
+
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -201,6 +245,16 @@ Deno.serve(async (req: Request) => {
     }
 
     console.log(`[Insights] Successfully saved insights to database`);
+
+    // Step 11: Fire-and-forget auto article drafts for eligible tasks.
+    // Runs AFTER successful DB insert — article failures never block the insights response.
+    const eligibleForAutoDraft = selectedTasks.filter(isAutoArticleEligible);
+    if (eligibleForAutoDraft.length > 0) {
+      console.log(`[Insights] Triggering auto-drafts for ${eligibleForAutoDraft.length} task(s)`);
+      for (const task of eligibleForAutoDraft) {
+        triggerAutoDraft(supabaseUrl, supabaseServiceKey, brandId, task);
+      }
+    }
 
     // Return response
     const response: GenerateInsightsResponse = {

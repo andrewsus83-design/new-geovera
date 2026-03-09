@@ -387,9 +387,9 @@ const scores = {
 
 // ── Helpers ──────────────────────────────────────────────────────
 function TrendBadge({ trend, pct }: { trend: "up" | "down" | "flat"; pct: number }) {
-  if (trend === "up") return <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-green-600 dark:text-green-400">↑ {pct}%</span>;
-  if (trend === "down") return <span className="inline-flex items-center gap-0.5 text-[10px] font-medium text-red-500 dark:text-red-400">↓ {pct}%</span>;
-  return <span className="text-[10px] font-medium text-gray-400">→ {pct}%</span>;
+  if (trend === "up") return <span className="inline-flex items-center gap-0.5 text-[10px] font-medium" style={{ color: "#16A34A" }}>↑ {pct}%</span>;
+  if (trend === "down") return <span className="inline-flex items-center gap-0.5 text-[10px] font-medium" style={{ color: "#DC2626" }}>↓ {pct}%</span>;
+  return <span className="text-[10px] font-medium" style={{ color: "var(--gv-color-neutral-400)" }}>→ {pct}%</span>;
 }
 
 function formatNum(n: number) {
@@ -400,7 +400,7 @@ function formatNum(n: number) {
 function SectionHeader({ label }: { label: string }) {
   return (
     <div className="mb-2 px-2">
-      <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">{label}</span>
+      <span className="text-[11px] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>{label}</span>
     </div>
   );
 }
@@ -618,16 +618,16 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
       return (
         <div className="flex flex-col h-full p-4">
           <div className="mb-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">AI Platforms Tracked</p>
-            <p className="text-xs text-gray-400">Pilih faktor GEO untuk melihat detail analisa</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] mb-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>AI Platforms Tracked</p>
+            <p className="text-[11px]" style={{ color: "var(--gv-color-neutral-400)" }}>Pilih faktor GEO untuk melihat detail analisa</p>
           </div>
           <div className="grid grid-cols-2 gap-2">
             {trackedPlatforms.map((p) => (
-              <div key={p.name} className="rounded-xl border border-gray-200 dark:border-gray-800 p-3 flex items-center gap-3">
+              <div key={p.name} className="rounded-[14px] p-3 flex items-center gap-3" style={{ border: "1px solid var(--gv-color-neutral-100)" }}>
                 <span className="text-2xl flex-shrink-0">{p.icon}</span>
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{p.name}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5 truncate">{p.desc}</p>
+                  <p className="text-[13px] font-semibold leading-tight" style={{ color: "var(--gv-color-neutral-900)" }}>{p.name}</p>
+                  <p className="text-[10px] mt-0.5 truncate" style={{ color: "var(--gv-color-neutral-400)" }}>{p.desc}</p>
                 </div>
               </div>
             ))}
@@ -639,13 +639,13 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
     return (
       <div className="flex h-full items-center justify-center p-8">
         <div className="text-center">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-400">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full" style={{ background: "var(--gv-color-neutral-100)" }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gv-color-neutral-400)" strokeWidth="1.5">
               <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Select {sectionLabel}</p>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">Click any item in the center panel</p>
+          <p className="text-[13px] font-semibold" style={{ color: "var(--gv-color-neutral-500)" }}>Select {sectionLabel}</p>
+          <p className="mt-1 text-[11px]" style={{ color: "var(--gv-color-neutral-400)" }}>Click any item in the center panel</p>
         </div>
       </div>
     );
@@ -654,49 +654,49 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
   // SEO Factor detail
   if (selected.type === "seo-factor") {
     const f = selected.item;
-    const barColor = f.status === "good" ? "bg-green-500" : f.status === "warn" ? "bg-orange-400" : "bg-red-400";
-    const scoreColor = f.status === "good" ? "text-green-600 dark:text-green-400" : f.status === "warn" ? "text-orange-500 dark:text-orange-400" : "text-red-500 dark:text-red-400";
-    const badgeColor = f.status === "good" ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400" : f.status === "warn" ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400" : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400";
+    const statusFill = f.status === "good" ? "#16A34A" : f.status === "warn" ? "#D97706" : "#DC2626";
+    const scoreStyle = { color: statusFill };
+    const badgeStyle = f.status === "good" ? { background: "#DCFCE7", color: "#16A34A" } : f.status === "warn" ? { background: "#FEF3C7", color: "#D97706" } : { background: "#FEE2E2", color: "#DC2626" };
     const badgeLabel = f.status === "good" ? "Good" : f.status === "warn" ? "Needs Work" : "Low — Prioritas";
     return (
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{f.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Faktor #{f.rank}</p>
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug" style={{ fontFamily: "Georgia, serif" }}>{f.label}</h3>
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>Faktor #{f.rank}</p>
+              <h3 className="text-[15px] font-bold leading-snug" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>{f.label}</h3>
             </div>
-            <span className={`text-2xl font-bold ${scoreColor}`}>{f.score}</span>
+            <span className="text-2xl font-bold" style={scoreStyle}>{f.score}</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 mb-2">
-            <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${f.score}%` }} />
+          <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }} className="mb-2">
+            <div style={{ height: 6, borderRadius: 99, background: statusFill, width: `${f.score}%`, transition: "width 0.3s" }} />
           </div>
-          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badgeColor}`}>{badgeLabel}</span>
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" style={badgeStyle}>{badgeLabel}</span>
         </div>
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
           {/* NOW */}
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">Kondisi Saat Ini</h4>
-            <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed mb-1">{f.tip}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{f.detail}</p>
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>Kondisi Saat Ini</h4>
+            <p className="text-sm font-medium leading-relaxed mb-1" style={{ color: "var(--gv-color-neutral-900)" }}>{f.tip}</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-600)" }}>{f.detail}</p>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           {/* SUGGESTED */}
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Suggested Actions</h4>
+            <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Suggested Actions</h4>
             <div className="space-y-2">
               {f.actions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5">
-                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-brand-100 dark:bg-brand-500/20 flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400">{i + 1}</span>
+                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full flex items-center justify-center" style={{ background: "var(--gv-color-primary-100)" }}>
+                    <span className="text-[10px] font-bold" style={{ color: "var(--gv-color-primary-600)" }}>{i + 1}</span>
                   </span>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{action}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>{action}</p>
                 </div>
               ))}
             </div>
@@ -709,22 +709,22 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
             const suggested = f.keywords.filter((k) => k.status === "suggested");
             return (
               <>
-                <div className="h-px bg-gray-100 dark:bg-gray-800" />
+                <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
                 <div className="space-y-3">
                   {optimized.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5 flex items-center gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-green-500 flex-shrink-0" />
+                      <h4 className="text-xs font-medium uppercase mb-1.5 flex items-center gap-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>
+                        <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ background: "#16A34A" }} />
                         Keywords Optimized
-                        <span className="ml-auto normal-case font-normal text-green-600 dark:text-green-400">{optimized.length} keywords</span>
+                        <span className="ml-auto normal-case font-normal" style={{ color: "#16A34A" }}>{optimized.length} keywords</span>
                       </h4>
-                      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                      <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                         {optimized.map((k, i) => (
                           <div key={i} className="flex items-center justify-between gap-2 py-1.5">
-                            <p className="text-sm text-gray-800 dark:text-gray-200 truncate flex-1">{k.keyword}</p>
+                            <p className="text-sm truncate flex-1" style={{ color: "var(--gv-color-neutral-800)" }}>{k.keyword}</p>
                             <div className="flex items-center gap-3 flex-shrink-0">
-                              <span className="text-sm font-semibold text-green-600 dark:text-green-400">#{k.position}</span>
-                              <span className="text-xs text-gray-400">{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
+                              <span className="text-sm font-semibold" style={{ color: "#16A34A" }}>#{k.position}</span>
+                              <span className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
                             </div>
                           </div>
                         ))}
@@ -733,18 +733,18 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                   )}
                   {monitored.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5 flex items-center gap-1.5">
-                        <span className="h-2 w-2 rounded-full bg-orange-400 flex-shrink-0" />
+                      <h4 className="text-xs font-medium uppercase mb-1.5 flex items-center gap-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>
+                        <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ background: "#D97706" }} />
                         Keywords Monitored
-                        <span className="ml-auto normal-case font-normal text-orange-500 dark:text-orange-400">{monitored.length} keywords</span>
+                        <span className="ml-auto normal-case font-normal" style={{ color: "#D97706" }}>{monitored.length} keywords</span>
                       </h4>
-                      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                      <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                         {monitored.map((k, i) => (
                           <div key={i} className="flex items-center justify-between gap-2 py-1.5">
-                            <p className="text-sm text-gray-800 dark:text-gray-200 truncate flex-1">{k.keyword}</p>
+                            <p className="text-sm truncate flex-1" style={{ color: "var(--gv-color-neutral-800)" }}>{k.keyword}</p>
                             <div className="flex items-center gap-3 flex-shrink-0">
-                              <span className="text-sm font-semibold text-orange-500 dark:text-orange-400">#{k.position}</span>
-                              <span className="text-xs text-gray-400">{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
+                              <span className="text-sm font-semibold" style={{ color: "#D97706" }}>#{k.position}</span>
+                              <span className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
                             </div>
                           </div>
                         ))}
@@ -753,18 +753,18 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                   )}
                   {suggested.length > 0 && (
                     <div>
-                      <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5 flex items-center gap-1.5">
+                      <h4 className="text-xs font-medium uppercase mb-1.5 flex items-center gap-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>
                         <span className="h-2 w-2 rounded-full bg-blue-400 flex-shrink-0" />
                         Suggested Keywords
-                        <span className="ml-auto normal-case font-normal text-blue-500 dark:text-blue-400">{suggested.length} keywords</span>
+                        <span className="ml-auto normal-case font-normal text-blue-500">{suggested.length} keywords</span>
                       </h4>
-                      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                      <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                         {suggested.map((k, i) => (
                           <div key={i} className="flex items-center justify-between gap-2 py-1.5">
-                            <p className="text-sm text-gray-800 dark:text-gray-200 truncate flex-1">{k.keyword}</p>
+                            <p className="text-sm truncate flex-1" style={{ color: "var(--gv-color-neutral-800)" }}>{k.keyword}</p>
                             <div className="flex items-center gap-2 flex-shrink-0">
-                              <span className="text-xs text-gray-400">{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
-                              <span className="text-[10px] font-medium text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-1.5 py-0.5 rounded-full">Belum ranking</span>
+                              <span className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{k.volume >= 1000 ? `${(k.volume / 1000).toFixed(1)}K` : k.volume}/mo</span>
+                              <span className="text-[10px] font-medium text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-full">Belum ranking</span>
                             </div>
                           </div>
                         ))}
@@ -779,36 +779,36 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
           {/* BACKLINKS — only for backlinks factor */}
           {f.backlinks && f.backlinks.length > 0 && (
             <>
-              <div className="h-px bg-gray-100 dark:bg-gray-800" />
+              <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
               <div>
-                <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5 flex items-center gap-2">
+                <h4 className="text-xs font-medium uppercase mb-1.5 flex items-center gap-2" style={{ color: "var(--gv-color-neutral-400)" }}>
                   Top 10 Highest Authority Backlinks
-                  <span className="ml-auto normal-case text-[10px] font-normal text-gray-400">{f.backlinks.length} domains</span>
+                  <span className="ml-auto normal-case text-[10px] font-normal" style={{ color: "var(--gv-color-neutral-400)" }}>{f.backlinks.length} domains</span>
                 </h4>
-                <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                   {f.backlinks
                     .slice()
                     .sort((a, b) => b.da - a.da)
                     .map((bl, i) => {
-                      const typeColor = bl.type === "editorial"
-                        ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
+                      const typeStyle = bl.type === "editorial"
+                        ? { background: "#DCFCE7", color: "#16A34A" }
                         : bl.type === "guest"
-                        ? "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400"
+                        ? { background: "#EFF6FF", color: "#1D4ED8" }
                         : bl.type === "directory"
-                        ? "bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400"
-                        : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
-                      const daColor = bl.da >= 85 ? "text-green-600 dark:text-green-400" : bl.da >= 70 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+                        ? { background: "#F5F3FF", color: "#7C3AED" }
+                        : { background: "var(--gv-color-neutral-100)", color: "var(--gv-color-neutral-600)" };
+                      const daColor = bl.da >= 85 ? "#16A34A" : bl.da >= 70 ? "var(--gv-color-primary-600)" : "#D97706";
                       return (
                         <div key={i} className="flex items-center gap-2 py-2">
-                          <span className="text-xs font-bold text-gray-300 dark:text-gray-600 w-4 flex-shrink-0 text-right">{i + 1}</span>
+                          <span className="text-xs font-bold w-4 flex-shrink-0 text-right" style={{ color: "var(--gv-color-neutral-300)" }}>{i + 1}</span>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">{bl.domain}</p>
-                            <p className="text-xs text-gray-400 truncate">{bl.anchorText}</p>
+                            <p className="text-sm font-medium truncate" style={{ color: "var(--gv-color-neutral-800)" }}>{bl.domain}</p>
+                            <p className="text-xs truncate" style={{ color: "var(--gv-color-neutral-400)" }}>{bl.anchorText}</p>
                           </div>
                           <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${typeColor}`}>{bl.type}</span>
-                            <span className={`text-sm font-bold ${daColor}`}>DA{bl.da}</span>
-                            {!bl.doFollow && <span className="text-[9px] text-gray-400 font-medium">nofollow</span>}
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium" style={typeStyle}>{bl.type}</span>
+                            <span className="text-sm font-bold" style={{ color: daColor }}>DA{bl.da}</span>
+                            {!bl.doFollow && <span className="text-[9px] font-medium" style={{ color: "var(--gv-color-neutral-400)" }}>nofollow</span>}
                           </div>
                         </div>
                       );
@@ -821,19 +821,19 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
           {/* LIVE PAGESPEED — only for Page Speed factor (rank 5) */}
           {isPageSpeedFactor && (
             <>
-              <div className="h-px bg-gray-100 dark:bg-gray-800" />
+              <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
               <div>
-                <h4 className="text-xs font-medium uppercase text-gray-400 mb-3 flex items-center gap-2">
+                <h4 className="text-xs font-medium uppercase mb-3 flex items-center gap-2" style={{ color: "var(--gv-color-neutral-400)" }}>
                   Live Core Web Vitals
                   <span className="ml-auto flex items-center gap-1 normal-case">
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] font-medium text-green-600 dark:text-green-400">Real-time</span>
+                    <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ background: "#16A34A" }} />
+                    <span className="text-[10px] font-medium" style={{ color: "#16A34A" }}>Real-time</span>
                   </span>
                 </h4>
                 {psLoading ? (
                   <div className="flex items-center justify-center py-8 gap-2">
-                    <div className="h-4 w-4 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
-                    <span className="text-sm text-gray-400">Mengambil data live...</span>
+                    <div className="h-4 w-4 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "var(--gv-color-primary-500)", borderTopColor: "transparent" }} />
+                    <span className="text-sm" style={{ color: "var(--gv-color-neutral-400)" }}>Mengambil data live...</span>
                   </div>
                 ) : psData.mobile ? (
                   <div className="space-y-4">
@@ -843,15 +843,15 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                         { label: "Mobile", icon: "📱", score: psData.mobile.scores.performance ?? 0 },
                         { label: "Desktop", icon: "🖥️", score: psData.desktop?.scores.performance ?? 0 },
                       ].map(({ label, icon, score }) => {
-                        const sc = score >= 90 ? "text-green-600 dark:text-green-400" : score >= 50 ? "text-orange-500 dark:text-orange-400" : "text-red-500 dark:text-red-400";
-                        const bc = score >= 90 ? "bg-green-500" : score >= 50 ? "bg-orange-400" : "bg-red-400";
+                        const scColor = score >= 90 ? "#16A34A" : score >= 50 ? "#D97706" : "#DC2626";
+                        const bcFill = score >= 90 ? "#16A34A" : score >= 50 ? "#D97706" : "#DC2626";
                         return (
-                          <div key={label} className="rounded-xl border border-gray-100 dark:border-gray-800 p-3 text-center">
+                          <div key={label} className="rounded-[14px] p-3 text-center" style={{ border: "1px solid var(--gv-color-neutral-100)" }}>
                             <p className="text-sm mb-1">{icon}</p>
-                            <p className={`text-2xl font-bold ${sc}`}>{score}</p>
-                            <p className="text-[10px] text-gray-400 mb-2">{label}</p>
-                            <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                              <div className={`h-1.5 rounded-full ${bc}`} style={{ width: `${score}%` }} />
+                            <p className="text-2xl font-bold" style={{ color: scColor }}>{score}</p>
+                            <p className="text-[10px] mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>{label}</p>
+                            <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }}>
+                              <div style={{ height: 6, borderRadius: 99, background: bcFill, width: `${score}%` }} />
                             </div>
                           </div>
                         );
@@ -859,31 +859,31 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                     </div>
                     {/* Mobile CWV metrics */}
                     <div>
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2">Core Web Vitals — Mobile</p>
-                      <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                      <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Core Web Vitals — Mobile</p>
+                      <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                         {Object.entries(psData.mobile.metrics).map(([key, m]) => {
                           const s = m.score ?? 0;
-                          const dot = s >= 0.9 ? "bg-green-500" : s >= 0.5 ? "bg-orange-400" : "bg-red-400";
+                          const dotFill = s >= 0.9 ? "#16A34A" : s >= 0.5 ? "#D97706" : "#DC2626";
                           return (
                             <div key={key} className="flex items-center justify-between py-2 gap-2">
                               <div className="flex items-center gap-2 min-w-0 flex-1">
-                                <span className={`h-2 w-2 rounded-full flex-shrink-0 ${dot}`} />
-                                <p className="text-xs text-gray-700 dark:text-gray-300 truncate">{m.title}</p>
+                                <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ background: dotFill }} />
+                                <p className="text-xs truncate" style={{ color: "var(--gv-color-neutral-700)" }}>{m.title}</p>
                               </div>
-                              <p className="text-xs font-semibold text-gray-900 dark:text-white flex-shrink-0">{m.displayValue}</p>
+                              <p className="text-xs font-semibold flex-shrink-0" style={{ color: "var(--gv-color-neutral-900)" }}>{m.displayValue}</p>
                             </div>
                           );
                         })}
                       </div>
                     </div>
                     {psData.mobile.fetchTime && (
-                      <p className="text-[10px] text-gray-400 text-right">
+                      <p className="text-[10px] text-right" style={{ color: "var(--gv-color-neutral-400)" }}>
                         Diambil: {new Date(psData.mobile.fetchTime).toLocaleTimeString("id-ID")}
                       </p>
                     )}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-400 text-center py-4">Gagal mengambil data. Coba lagi nanti.</p>
+                  <p className="text-sm text-center py-4" style={{ color: "var(--gv-color-neutral-400)" }}>Gagal mengambil data. Coba lagi nanti.</p>
                 )}
               </div>
             </>
@@ -892,27 +892,27 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
           {/* TECH ISSUES — only for struktur teknis factor */}
           {f.techIssues && f.techIssues.length > 0 && (
             <>
-              <div className="h-px bg-gray-100 dark:bg-gray-800" />
+              <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
               <div>
-                <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5 flex items-center gap-2">
+                <h4 className="text-xs font-medium uppercase mb-1.5 flex items-center gap-2" style={{ color: "var(--gv-color-neutral-400)" }}>
                   Technical Checks
                   <div className="ml-auto flex items-center gap-1.5 normal-case">
-                    <span className="text-[10px] font-medium text-green-600 dark:text-green-400">✓ {f.techIssues.filter((t) => t.severity === "ok").length}</span>
-                    {f.techIssues.filter((t) => t.severity === "warn").length > 0 && <span className="text-[10px] font-medium text-orange-500 dark:text-orange-400">⚠ {f.techIssues.filter((t) => t.severity === "warn").length}</span>}
-                    {f.techIssues.filter((t) => t.severity === "error").length > 0 && <span className="text-[10px] font-medium text-red-500 dark:text-red-400">✕ {f.techIssues.filter((t) => t.severity === "error").length}</span>}
+                    <span className="text-[10px] font-medium" style={{ color: "#16A34A" }}>✓ {f.techIssues.filter((t) => t.severity === "ok").length}</span>
+                    {f.techIssues.filter((t) => t.severity === "warn").length > 0 && <span className="text-[10px] font-medium" style={{ color: "#D97706" }}>⚠ {f.techIssues.filter((t) => t.severity === "warn").length}</span>}
+                    {f.techIssues.filter((t) => t.severity === "error").length > 0 && <span className="text-[10px] font-medium" style={{ color: "#DC2626" }}>✕ {f.techIssues.filter((t) => t.severity === "error").length}</span>}
                   </div>
                 </h4>
-                <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
                   {f.techIssues.map((issue, i) => (
                     <div key={i} className="flex items-start gap-3 py-2">
-                      <span className={`flex-shrink-0 mt-0.5 font-semibold ${issue.severity === "ok" ? "text-green-500" : issue.severity === "warn" ? "text-orange-400" : "text-red-500"}`}>
+                      <span className="flex-shrink-0 mt-0.5 font-semibold" style={{ color: issue.severity === "ok" ? "#16A34A" : issue.severity === "warn" ? "#D97706" : "#DC2626" }}>
                         {issue.severity === "ok" ? "✓" : issue.severity === "warn" ? "⚠" : "✕"}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className={`text-sm font-medium leading-tight mb-0.5 ${issue.severity === "ok" ? "text-green-700 dark:text-green-300" : issue.severity === "warn" ? "text-orange-600 dark:text-orange-300" : "text-red-600 dark:text-red-300"}`}>
+                        <p className="text-sm font-medium leading-tight mb-0.5" style={{ color: issue.severity === "ok" ? "#16A34A" : issue.severity === "warn" ? "#D97706" : "#DC2626" }}>
                           {issue.label}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{issue.detail}</p>
+                        <p className="text-xs leading-relaxed" style={{ color: "var(--gv-color-neutral-500)" }}>{issue.detail}</p>
                       </div>
                     </div>
                   ))}
@@ -928,42 +928,41 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
   // GEO Factor detail
   if (selected.type === "geo-factor") {
     const f = selected.item;
-    const barColor = f.status === "good" ? "bg-green-500" : f.status === "warn" ? "bg-orange-400" : "bg-red-400";
-    const scoreColor = f.status === "good" ? "text-green-600 dark:text-green-400" : f.status === "warn" ? "text-orange-500 dark:text-orange-400" : "text-red-500 dark:text-red-400";
-    const badgeColor = f.status === "good" ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400" : f.status === "warn" ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400" : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400";
+    const statusFill = f.status === "good" ? "#16A34A" : f.status === "warn" ? "#D97706" : "#DC2626";
+    const badgeStyle = f.status === "good" ? { background: "#DCFCE7", color: "#16A34A" } : f.status === "warn" ? { background: "#FEF3C7", color: "#D97706" } : { background: "#FEE2E2", color: "#DC2626" };
     const badgeLabel = f.status === "good" ? "Good" : f.status === "warn" ? "Needs Work" : "Low — Prioritas";
     return (
       <div className="flex flex-col h-full">
-        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{f.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">GEO Faktor #{f.rank}</p>
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug" style={{ fontFamily: "Georgia, serif" }}>{f.label}</h3>
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>GEO Faktor #{f.rank}</p>
+              <h3 className="text-[15px] font-bold leading-snug" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>{f.label}</h3>
             </div>
-            <span className={`text-2xl font-bold ${scoreColor}`}>{f.score}</span>
+            <span className="text-2xl font-bold" style={{ color: statusFill }}>{f.score}</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 mb-2">
-            <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${f.score}%` }} />
+          <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }} className="mb-2">
+            <div style={{ height: 6, borderRadius: 99, background: statusFill, width: `${f.score}%`, transition: "width 0.3s" }} />
           </div>
-          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badgeColor}`}>{badgeLabel}</span>
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" style={badgeStyle}>{badgeLabel}</span>
         </div>
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">Kondisi Saat Ini</h4>
-            <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed mb-1">{f.tip}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{f.detail}</p>
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>Kondisi Saat Ini</h4>
+            <p className="text-sm font-medium leading-relaxed mb-1" style={{ color: "var(--gv-color-neutral-900)" }}>{f.tip}</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-600)" }}>{f.detail}</p>
           </div>
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Suggested Actions</h4>
+            <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Suggested Actions</h4>
             <div className="space-y-2">
               {f.actions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5">
-                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-brand-100 dark:bg-brand-500/20 flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400">{i + 1}</span>
+                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full flex items-center justify-center" style={{ background: "var(--gv-color-primary-100)" }}>
+                    <span className="text-[10px] font-bold" style={{ color: "var(--gv-color-primary-600)" }}>{i + 1}</span>
                   </span>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{action}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>{action}</p>
                 </div>
               ))}
             </div>
@@ -972,31 +971,31 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
           {/* PLATFORM SCORES — per AI engine */}
           {f.platforms && f.platforms.length > 0 && (
             <>
-              <div className="h-px bg-gray-100 dark:bg-gray-800" />
+              <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
               <div>
-                <h4 className="text-xs font-medium uppercase text-gray-400 mb-3">Score per AI Platform</h4>
+                <h4 className="text-xs font-medium uppercase mb-3" style={{ color: "var(--gv-color-neutral-400)" }}>Score per AI Platform</h4>
                 <div className="space-y-4">
                   {f.platforms.map((p) => {
-                    const pBarColor = p.score >= 70 ? "bg-green-500" : p.score >= 50 ? "bg-brand-500" : "bg-orange-400";
-                    const pScoreColor = p.score >= 70 ? "text-green-600 dark:text-green-400" : p.score >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+                    const pFill = p.score >= 70 ? "#16A34A" : p.score >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
+                    const pScoreColor = p.score >= 70 ? "#16A34A" : p.score >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
                     return (
-                      <div key={p.engine} className="rounded-xl border border-gray-100 dark:border-gray-800 p-3 space-y-2">
+                      <div key={p.engine} className="rounded-[14px] p-3 space-y-2" style={{ border: "1px solid var(--gv-color-neutral-100)" }}>
                         {/* Engine header + score */}
                         <div className="flex items-center gap-2">
                           <span className="text-base leading-none">{p.icon}</span>
-                          <span className="text-sm font-semibold text-gray-900 dark:text-white flex-1">{p.engine}</span>
-                          <span className={`text-lg font-bold ${pScoreColor}`}>{p.score}</span>
+                          <span className="text-sm font-semibold flex-1" style={{ color: "var(--gv-color-neutral-900)" }}>{p.engine}</span>
+                          <span className="text-lg font-bold" style={{ color: pScoreColor }}>{p.score}</span>
                         </div>
                         {/* Score bar */}
-                        <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-                          <div className={`h-1.5 rounded-full transition-all ${pBarColor}`} style={{ width: `${p.score}%` }} />
+                        <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }}>
+                          <div style={{ height: 6, borderRadius: 99, background: pFill, width: `${p.score}%`, transition: "width 0.3s" }} />
                         </div>
                         {/* Analysis */}
-                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{p.analysis}</p>
+                        <p className="text-xs leading-relaxed" style={{ color: "var(--gv-color-neutral-600)" }}>{p.analysis}</p>
                         {/* Suggestion */}
-                        <div className="flex items-start gap-1.5 bg-brand-50 dark:bg-brand-500/5 rounded-lg px-2.5 py-2">
-                          <span className="text-brand-500 flex-shrink-0 mt-0.5 text-xs">💡</span>
-                          <p className="text-xs text-brand-700 dark:text-brand-300 leading-relaxed">{p.suggestion}</p>
+                        <div className="flex items-start gap-1.5 rounded-lg px-2.5 py-2" style={{ background: "var(--gv-color-primary-50)" }}>
+                          <span className="flex-shrink-0 mt-0.5 text-xs" style={{ color: "var(--gv-color-primary-500)" }}>💡</span>
+                          <p className="text-xs leading-relaxed" style={{ color: "var(--gv-color-primary-700)" }}>{p.suggestion}</p>
                         </div>
                       </div>
                     );
@@ -1015,21 +1014,21 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
     const c = selected.item;
     return (
       <div className="flex flex-col h-full">
-        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-lg">{c.platformIcon}</span>
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{c.platform}</span>
-            <span className="text-[10px] text-gray-400">·</span>
-            <span className="text-xs text-gray-400">{c.publishedDate}</span>
+            <span className="text-xs font-medium" style={{ color: "var(--gv-color-neutral-500)" }}>{c.platform}</span>
+            <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>·</span>
+            <span className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{c.publishedDate}</span>
             <TrendBadge trend={c.trend} pct={c.trendPct} />
           </div>
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug" style={{ fontFamily: "Georgia, serif" }}>
+          <h3 className="text-[15px] font-bold leading-snug" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>
             {c.title}
           </h3>
         </div>
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Performance</h4>
+            <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Performance</h4>
             <div className="grid grid-cols-2 gap-y-3 gap-x-4">
               {[
                 { label: "Organic Reach", value: formatNum(c.reach) },
@@ -1038,30 +1037,30 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                 { label: "Comments", value: formatNum(c.comments) },
               ].map((m) => (
                 <div key={m.label}>
-                  <p className="text-xs text-gray-400">{m.label}</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-0.5">{m.value}</p>
+                  <p className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{m.label}</p>
+                  <p className="text-lg font-bold mt-0.5" style={{ color: "var(--gv-color-neutral-900)" }}>{m.value}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           <div>
             <div className="flex justify-between mb-1">
-              <span className="text-xs text-gray-400">Engagement Rate</span>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{c.engagement}%</span>
+              <span className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>Engagement Rate</span>
+              <span className="text-xs font-medium" style={{ color: "var(--gv-color-neutral-700)" }}>{c.engagement}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-              <div className="h-2 rounded-full bg-brand-500 transition-all" style={{ width: `${Math.min(c.engagement * 5, 100)}%` }} />
+            <div style={{ height: 8, borderRadius: 99, background: "var(--gv-color-neutral-100)" }}>
+              <div style={{ height: 8, borderRadius: 99, background: "var(--gv-color-primary-500)", width: `${Math.min(c.engagement * 5, 100)}%`, transition: "width 0.3s" }} />
             </div>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">SEO Insight</h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>SEO Insight</h4>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>
               {c.trend === "up"
                 ? `This article is performing ${c.trendPct}% above average in organic reach. Consider adding internal links and updating the publish date to maintain search ranking.`
                 : c.trend === "down"
@@ -1078,44 +1077,44 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
   if (selected.type === "geo") {
     const g = selected.item;
     const coveragePct = Math.round((g.queriesMentioned / g.totalQueries) * 100);
-    const statusColor = g.status === "active"
-      ? "text-green-600 bg-green-50 dark:bg-green-500/10 dark:text-green-400"
+    const statusStyle = g.status === "active"
+      ? { background: "#DCFCE7", color: "#16A34A" }
       : g.status === "improving"
-      ? "text-blue-600 bg-blue-50 dark:bg-blue-500/10 dark:text-blue-400"
-      : "text-red-600 bg-red-50 dark:bg-red-500/10 dark:text-red-400";
+      ? { background: "#EFF6FF", color: "#1D4ED8" }
+      : { background: "#FEE2E2", color: "#DC2626" };
     const statusLabel = g.status === "active" ? "Active" : g.status === "improving" ? "Improving" : "Declining";
-    const visColor = g.visibilityScore >= 70 ? "text-green-600 dark:text-green-400" : g.visibilityScore >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
-    const visBar = g.visibilityScore >= 70 ? "bg-green-500" : g.visibilityScore >= 50 ? "bg-brand-500" : "bg-orange-400";
+    const visScoreColor = g.visibilityScore >= 70 ? "#16A34A" : g.visibilityScore >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
+    const visFill = g.visibilityScore >= 70 ? "#16A34A" : g.visibilityScore >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
 
     return (
       <div className="flex flex-col h-full">
-        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
           <div className="flex items-center gap-3 mb-1">
             <span className="text-3xl">{g.engineIcon}</span>
             <div className="flex-1 min-w-0">
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white" style={{ fontFamily: "Georgia, serif" }}>{g.engine}</h3>
-              <p className="text-xs text-gray-400 mt-0.5">Last checked {g.lastChecked}</p>
+              <h3 className="text-[15px] font-bold" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>{g.engine}</h3>
+              <p className="text-xs mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>Last checked {g.lastChecked}</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-              <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusColor}`}>{statusLabel}</span>
+              <span className="rounded-full px-2 py-0.5 text-xs font-medium" style={statusStyle}>{statusLabel}</span>
               <TrendBadge trend={g.trend} pct={g.trendPct} />
             </div>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
           <div className="text-center py-2">
-            <p className="text-xs font-medium uppercase text-gray-400 mb-1">Visibility Score</p>
-            <p className={`text-5xl font-bold ${visColor}`}>{g.visibilityScore}</p>
-            <p className="text-xs text-gray-400 mt-1">out of 100</p>
-            <div className="mt-3 h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-              <div className={`h-2 rounded-full transition-all ${visBar}`} style={{ width: `${g.visibilityScore}%` }} />
+            <p className="text-xs font-medium uppercase mb-1" style={{ color: "var(--gv-color-neutral-400)" }}>Visibility Score</p>
+            <p className="text-5xl font-bold" style={{ color: visScoreColor }}>{g.visibilityScore}</p>
+            <p className="text-xs mt-1" style={{ color: "var(--gv-color-neutral-400)" }}>out of 100</p>
+            <div className="mt-3" style={{ height: 8, borderRadius: 99, background: "var(--gv-color-neutral-100)" }}>
+              <div style={{ height: 8, borderRadius: 99, background: visFill, width: `${g.visibilityScore}%`, transition: "width 0.3s" }} />
             </div>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Stats</h4>
+            <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Stats</h4>
             <div className="grid grid-cols-2 gap-y-3 gap-x-4">
               {[
                 { label: "Queries Mentioned", value: `${g.queriesMentioned}/${g.totalQueries}` },
@@ -1124,25 +1123,25 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                 { label: "Trend (30d)", value: `${g.trend === "up" ? "+" : g.trend === "down" ? "-" : ""}${g.trendPct}%` },
               ].map((m) => (
                 <div key={m.label}>
-                  <p className="text-xs text-gray-400">{m.label}</p>
-                  <p className="text-base font-bold text-gray-900 dark:text-white mt-0.5">{m.value}</p>
+                  <p className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{m.label}</p>
+                  <p className="text-base font-bold mt-0.5" style={{ color: "var(--gv-color-neutral-900)" }}>{m.value}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">Top Query</h4>
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">&ldquo;{g.topQuery}&rdquo;</p>
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>Top Query</h4>
+            <p className="text-sm font-medium leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>&ldquo;{g.topQuery}&rdquo;</p>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">GEO Insight</h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>GEO Insight</h4>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>
               {g.visibilityScore >= 70
                 ? `GeoVera has strong visibility on ${g.engine} (${g.visibilityScore}/100). Maintain content freshness and authoritative citations to sustain this ranking.`
                 : g.visibilityScore >= 50
@@ -1158,9 +1157,8 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
   // Social Factor detail
   if (selected.type === "social-factor") {
     const f = selected.item;
-    const barColor = f.status === "good" ? "bg-green-500" : f.status === "warn" ? "bg-orange-400" : "bg-red-400";
-    const scoreColor = f.status === "good" ? "text-green-600 dark:text-green-400" : f.status === "warn" ? "text-orange-500 dark:text-orange-400" : "text-red-500 dark:text-red-400";
-    const badgeColor = f.status === "good" ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400" : f.status === "warn" ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400" : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400";
+    const statusFill = f.status === "good" ? "#16A34A" : f.status === "warn" ? "#D97706" : "#DC2626";
+    const badgeStyle = f.status === "good" ? { background: "#DCFCE7", color: "#16A34A" } : f.status === "warn" ? { background: "#FEF3C7", color: "#D97706" } : { background: "#FEE2E2", color: "#DC2626" };
     const badgeLabel = f.status === "good" ? "Good" : f.status === "warn" ? "Needs Work" : "Low — Prioritas";
 
     // Posts with valid scores for this factor (score > 0)
@@ -1172,63 +1170,63 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
     return (
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
           <div className="flex items-center gap-3 mb-3">
             <span className="text-2xl">{f.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-0.5">Social Faktor #{f.rank}</p>
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug" style={{ fontFamily: "Georgia, serif" }}>{f.label}</h3>
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>Social Faktor #{f.rank}</p>
+              <h3 className="text-[15px] font-bold leading-snug" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>{f.label}</h3>
             </div>
-            <span className={`text-2xl font-bold ${scoreColor}`}>{f.score}</span>
+            <span className="text-2xl font-bold" style={{ color: statusFill }}>{f.score}</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 mb-2">
-            <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${f.score}%` }} />
+          <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }} className="mb-2">
+            <div style={{ height: 6, borderRadius: 99, background: statusFill, width: `${f.score}%`, transition: "width 0.3s" }} />
           </div>
-          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${badgeColor}`}>{badgeLabel}</span>
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" style={badgeStyle}>{badgeLabel}</span>
         </div>
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4">
           {/* Kondisi Saat Ini */}
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-1.5">Kondisi Saat Ini</h4>
-            <p className="text-sm font-medium text-gray-900 dark:text-white leading-relaxed mb-1">{f.tip}</p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{f.detail}</p>
+            <h4 className="text-xs font-medium uppercase mb-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>Kondisi Saat Ini</h4>
+            <p className="text-sm font-medium leading-relaxed mb-1" style={{ color: "var(--gv-color-neutral-900)" }}>{f.tip}</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-600)" }}>{f.detail}</p>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           {/* Konsistensi Channel */}
-          <div className="rounded-xl bg-orange-50 dark:bg-orange-500/5 border border-orange-100 dark:border-orange-500/20 px-3 py-2.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-500 mb-1">Konsistensi Channel</p>
-            <p className="text-xs text-orange-700 dark:text-orange-300 leading-relaxed">{f.consistencyNote}</p>
+          <div className="rounded-[14px] px-3 py-2.5" style={{ background: "#FEF3C7", border: "1px solid #FDE68A" }}>
+            <p className="text-[10px] font-semibold uppercase tracking-wider mb-1" style={{ color: "#D97706" }}>Konsistensi Channel</p>
+            <p className="text-xs leading-relaxed" style={{ color: "#92400E" }}>{f.consistencyNote}</p>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           {/* Suggested Actions */}
           <div>
-            <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Suggested Actions</h4>
+            <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Suggested Actions</h4>
             <div className="space-y-2">
               {f.actions.map((action, i) => (
                 <div key={i} className="flex items-start gap-2.5">
-                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-brand-100 dark:bg-brand-500/20 flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-brand-600 dark:text-brand-400">{i + 1}</span>
+                  <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full flex items-center justify-center" style={{ background: "var(--gv-color-primary-100)" }}>
+                    <span className="text-[10px] font-bold" style={{ color: "var(--gv-color-primary-600)" }}>{i + 1}</span>
                   </span>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{action}</p>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--gv-color-neutral-700)" }}>{action}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="h-px bg-gray-100 dark:bg-gray-800" />
+          <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
           {/* Per-post scores — 7D batches, scroll to 28D */}
           {validScores.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h4 className="text-xs font-medium uppercase text-gray-400 flex-1">Score per Konten</h4>
-                <span className="text-[10px] text-gray-400">{validScores.length} konten · 7D/batch</span>
+                <h4 className="text-xs font-medium uppercase flex-1" style={{ color: "var(--gv-color-neutral-400)" }}>Score per Konten</h4>
+                <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>{validScores.length} konten · 7D/batch</span>
               </div>
               <div className="space-y-3">
                 {Array.from({ length: totalPages }, (_, pageIdx) => {
@@ -1237,32 +1235,32 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                     <div key={pageIdx}>
                       {/* Week label */}
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--gv-color-neutral-400)" }}>
                           {pageIdx === 0 ? "7D — Feb 23–26" : pageIdx === 1 ? "7D — Feb 16–22" : `7D — Week ${pageIdx + 1}`}
                         </span>
-                        <div className="flex-1 h-px bg-gray-100 dark:bg-gray-800" />
+                        <div className="flex-1" style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
                       </div>
                       {/* Post rows */}
                       <div className="space-y-1.5">
                         {batch.map((ps) => {
                           const post = socialItems.find((si) => si.id === ps.postId);
                           if (!post) return null;
-                          const pBar = ps.score >= 70 ? "bg-green-500" : ps.score >= 50 ? "bg-brand-500" : "bg-orange-400";
-                          const pScore = ps.score >= 70 ? "text-green-600 dark:text-green-400" : ps.score >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+                          const pFill = ps.score >= 70 ? "#16A34A" : ps.score >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
+                          const pScoreColor = ps.score >= 70 ? "#16A34A" : ps.score >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
                           return (
-                            <div key={ps.postId} className="rounded-lg border border-gray-100 dark:border-gray-800 p-2.5">
+                            <div key={ps.postId} className="rounded-[12px] p-2.5" style={{ border: "1px solid var(--gv-color-neutral-100)" }}>
                               {/* Post title row */}
                               <div className="flex items-start gap-2 mb-1.5">
                                 <span className="text-sm flex-shrink-0">{post.platformIcon}</span>
-                                <p className="text-xs font-medium text-gray-800 dark:text-gray-200 leading-snug flex-1 line-clamp-1">{post.title}</p>
-                                <span className={`text-sm font-bold flex-shrink-0 ${pScore}`}>{ps.score}</span>
+                                <p className="text-xs font-medium leading-snug flex-1 line-clamp-1" style={{ color: "var(--gv-color-neutral-800)" }}>{post.title}</p>
+                                <span className="text-sm font-bold flex-shrink-0" style={{ color: pScoreColor }}>{ps.score}</span>
                               </div>
                               {/* Mini score bar */}
-                              <div className="h-1 w-full rounded-full bg-gray-100 dark:bg-gray-800 mb-1.5">
-                                <div className={`h-1 rounded-full transition-all ${pBar}`} style={{ width: `${ps.score}%` }} />
+                              <div style={{ height: 4, borderRadius: 99, background: "var(--gv-color-neutral-100)" }} className="mb-1.5">
+                                <div style={{ height: 4, borderRadius: 99, background: pFill, width: `${ps.score}%`, transition: "width 0.3s" }} />
                               </div>
                               {/* Note */}
-                              <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">{ps.note}</p>
+                              <p className="text-[11px] leading-relaxed" style={{ color: "var(--gv-color-neutral-500)" }}>{ps.note}</p>
                             </div>
                           );
                         })}
@@ -1272,9 +1270,9 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
                 })}
                 {/* Beyond 28D note */}
                 <div className="flex items-center gap-2 mt-1">
-                  <div className="flex-1 h-px bg-gray-100 dark:bg-gray-800" />
-                  <span className="text-[10px] text-gray-400">Data &gt; 28D tersedia by request</span>
-                  <div className="flex-1 h-px bg-gray-100 dark:bg-gray-800" />
+                  <div className="flex-1" style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
+                  <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>Data &gt; 28D tersedia by request</span>
+                  <div className="flex-1" style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
                 </div>
               </div>
             </div>
@@ -1289,8 +1287,8 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
   const engRate = (((s.likes + s.comments + s.shares) / s.reach) * 100).toFixed(1);
   const validScores = s.factorScores.filter(x => x > 0);
   const socialScore = Math.round(validScores.reduce((a, b) => a + b, 0) / (validScores.length || 1));
-  const socialScoreColor = socialScore >= 70 ? "text-green-600 dark:text-green-400" : socialScore >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
-  const socialBar = socialScore >= 70 ? "bg-green-500" : socialScore >= 50 ? "bg-brand-500" : "bg-orange-400";
+  const socialScoreFill = socialScore >= 70 ? "#16A34A" : socialScore >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
+  const socialScoreTextColor = socialScore >= 70 ? "#16A34A" : socialScore >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
   return (
     <div className="flex flex-col h-full">
       {/* Image header */}
@@ -1300,9 +1298,9 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
           <span className="text-white text-lg drop-shadow">{s.platformIcon}</span>
           <span className="bg-black/40 text-white text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full capitalize backdrop-blur-sm">{s.type}</span>
         </div>
-        <div className="absolute top-3 right-3 bg-white/90 dark:bg-gray-900/90 rounded-xl px-3 py-1.5 text-center backdrop-blur-sm">
-          <p className={`text-2xl font-bold leading-none ${socialScoreColor}`}>{socialScore}</p>
-          <p className="text-[9px] text-gray-500 mt-0.5">social score</p>
+        <div className="absolute top-3 right-3 rounded-xl px-3 py-1.5 text-center backdrop-blur-sm" style={{ background: "rgba(255,255,255,0.9)" }}>
+          <p className="text-2xl font-bold leading-none" style={{ color: socialScoreTextColor }}>{socialScore}</p>
+          <p className="text-[9px] mt-0.5" style={{ color: "var(--gv-color-neutral-500)" }}>social score</p>
         </div>
         <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-sm rounded-lg px-2.5 py-1">
           <p className="text-white text-xs font-medium">{s.timestamp}</p>
@@ -1313,12 +1311,12 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
       </div>
 
       {/* Header — title, caption, hashtags */}
-      <div className="border-b border-gray-200 dark:border-gray-800 p-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-white leading-snug mb-2" style={{ fontFamily: "Georgia, serif" }}>{s.title}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-3">{s.caption}</p>
+      <div className="p-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
+        <h3 className="text-[15px] font-bold leading-snug mb-2" style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}>{s.title}</h3>
+        <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--gv-color-neutral-600)" }}>{s.caption}</p>
         <div className="flex flex-wrap gap-1.5">
           {s.hashtags.map((tag) => (
-            <span key={tag} className="inline-flex items-center rounded-full bg-brand-50 dark:bg-brand-500/10 px-2 py-0.5 text-xs text-brand-700 dark:text-brand-400 font-medium">{tag}</span>
+            <span key={tag} className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium" style={{ background: "var(--gv-color-primary-50)", color: "var(--gv-color-primary-700)" }}>{tag}</span>
           ))}
         </div>
       </div>
@@ -1329,20 +1327,20 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
         {/* Overall score */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-xs font-medium uppercase text-gray-400">Overall Social Score</h4>
-            <span className={`text-base font-bold ${socialScoreColor}`}>{socialScore} / 100</span>
+            <h4 className="text-xs font-medium uppercase" style={{ color: "var(--gv-color-neutral-400)" }}>Overall Social Score</h4>
+            <span className="text-base font-bold" style={{ color: socialScoreTextColor }}>{socialScore} / 100</span>
           </div>
-          <div className="h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
-            <div className={`h-2 rounded-full transition-all ${socialBar}`} style={{ width: `${socialScore}%` }} />
+          <div style={{ height: 8, borderRadius: 99, background: "var(--gv-color-neutral-100)" }}>
+            <div style={{ height: 8, borderRadius: 99, background: socialScoreFill, width: `${socialScore}%`, transition: "width 0.3s" }} />
           </div>
-          <p className="text-xs text-gray-400 mt-1.5">{validScores.length} faktor aktif untuk format {s.type}</p>
+          <p className="text-xs mt-1.5" style={{ color: "var(--gv-color-neutral-400)" }}>{validScores.length} faktor aktif untuk format {s.type}</p>
         </div>
 
-        <div className="h-px bg-gray-100 dark:bg-gray-800" />
+        <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
         {/* Stats */}
         <div>
-          <h4 className="text-xs font-medium uppercase text-gray-400 mb-2">Performance</h4>
+          <h4 className="text-xs font-medium uppercase mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>Performance</h4>
           <div className="grid grid-cols-2 gap-y-2.5 gap-x-4">
             {[
               { label: "Reach", value: formatNum(s.reach) },
@@ -1355,43 +1353,43 @@ function DetailPanel({ selected, section }: { selected: SelectedItem; section: A
               { label: "CTR", value: `${s.ctr}%` },
             ].map((m) => (
               <div key={m.label}>
-                <p className="text-xs text-gray-400">{m.label}</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white mt-0.5">{m.value}</p>
+                <p className="text-xs" style={{ color: "var(--gv-color-neutral-400)" }}>{m.label}</p>
+                <p className="text-sm font-semibold mt-0.5" style={{ color: "var(--gv-color-neutral-900)" }}>{m.value}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="h-px bg-gray-100 dark:bg-gray-800" />
+        <div style={{ height: 1, background: "var(--gv-color-neutral-100)" }} />
 
         {/* Score per faktor — flat divider list */}
         <div>
-          <h4 className="text-xs font-medium uppercase text-gray-400 mb-3">Score per Faktor</h4>
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
+          <h4 className="text-xs font-medium uppercase mb-3" style={{ color: "var(--gv-color-neutral-400)" }}>Score per Faktor</h4>
+          <div className="divide-y" style={{ borderColor: "var(--gv-color-neutral-100)" }}>
             {socialFactors.map((f, idx) => {
               const score = s.factorScores[idx] ?? 0;
               const ps = f.postScores.find(p => p.postId === s.id);
-              const fBar = score >= 70 ? "bg-green-500" : score >= 50 ? "bg-brand-500" : "bg-orange-400";
-              const fScore = score >= 70 ? "text-green-600 dark:text-green-400" : score >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+              const fFill = score >= 70 ? "#16A34A" : score >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
+              const fScoreColor = score >= 70 ? "#16A34A" : score >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
               return (
                 <div key={f.rank} className={`py-3 ${score === 0 ? "opacity-40" : ""}`}>
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="text-base leading-none flex-shrink-0">{f.icon}</span>
-                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200 flex-1 leading-snug">{f.label}</p>
-                    <span className={`text-base font-bold flex-shrink-0 ${score === 0 ? "text-gray-400" : fScore}`}>
+                    <p className="text-sm font-medium flex-1 leading-snug" style={{ color: "var(--gv-color-neutral-800)" }}>{f.label}</p>
+                    <span className="text-base font-bold flex-shrink-0" style={{ color: score === 0 ? "var(--gv-color-neutral-400)" : fScoreColor }}>
                       {score === 0 ? "—" : score}
                     </span>
                   </div>
                   {score > 0 && (
-                    <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800 mb-1.5">
-                      <div className={`h-1.5 rounded-full transition-all ${fBar}`} style={{ width: `${score}%` }} />
+                    <div style={{ height: 6, borderRadius: 99, background: "var(--gv-color-neutral-100)" }} className="mb-1.5">
+                      <div style={{ height: 6, borderRadius: 99, background: fFill, width: `${score}%`, transition: "width 0.3s" }} />
                     </div>
                   )}
                   {ps && score > 0 && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{ps.note}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--gv-color-neutral-500)" }}>{ps.note}</p>
                   )}
                   {score === 0 && (
-                    <p className="text-xs text-gray-400 leading-relaxed">Tidak berlaku untuk format {s.type}</p>
+                    <p className="text-xs leading-relaxed" style={{ color: "var(--gv-color-neutral-400)" }}>Tidak berlaku untuk format {s.type}</p>
                   )}
                 </div>
               );
@@ -1422,32 +1420,31 @@ function ScoreCard({
   const delta = score - prev;
   const isUp = delta > 0;
   const isDown = delta < 0;
-  const barColor = score >= 70 ? "bg-green-500" : score >= 50 ? "bg-brand-500" : "bg-orange-400";
-  const scoreColor = score >= 70 ? "text-green-600 dark:text-green-400" : score >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+  const barBg = score >= 70 ? "#16A34A" : score >= 50 ? "var(--gv-color-primary-500)" : "#D97706";
+  const scoreColor = score >= 70 ? "#16A34A" : score >= 50 ? "var(--gv-color-primary-600)" : "#D97706";
 
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left rounded-lg border px-3 py-2 transition-all ${
-        active
-          ? "border-brand-500 bg-brand-50/50 dark:border-brand-400 dark:bg-brand-500/5"
-          : "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/40 hover:border-gray-300 dark:hover:border-gray-600"
-      }`}
+      className="w-full text-left rounded-lg border px-3 py-2 transition-all"
+      style={active
+        ? { border: "1px solid var(--gv-color-primary-300)", background: "var(--gv-color-primary-50)" }
+        : { border: "1px solid var(--gv-color-neutral-200)", background: "var(--gv-color-neutral-50)" }}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <span className="text-sm">{icon}</span>
-          <span className="text-[11px] font-semibold text-gray-700 dark:text-gray-300">{label}</span>
+          <span className="text-[11px] font-semibold" style={{ color: "var(--gv-color-neutral-700)" }}>{label}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className={`text-sm font-bold ${scoreColor}`}>{score}</span>
-          {isUp && <span className="text-[10px] font-medium text-green-600 dark:text-green-400">↑+{delta}</span>}
-          {isDown && <span className="text-[10px] font-medium text-red-500 dark:text-red-400">↓{delta}</span>}
-          {!isUp && !isDown && <span className="text-[10px] text-gray-400">→</span>}
+          <span className="text-sm font-bold" style={{ color: scoreColor }}>{score}</span>
+          {isUp && <span className="text-[10px] font-medium" style={{ color: "#16A34A" }}>↑+{delta}</span>}
+          {isDown && <span className="text-[10px] font-medium" style={{ color: "#DC2626" }}>↓{delta}</span>}
+          {!isUp && !isDown && <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>→</span>}
         </div>
       </div>
-      <div className="mt-1.5 h-1 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-        <div className={`h-1 rounded-full transition-all ${barColor}`} style={{ width: `${score}%` }} />
+      <div className="mt-1.5 h-1 w-full rounded-full" style={{ background: "var(--gv-color-neutral-200)" }}>
+        <div className="h-1 rounded-full transition-all" style={{ width: `${score}%`, background: barBg }} />
       </div>
     </button>
   );
@@ -1821,17 +1818,7 @@ export default function AnalyticsPage() {
   };
 
   const left = (
-    <NavColumn>
-      <h3
-        className="text-sm font-semibold text-gray-900 dark:text-white px-1"
-        style={{ fontFamily: "Georgia, serif" }}
-      >
-        Report & Analytics
-      </h3>
-      <p className="text-xs text-gray-400 px-1 mt-1">
-        Scores updated biweekly.
-      </p>
-    </NavColumn>
+    <NavColumn />
   );
 
   // Active score data
@@ -1841,38 +1828,39 @@ export default function AnalyticsPage() {
   const center = (
     <div className="flex flex-col h-full">
       {/* ── Sticky top header — title + scores ── */}
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 pt-2 pb-2 border-b border-gray-100 dark:border-gray-800">
+      <div className="flex-shrink-0 px-5 pt-5 pb-4" style={{ borderBottom: "1px solid var(--gv-color-neutral-200)", background: "var(--gv-color-bg-surface)" }}>
         <div className="flex items-center justify-between gap-3">
-          <h2
-            className="text-xl font-semibold text-gray-900 dark:text-white flex-shrink-0 px-2"
-            style={{ fontFamily: "Georgia, serif" }}
+          <h1
+            className="text-[22px] font-bold leading-tight flex-shrink-0"
+            style={{ color: "var(--gv-color-neutral-900)", fontFamily: "var(--gv-font-heading)" }}
           >
             {activeSection === "seo" ? "SEO" : activeSection === "geo" ? "GEO · AI Platform" : "Social Search"}
-          </h2>
+          </h1>
           {/* Sync button — Social section only */}
           {activeSection === "social" && (
             <div className="flex items-center gap-2 flex-shrink-0">
               {isLiveData && (
-                <span className="flex items-center gap-1 text-[10px] text-green-600 dark:text-green-400 font-medium">
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-500 inline-block" />
+                <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: "#16A34A" }}>
+                  <span className="h-1.5 w-1.5 rounded-full inline-block" style={{ background: "#16A34A" }} />
                   Live
                 </span>
               )}
               {lastSyncAt && (
-                <span className="text-[10px] text-gray-400 hidden sm:block">
+                <span className="text-[10px] hidden sm:block" style={{ color: "var(--gv-color-neutral-400)" }}>
                   {new Date(lastSyncAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               )}
               <button
                 onClick={handleSyncAnalytics}
                 disabled={syncLoading}
-                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                className="flex items-center gap-1.5 rounded-[10px] px-2.5 py-1.5 text-[12px] font-semibold transition-colors disabled:opacity-50"
+                style={
                   syncStatus === "success"
-                    ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
+                    ? { background: "#DCFCE7", color: "#16A34A" }
                     : syncStatus === "error"
-                    ? "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400"
-                    : "bg-brand-50 text-brand-700 hover:bg-brand-100 dark:bg-brand-500/10 dark:text-brand-400 dark:hover:bg-brand-500/20"
-                } disabled:opacity-50`}
+                    ? { background: "#FEE2E2", color: "#DC2626" }
+                    : { background: "var(--gv-color-primary-50)", color: "var(--gv-color-primary-700)" }
+                }
               >
                 {syncLoading ? (
                   <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -1892,7 +1880,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* ── Scrollable content body ── */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-2 px-2">
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-4 space-y-4">
 
       {/* ── SEO — Articles & Blog content ── */}
       {activeSection === "seo" && (
@@ -1951,30 +1939,32 @@ export default function AnalyticsPage() {
               ] },
             ] as SeoFactor[]).map((f) => {
               const isSelected = selected?.type === "seo-factor" && selected.item.rank === f.rank;
-              const barColor = f.status === "good" ? "bg-green-500" : f.status === "warn" ? "bg-orange-400" : "bg-red-400";
-              const scoreColor = f.status === "good" ? "text-green-600 dark:text-green-400" : f.status === "warn" ? "text-orange-500 dark:text-orange-400" : "text-red-500 dark:text-red-400";
-              const badgeCls = f.status === "good"
-                ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
+              const badgeStyle = f.status === "good"
+                ? { background: "#DCFCE7", color: "#16A34A" }
                 : f.status === "warn"
-                ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
-                : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400";
+                ? { background: "#FEF3C7", color: "#D97706" }
+                : { background: "#FEE2E2", color: "#DC2626" };
               const badgeLabel = f.status === "good" ? "Good" : f.status === "warn" ? "Needs work" : "Low";
               return (
                 <button
                   key={f.rank}
                   onClick={() => handleSelect({ type: "seo-factor", item: f })}
-                  className={`w-full text-left rounded-xl border p-2.5 transition-all ${isSelected ? "border-brand-500 bg-brand-50/50 shadow-sm dark:border-brand-400 dark:bg-brand-500/5" : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"}`}
+                  className="w-full text-left rounded-[14px] p-3 transition-all"
+                  style={{
+                    border: `1.5px solid ${isSelected ? "var(--gv-color-primary-200)" : "var(--gv-color-neutral-100)"}`,
+                    background: isSelected ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)",
+                  }}
                 >
                   {/* Top row: icon + label */}
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm leading-none flex-shrink-0">{f.icon}</span>
-                    <h4 className="text-sm font-medium text-gray-900 dark:text-white leading-snug flex-1 min-w-0">{f.label}</h4>
-                    <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium flex-shrink-0 ${badgeCls}`}>
+                    <h4 className="text-[13px] font-semibold leading-snug flex-1 min-w-0" style={{ color: "var(--gv-color-neutral-900)" }}>{f.label}</h4>
+                    <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium flex-shrink-0" style={badgeStyle}>
                       {badgeLabel}
                     </span>
                   </div>
                   {/* Tip */}
-                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{f.tip}</p>
+                  <p className="text-[11px] line-clamp-2" style={{ color: "var(--gv-color-neutral-400)" }}>{f.tip}</p>
                 </button>
               );
             })}
@@ -1991,26 +1981,30 @@ export default function AnalyticsPage() {
           <div className="space-y-1 mb-4">
             {geoFactors.map((f) => {
               const isSelected = selected?.type === "geo-factor" && selected.item.rank === f.rank;
-              const badgeCls = f.status === "good"
-                ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400"
+              const badgeStyle = f.status === "good"
+                ? { background: "#DCFCE7", color: "#16A34A" }
                 : f.status === "warn"
-                ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
-                : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400";
+                ? { background: "#FEF3C7", color: "#D97706" }
+                : { background: "#FEE2E2", color: "#DC2626" };
               const badgeLabel = f.status === "good" ? "Good" : f.status === "warn" ? "Needs work" : "Low";
               return (
                 <button
                   key={f.rank}
                   onClick={() => handleSelect({ type: "geo-factor", item: f })}
-                  className={`w-full text-left rounded-xl border p-2.5 transition-all ${isSelected ? "border-brand-500 bg-brand-50/50 shadow-sm dark:border-brand-400 dark:bg-brand-500/5" : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"}`}
+                  className="w-full text-left rounded-[14px] p-3 transition-all"
+                  style={{
+                    border: `1.5px solid ${isSelected ? "var(--gv-color-primary-200)" : "var(--gv-color-neutral-100)"}`,
+                    background: isSelected ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)",
+                  }}
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-sm leading-none flex-shrink-0">{f.icon}</span>
-                    <h4 className="text-sm font-medium text-gray-900 dark:text-white leading-snug flex-1 min-w-0">{f.label}</h4>
-                    <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium flex-shrink-0 ${badgeCls}`}>
+                    <h4 className="text-[13px] font-semibold leading-snug flex-1 min-w-0" style={{ color: "var(--gv-color-neutral-900)" }}>{f.label}</h4>
+                    <span className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium flex-shrink-0" style={badgeStyle}>
                       {badgeLabel}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{f.tip}</p>
+                  <p className="text-[11px] line-clamp-2" style={{ color: "var(--gv-color-neutral-400)" }}>{f.tip}</p>
                 </button>
               );
             })}
@@ -2031,17 +2025,16 @@ export default function AnalyticsPage() {
                 .map((s) => {
                   const isSelected = selected?.type === "social" && selected.item.id === s.id;
                   const socialScore = Math.round(s.factorScores.filter(x => x > 0).reduce((a, b) => a + b, 0) / (s.factorScores.filter(x => x > 0).length || 1));
-                  const scoreCol = socialScore >= 70 ? "text-green-600 dark:text-green-400" : socialScore >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
-                  const scoreBadge = socialScore >= 70 ? "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400" : socialScore >= 50 ? "bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400" : "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400";
+                  const scoreColStyle = { color: socialScore >= 70 ? "#16A34A" : socialScore >= 50 ? "var(--gv-color-primary-600)" : "#D97706" };
                   return (
                     <button
                       key={s.id}
                       onClick={() => handleSelect({ type: "social", item: s })}
-                      className={`w-full text-left rounded-xl border overflow-hidden transition-all ${
-                        isSelected
-                          ? "border-brand-500 shadow-md dark:border-brand-400"
-                          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
-                      }`}
+                      className="w-full text-left rounded-[14px] overflow-hidden transition-all"
+                      style={{
+                        border: `1.5px solid ${isSelected ? "var(--gv-color-primary-200)" : "var(--gv-color-neutral-100)"}`,
+                        background: isSelected ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)",
+                      }}
                     >
                       {/* Image header */}
                       <div className={`relative h-32 bg-gradient-to-br ${s.imageBg} flex items-center justify-center overflow-hidden`}>
@@ -2052,9 +2045,9 @@ export default function AnalyticsPage() {
                           <span className="bg-black/40 text-white text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded-full backdrop-blur-sm capitalize">{s.type}</span>
                         </div>
                         {/* Social score badge */}
-                        <div className={`absolute top-2 right-2 flex items-center gap-1 bg-white/90 dark:bg-gray-900/90 rounded-full px-2 py-0.5 backdrop-blur-sm ${scoreCol}`}>
+                        <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-0.5 backdrop-blur-sm" style={{ background: "rgba(255,255,255,0.9)", ...scoreColStyle }}>
                           <span className="text-xs font-bold">{socialScore}</span>
-                          <span className="text-[9px] font-medium text-gray-500">score</span>
+                          <span className="text-[9px] font-medium" style={{ color: "var(--gv-color-neutral-500)" }}>score</span>
                         </div>
                         {/* Trend badge */}
                         <div className="absolute bottom-2 right-2">
@@ -2062,26 +2055,26 @@ export default function AnalyticsPage() {
                         </div>
                       </div>
                       {/* Timestamp — tepat di bawah gambar */}
-                      <div className="flex items-center justify-between px-3 py-1.5 border-b border-gray-100 dark:border-gray-800">
-                        <span className="text-[11px] text-gray-400">{s.timestamp}</span>
+                      <div className="flex items-center justify-between px-3 py-1.5" style={{ borderBottom: "1px solid var(--gv-color-neutral-100)" }}>
+                        <span className="text-[11px]" style={{ color: "var(--gv-color-neutral-400)" }}>{s.timestamp}</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] text-gray-500">👁 {formatNum(s.reach)}</span>
-                          <span className="text-[11px] text-gray-500">❤️ {formatNum(s.likes)}</span>
-                          <span className="text-[11px] text-gray-500">💬 {s.comments}</span>
+                          <span className="text-[11px]" style={{ color: "var(--gv-color-neutral-500)" }}>👁 {formatNum(s.reach)}</span>
+                          <span className="text-[11px]" style={{ color: "var(--gv-color-neutral-500)" }}>❤️ {formatNum(s.likes)}</span>
+                          <span className="text-[11px]" style={{ color: "var(--gv-color-neutral-500)" }}>💬 {s.comments}</span>
                         </div>
                       </div>
                       {/* Content */}
                       <div className="p-3">
                         {/* Title */}
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2 mb-1.5">{s.title}</p>
+                        <p className="text-[13px] font-semibold leading-snug line-clamp-2 mb-1.5" style={{ color: "var(--gv-color-neutral-900)" }}>{s.title}</p>
                         {/* Caption */}
-                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-2">{s.caption}</p>
+                        <p className="text-[11px] leading-relaxed line-clamp-2 mb-2" style={{ color: "var(--gv-color-neutral-400)" }}>{s.caption}</p>
                         {/* Hashtags */}
                         <div className="flex flex-wrap gap-1">
                           {s.hashtags.slice(0, 2).map((tag) => (
-                            <span key={tag} className="text-xs text-brand-600 dark:text-brand-400 font-medium truncate">{tag}</span>
+                            <span key={tag} className="text-[11px] font-medium truncate" style={{ color: "var(--gv-color-primary-600)" }}>{tag}</span>
                           ))}
-                          {s.hashtags.length > 2 && <span className="text-xs text-gray-400">+{s.hashtags.length - 2}</span>}
+                          {s.hashtags.length > 2 && <span className="text-[11px]" style={{ color: "var(--gv-color-neutral-400)" }}>+{s.hashtags.length - 2}</span>}
                         </div>
                       </div>
                     </button>
@@ -2098,16 +2091,16 @@ export default function AnalyticsPage() {
                 .map((s) => {
                   const isSelected = selected?.type === "social" && selected.item.id === s.id;
                   const socialScore = Math.round(s.factorScores.filter(x => x > 0).reduce((a, b) => a + b, 0) / (s.factorScores.filter(x => x > 0).length || 1));
-                  const scoreCol = socialScore >= 70 ? "text-green-600 dark:text-green-400" : socialScore >= 50 ? "text-brand-600 dark:text-brand-400" : "text-orange-500 dark:text-orange-400";
+                  const scoreColStyle = { color: socialScore >= 70 ? "#16A34A" : socialScore >= 50 ? "var(--gv-color-primary-600)" : "#D97706" };
                   return (
                     <button
                       key={s.id}
                       onClick={() => handleSelect({ type: "social", item: s })}
-                      className={`w-full text-left rounded-xl border overflow-hidden transition-all ${
-                        isSelected
-                          ? "border-brand-500 shadow-md dark:border-brand-400"
-                          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700"
-                      }`}
+                      className="w-full text-left rounded-[14px] overflow-hidden transition-all"
+                      style={{
+                        border: `1.5px solid ${isSelected ? "var(--gv-color-primary-200)" : "var(--gv-color-neutral-100)"}`,
+                        background: isSelected ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)",
+                      }}
                     >
                       <div className={`relative h-32 bg-gradient-to-br ${s.imageBg} flex items-center justify-center overflow-hidden`}>
                         <span className="text-4xl opacity-80 select-none">{s.imageEmoji}</span>
@@ -2115,27 +2108,27 @@ export default function AnalyticsPage() {
                           <span className="text-white text-sm leading-none drop-shadow">{s.platformIcon}</span>
                           <span className="bg-black/40 text-white text-[9px] font-semibold uppercase px-1.5 py-0.5 rounded-full backdrop-blur-sm capitalize">{s.type}</span>
                         </div>
-                        <div className={`absolute top-2 right-2 flex items-center gap-1 bg-white/90 dark:bg-gray-900/90 rounded-full px-2 py-0.5 backdrop-blur-sm ${scoreCol}`}>
+                        <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full px-2 py-0.5 backdrop-blur-sm" style={{ background: "rgba(255,255,255,0.9)", ...scoreColStyle }}>
                           <span className="text-xs font-bold">{socialScore}</span>
-                          <span className="text-[9px] font-medium text-gray-500">score</span>
+                          <span className="text-[9px] font-medium" style={{ color: "var(--gv-color-neutral-500)" }}>score</span>
                         </div>
                         <div className="absolute bottom-2 right-2">
                           <TrendBadge trend={s.trend} pct={s.trendPct} />
                         </div>
                       </div>
                       <div className="p-2.5">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2 mb-1">{s.title}</p>
+                        <p className="text-[13px] font-semibold leading-snug line-clamp-2 mb-1" style={{ color: "var(--gv-color-neutral-900)" }}>{s.title}</p>
                         <div className="flex flex-wrap gap-1 mb-1.5">
                           {s.hashtags.slice(0, 2).map((tag) => (
-                            <span key={tag} className="text-[10px] text-brand-600 dark:text-brand-400 font-medium truncate">{tag}</span>
+                            <span key={tag} className="text-[10px] font-medium truncate" style={{ color: "var(--gv-color-primary-600)" }}>{tag}</span>
                           ))}
-                          {s.hashtags.length > 2 && <span className="text-[10px] text-gray-400">+{s.hashtags.length - 2}</span>}
+                          {s.hashtags.length > 2 && <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>+{s.hashtags.length - 2}</span>}
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="text-[10px] text-gray-400">{s.timestamp}</span>
-                          <span className="text-[10px] text-gray-400 ml-auto">👁 {formatNum(s.reach)}</span>
-                          <span className="text-[10px] text-gray-400">❤️ {formatNum(s.likes)}</span>
-                          <span className="text-[10px] text-gray-400">💬 {s.comments}</span>
+                          <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>{s.timestamp}</span>
+                          <span className="text-[10px] ml-auto" style={{ color: "var(--gv-color-neutral-400)" }}>👁 {formatNum(s.reach)}</span>
+                          <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>❤️ {formatNum(s.likes)}</span>
+                          <span className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>💬 {s.comments}</span>
                         </div>
                       </div>
                     </button>
@@ -2146,10 +2139,15 @@ export default function AnalyticsPage() {
 
           {/* Load more — up to 60 posts / 28D, then by request */}
           <div className="flex flex-col items-center gap-1.5 py-3">
-            <button className="text-xs text-brand-600 dark:text-brand-400 font-medium bg-brand-50 dark:bg-brand-500/10 px-3 py-1.5 rounded-full hover:bg-brand-100 transition-colors">
+            <button
+              className="text-xs font-medium px-3 py-1.5 rounded-full transition-colors"
+              style={{ color: "var(--gv-color-primary-600)", background: "var(--gv-color-primary-50)" }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--gv-color-primary-100)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.background = "var(--gv-color-primary-50)")}
+            >
               Load 7D berikutnya (max 12 posts/batch)
             </button>
-            <p className="text-[10px] text-gray-400">Max 60 posts · 28D · lebih lanjut by request</p>
+            <p className="text-[10px]" style={{ color: "var(--gv-color-neutral-400)" }}>Max 60 posts · 28D · lebih lanjut by request</p>
           </div>
         </div>
       )}
@@ -2157,7 +2155,7 @@ export default function AnalyticsPage() {
       </div>{/* end scrollable body */}
 
       {/* ── Sticky bottom tabs — SEO / GEO / Social ── */}
-      <div className="sticky bottom-0 z-10 border-t border-gray-200 dark:border-gray-800 overflow-hidden rounded-b-xl">
+      <div className="flex-shrink-0 overflow-hidden rounded-b-xl" style={{ borderTop: "1px solid var(--gv-color-neutral-200)" }}>
         <div className="flex h-full">
           {([
             {
@@ -2191,11 +2189,12 @@ export default function AnalyticsPage() {
             <button
               key={key}
               onClick={() => handleSectionChange(key)}
-              className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-3 text-[11px] font-medium transition-colors border-r last:border-r-0 border-gray-200 dark:border-gray-800 ${
-                activeSection === key
-                  ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
-                  : "bg-white text-gray-400 dark:bg-gray-900 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300"
-              }`}
+              className="flex-1 flex flex-col items-center justify-center gap-0.5 py-3 text-[11px] font-medium transition-colors border-r last:border-r-0"
+              style={{
+                borderColor: "var(--gv-color-neutral-200)",
+                background: activeSection === key ? "var(--gv-color-primary-50)" : "var(--gv-color-bg-surface)",
+                color: activeSection === key ? "var(--gv-color-primary-600)" : "var(--gv-color-neutral-400)",
+              }}
             >
               {icon}
               <span>{label}</span>
