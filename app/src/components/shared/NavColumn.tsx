@@ -240,30 +240,9 @@ export default function NavColumn({ children }: { children?: React.ReactNode } =
                 <p className="text-[13px] font-semibold leading-tight" style={{ color: "var(--gv-color-neutral-900)" }}>{DEMO_USER.name}</p>
                 <p className="text-[11px] leading-tight mt-0.5" style={{ color: "var(--gv-color-neutral-400)" }}>{DEMO_USER.role}</p>
               </div>
-              {/* Billing */}
+              {/* Subscription */}
               <Link
-                href="/billing"
-                onClick={() => setShowUserMenu(false)}
-                className="flex w-full items-center gap-2 px-3 py-2.5 text-[13px] transition-colors duration-200"
-                style={{ color: "var(--gv-color-neutral-700)" }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.background = "var(--gv-color-neutral-50)")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.background = "transparent")
-                }
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <rect x="2" y="5" width="20" height="14" rx="2" />
-                  <line x1="2" y1="10" x2="22" y2="10" />
-                </svg>
-                Billing
-              </Link>
-
-              {/* Security */}
-              <Link
-                href="/profile"
+                href="/subscription"
                 onClick={() => setShowUserMenu(false)}
                 className="flex w-full items-center gap-2 px-3 py-2.5 text-[13px] transition-colors duration-200"
                 style={{ color: "var(--gv-color-neutral-700)", borderBottom: "1px solid var(--gv-color-neutral-100)" }}
@@ -276,9 +255,10 @@ export default function NavColumn({ children }: { children?: React.ReactNode } =
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <rect x="2" y="5" width="20" height="14" rx="2" />
+                  <line x1="2" y1="10" x2="22" y2="10" />
                 </svg>
-                Security
+                Langganan
               </Link>
 
               <button
