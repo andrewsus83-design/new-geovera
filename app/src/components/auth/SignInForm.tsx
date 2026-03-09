@@ -62,6 +62,18 @@ export default function SignInForm() {
       }
       const { error: authError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (authError) { setError(authError.message); return; }
+
+      // Route based on onboarding + subscription status
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("onboarding_completed, status")
+          .eq("id", session.user.id)
+          .single();
+        if (profile?.status === "active") { router.push("/getting-started"); return; }
+        if (!profile?.onboarding_completed) { router.push("/onboarding"); return; }
+      }
       router.push("/pricing");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Gagal. Coba lagi.");

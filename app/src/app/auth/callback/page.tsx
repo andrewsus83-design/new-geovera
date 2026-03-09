@@ -15,12 +15,18 @@ export default function AuthCallbackPage() {
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session?.user) {
-        router.replace("/signin");
-        return;
-      }
-      // Always go to pricing after login (new flow)
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session?.user) { router.replace("/signin"); return; }
+
+      // Check onboarding + subscription status
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("onboarding_completed, status")
+        .eq("id", session.user.id)
+        .single();
+
+      if (profile?.status === "active") { router.replace("/getting-started"); return; }
+      if (!profile?.onboarding_completed) { router.replace("/onboarding"); return; }
       router.replace("/pricing");
     });
   }, [router]);
