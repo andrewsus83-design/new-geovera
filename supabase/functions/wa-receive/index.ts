@@ -27,9 +27,9 @@ function parseCommand(text: string): { cmd: string; arg?: string; num?: number }
   const cleaned = text.trim().replace(/^(@\S+\s*)+/i, '').trim();
   const t = cleaned || text.trim(); const tup = t.toUpperCase();
   // Session reply: "3 topik saya" or "3. topik saya" (any digit + space/dot + text) → manual input
-  if (/^[1-9][\. ]\s*\S/.test(t) && !/^(\d)([a-f])$/i.test(t)) { const m = t.match(/^[1-9][\. ]\s*(.+)/i); if (m) return { cmd: 'MANUAL_INPUT', arg: m[1].trim() }; }
-  // Session reply: "2a", "2b", "3c" etc → section pick
-  if (/^(\d)([a-f])$/i.test(t)) { const m = t.match(/^(\d)([a-f])$/i)!; return { cmd: 'SECTION_PICK', num: parseInt(m[1]), arg: m[2].toLowerCase() }; }
+  if (/^[1-9][\. ]\s*\S/.test(t) && !/^(\d)([a-f])(\s|,|$)/i.test(t)) { const m = t.match(/^[1-9][\. ]\s*(.+)/i); if (m) return { cmd: 'MANUAL_INPUT', arg: m[1].trim() }; }
+  // Session reply: "2a", "2b", "3c" etc → section pick (allow trailing comma/space e.g. "1b, 2b")
+  if (/^(\d)([a-f])(\s|,|$)/i.test(t)) { const m = t.match(/^(\d)([a-f])/i)!; return { cmd: 'SECTION_PICK', num: parseInt(m[1]), arg: m[2].toLowerCase() }; }
   if (/^(DONE|D)\s*(\d+)$/i.test(t))  { const m = t.match(/(\d+)/); return { cmd: 'DONE',  num: m ? parseInt(m[1]) : undefined }; }
   if (/^\d+$/.test(t))                 return { cmd: 'DONE',  num: parseInt(t) };
   if (/^(SKIP|S)\s*(\d+)$/i.test(t))  { const m = t.match(/(\d+)/); return { cmd: 'SKIP',  num: m ? parseInt(m[1]) : undefined }; }
@@ -129,19 +129,20 @@ async function getTaskTopics(supabase: ReturnType<typeof createClient>, brandId:
     .map(t => ({ label: String(t.title ?? '').slice(0, 80), prompt: String(t.title ?? ''), source: 'task', source_id: String(t.id) }));
 }
 
-function buildMenuText(sessionType: string, sections: ContentSection[], hint: string): string {
+function buildMenuText(sessionType: string, sections: ContentSection[], hint: string, botPrefix = 'Geovera'): string {
   const lines: string[] = [`Silahkan memilih opsi di bawah:`];
   for (const sec of sections) {
     lines.push(``, `*${sec.num}.* ${sec.label}:`);
     sec.opts.forEach((o, i) => lines.push(`   ${ALPHA[i]}. ${o.label}`));
   }
   const manualNum = (sections[sections.length - 1]?.num ?? 0) + 1;
-  lines.push(``, `*${manualNum}.* Topik manual — ketik: *${manualNum} [deskripsi]*`);
-  lines.push(``, `Contoh balas: *1a*, *1b*, *2a* atau *${manualNum} ${hint}*`);
+  lines.push(``, `*${manualNum}.* Topik manual — ketik: *@${botPrefix} ${manualNum} [deskripsi]*`);
+  lines.push(``, `Contoh balas: *@${botPrefix} 1a*, *@${botPrefix} 1b*, *@${botPrefix} 2a*`);
+  lines.push(`atau manual: *@${botPrefix} ${manualNum} ${hint}*`);
   return lines.join('\n');
 }
 
-async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string): Promise<{ menu: string; sessionData: SessionData }> {
+async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string, botPrefix = 'Geovera'): Promise<{ menu: string; sessionData: SessionData }> {
   const taskTopics = await getTaskTopics(supabase, brandId, ['artikel', 'article', 'blog', 'konten', 'content', 'tulisan']);
   const rawTopics = taskTopics.length > 0 ? taskTopics.slice(0, 3) : [
     { label: `Tips ${brandName} untuk pemula`, prompt: `Tips ${brandName} untuk pemula`, source: 'suggested' },
@@ -161,10 +162,10 @@ async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brand
     { num: 2, label: 'Pilih topik rekomendasi hari ini', opts: topicOpts },
   ];
   const sessionData: SessionData = { session_type: 'artikel', sections };
-  return { menu: buildMenuText('artikel', sections, `tips jualan online`), sessionData };
+  return { menu: buildMenuText('artikel', sections, `tips jualan online`, botPrefix), sessionData };
 }
 
-async function buildImageMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string): Promise<{ menu: string; sessionData: SessionData }> {
+async function buildImageMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string, botPrefix = 'Geovera'): Promise<{ menu: string; sessionData: SessionData }> {
   const taskTopics = await getTaskTopics(supabase, brandId, ['gambar', 'image', 'visual', 'foto', 'photo', 'desain', 'grafis', 'banner', 'poster']);
   const { data: recentArticles } = await supabase.from('gv_article_generations').select('id, topic').eq('brand_id', brandId).not('article_url', 'is', null).order('created_at', { ascending: false }).limit(5);
 
@@ -186,10 +187,10 @@ async function buildImageMenu(supabase: ReturnType<typeof createClient>, brandId
   if (articleOpts.length > 0) sections.push({ num: 3, label: 'Gambar untuk artikel terbaru', opts: articleOpts });
 
   const sessionData: SessionData = { session_type: 'gambar', sections };
-  return { menu: buildMenuText('gambar', sections, `foto produk background putih`), sessionData };
+  return { menu: buildMenuText('gambar', sections, `foto produk background putih`, botPrefix), sessionData };
 }
 
-async function buildVideoMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string): Promise<{ menu: string; sessionData: SessionData }> {
+async function buildVideoMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string, botPrefix = 'Geovera'): Promise<{ menu: string; sessionData: SessionData }> {
   const taskTopics = await getTaskTopics(supabase, brandId, ['video', 'reel', 'tiktok', 'short', 'cinematic']);
   const [{ data: recentArticles }, { data: recentImages }] = await Promise.all([
     supabase.from('gv_article_generations').select('id, topic').eq('brand_id', brandId).not('article_url', 'is', null).order('created_at', { ascending: false }).limit(4),
@@ -222,7 +223,7 @@ async function buildVideoMenu(supabase: ReturnType<typeof createClient>, brandId
   if (imageOpts.length > 0) sections.push({ num: (sections[sections.length - 1]?.num ?? 1) + 1, label: 'Video dari gambar tersedia', opts: imageOpts });
 
   const sessionData: SessionData = { session_type: 'video', sections };
-  return { menu: buildMenuText('video', sections, `video promo produk terbaru ${brandName}`), sessionData };
+  return { menu: buildMenuText('video', sections, `video promo produk terbaru ${brandName}`, botPrefix), sessionData };
 }
 
 // ─── Content generation fire-and-forget ───────────────────────────────────────
@@ -327,7 +328,7 @@ async function handleMessage(p: Record<string, unknown>) {
 
   // GROUP RULE: Only process messages with "@" mention
   // Exception: session replies (bare numbers, "2a", "1. topik") don't need @mention
-  const isSessionReply = /^[1-9][\. ]\s*\S/.test(message.trim()) || /^\d[a-f]$/i.test(message.trim()) || /^\d+$/.test(message.trim());
+  const isSessionReply = /^[1-9][\. ]\s*\S/.test(message.trim()) || /^\d[a-f](\s|,|$)/i.test(message.trim()) || /^\d+$/.test(message.trim());
   if (isGroup && !message.includes('@') && !isSessionReply) { console.log('[skip] No @ mention in group'); return; }
 
   const rawStatus = String(p.status ?? '');
@@ -409,17 +410,33 @@ async function handleMessage(p: Record<string, unknown>) {
   if (cmd === 'SECTION_PICK' && num !== undefined && arg) {
     const session = await getActiveSession(supabase, brandId, replyTo);
     if (session) {
-      const section = session.sections.find(s => s.num === num);
-      if (section) {
-        const subIdx = ALPHA.indexOf(arg);
-        if (subIdx >= 0 && subIdx < section.opts.length) {
-          const chosen = section.opts[subIdx];
-          await deleteSession(supabase, session.id);
-          const genCmd = session.session_type === 'artikel' ? 'GEN_ARTICLE' : session.session_type === 'gambar' ? 'GEN_IMAGE' : 'GEN_VIDEO';
-          console.log(`[SECTION_PICK] session:${session.session_type} sec:${num}${arg} chosen:"${chosen.label}" length:${chosen.length||'default'}`);
-          await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: chosen.prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup, length: chosen.length });
-          return;
-        }
+      // Parse ALL picks from message (e.g. "1b, 2b" → [{num:1,arg:'b'},{num:2,arg:'b'}])
+      const cleanedMsg = message.replace(/^(@\S+\s*)+/i, '').trim();
+      const allPickMatches = [...cleanedMsg.matchAll(/(\d)([a-f])(\s|,|$)/gi)].map(m => ({ num: parseInt(m[1]), arg: m[2].toLowerCase() }));
+      if (allPickMatches.length === 0) allPickMatches.push({ num, arg });
+
+      let finalPrompt = '';
+      let finalLength = '';
+      let anyValid = false;
+
+      for (const pick of allPickMatches) {
+        const sec = session.sections.find(s => s.num === pick.num);
+        if (!sec) continue;
+        const subIdx = ALPHA.indexOf(pick.arg);
+        if (subIdx < 0 || subIdx >= sec.opts.length) continue;
+        const chosen = sec.opts[subIdx];
+        anyValid = true;
+        if (chosen.length) finalLength = chosen.length;          // section 1: length
+        if (!chosen.length) finalPrompt = chosen.prompt;         // section 2+: topic
+        else if (!finalPrompt) finalPrompt = chosen.prompt;      // fallback: use section 1 topic if no section 2
+      }
+
+      if (anyValid) {
+        await deleteSession(supabase, session.id);
+        const genCmd = session.session_type === 'artikel' ? 'GEN_ARTICLE' : session.session_type === 'gambar' ? 'GEN_IMAGE' : 'GEN_VIDEO';
+        console.log(`[SECTION_PICK] session:${session.session_type} picks:${allPickMatches.map(p=>p.num+p.arg).join(',')} prompt:"${finalPrompt.slice(0,60)}" length:${finalLength||'default'}`);
+        await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: finalPrompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup, length: finalLength || undefined });
+        return;
       }
     }
     // No valid session → fall through
@@ -463,21 +480,21 @@ async function handleMessage(p: Record<string, unknown>) {
 
   // ─── MENU commands ─────────────────────────────────────────────────────────
   if (cmd === 'GEN_ARTICLE_MENU') {
-    const { menu, sessionData } = await buildArticleMenu(supabase, brandId, brandName);
+    const { menu, sessionData } = await buildArticleMenu(supabase, brandId, brandName, botPrefix);
     await saveSession(supabase, brandId, waNumber, replyTo, sessionData);
     await sendWA(replyTo, menu, token);
     await supabase.from('wa_log').insert({ brand_id: brandId, wa_number: waNumber, direction: 'out', message: '[ARTIKEL MENU]', command: 'gen_article_menu', device_number: deviceNumber||null, group_id: isGroup?replyTo:null, processed: true, received_at: new Date().toISOString() });
     return;
   }
   if (cmd === 'GEN_IMAGE_MENU') {
-    const { menu, sessionData } = await buildImageMenu(supabase, brandId, brandName);
+    const { menu, sessionData } = await buildImageMenu(supabase, brandId, brandName, botPrefix);
     await saveSession(supabase, brandId, waNumber, replyTo, sessionData);
     await sendWA(replyTo, menu, token);
     await supabase.from('wa_log').insert({ brand_id: brandId, wa_number: waNumber, direction: 'out', message: '[GAMBAR MENU]', command: 'gen_image_menu', device_number: deviceNumber||null, group_id: isGroup?replyTo:null, processed: true, received_at: new Date().toISOString() });
     return;
   }
   if (cmd === 'GEN_VIDEO_MENU') {
-    const { menu, sessionData } = await buildVideoMenu(supabase, brandId, brandName);
+    const { menu, sessionData } = await buildVideoMenu(supabase, brandId, brandName, botPrefix);
     await saveSession(supabase, brandId, waNumber, replyTo, sessionData);
     await sendWA(replyTo, menu, token);
     await supabase.from('wa_log').insert({ brand_id: brandId, wa_number: waNumber, direction: 'out', message: '[VIDEO MENU]', command: 'gen_video_menu', device_number: deviceNumber||null, group_id: isGroup?replyTo:null, processed: true, received_at: new Date().toISOString() });

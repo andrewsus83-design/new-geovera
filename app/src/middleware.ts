@@ -19,6 +19,7 @@ const PUBLIC_PREFIXES = [
   "/payment",
   "/report",
   "/rss",
+  "/articles",
   "/api",
   "/_next",
   "/favicon",

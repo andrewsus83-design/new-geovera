@@ -3,9 +3,17 @@
   "configurations": [
     {
       "name": "geovera-app",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "app"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "--port", "3000"],
+      "cwd": "app",
       "port": 3000
+    },
+    {
+      "name": "admin",
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["/Users/drew83/Desktop/geovera-staging/.claude/worktrees/sleepy-murdock/admin/node_modules/next/dist/bin/next", "dev", "--port", "3002"],
+      "cwd": "/Users/drew83/Desktop/geovera-staging/.claude/worktrees/sleepy-murdock/admin",
+      "port": 3002
     }
   ]
 }
