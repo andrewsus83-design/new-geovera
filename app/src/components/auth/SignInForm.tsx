@@ -97,14 +97,22 @@ export default function SignInForm() {
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "40px" }}>
-          <div style={{ display: "inline-block", marginBottom: "24px" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
             <Image
-              src="/images/logo/auth-logo.svg"
-              width={160}
-              height={33}
-              alt="GeoVera"
+              src="/images/logo/logo-icon.svg"
+              width={36}
+              height={36}
+              alt=""
               priority
             />
+            <span style={{
+              fontFamily: "var(--gv-font-heading)",
+              fontSize: "22px",
+              fontWeight: 700,
+              color: "var(--gv-color-neutral-900)",
+              letterSpacing: "-0.4px",
+              lineHeight: 1,
+            }}>GeoVera</span>
           </div>
           <h1 style={{
             fontFamily: "var(--gv-font-heading)",
