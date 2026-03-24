@@ -26,8 +26,8 @@ function resolveToken(stored: string | null, fallback: string): string {
 function parseCommand(text: string): { cmd: string; arg?: string; num?: number } {
   const cleaned = text.trim().replace(/^(@\S+\s*)+/i, '').trim();
   const t = cleaned || text.trim(); const tup = t.toUpperCase();
-  // Session reply: "1. description text" → manual input
-  if (/^1\.\s*(.+)/i.test(t)) { const m = t.match(/^1\.\s*(.+)/i); return { cmd: 'MANUAL_INPUT', arg: m![1].trim() }; }
+  // Session reply: "3 topik saya" or "3. topik saya" (any digit + space/dot + text) → manual input
+  if (/^[1-9][\. ]\s*\S/.test(t) && !/^(\d)([a-f])$/i.test(t)) { const m = t.match(/^[1-9][\. ]\s*(.+)/i); if (m) return { cmd: 'MANUAL_INPUT', arg: m[1].trim() }; }
   // Session reply: "2a", "2b", "3c" etc → section pick
   if (/^(\d)([a-f])$/i.test(t)) { const m = t.match(/^(\d)([a-f])$/i)!; return { cmd: 'SECTION_PICK', num: parseInt(m[1]), arg: m[2].toLowerCase() }; }
   if (/^(DONE|D)\s*(\d+)$/i.test(t))  { const m = t.match(/(\d+)/); return { cmd: 'DONE',  num: m ? parseInt(m[1]) : undefined }; }
@@ -130,18 +130,14 @@ async function getTaskTopics(supabase: ReturnType<typeof createClient>, brandId:
 }
 
 function buildMenuText(sessionType: string, sections: ContentSection[], hint: string): string {
-  const lines: string[] = [
-    `Silahkan memilih opsi di bawah:`,
-    ``,
-    `*1.* Masukkan deskripsi / topik manual`,
-  ];
+  const lines: string[] = [`Silahkan memilih opsi di bawah:`];
   for (const sec of sections) {
     lines.push(``, `*${sec.num}.* ${sec.label}:`);
     sec.opts.forEach((o, i) => lines.push(`   ${ALPHA[i]}. ${o.label}`));
   }
-  const lastSec = sections[sections.length - 1];
-  const lastRef = lastSec ? `"${lastSec.num}a"` : '"2a"';
-  lines.push(``, `Balas dengan *"1. ${hint}"* atau cukup *"2"*, *"2a"*, *"2b"*, dll`);
+  const manualNum = (sections[sections.length - 1]?.num ?? 0) + 1;
+  lines.push(``, `*${manualNum}.* Topik manual — ketik: *${manualNum} [deskripsi]*`);
+  lines.push(``, `Contoh balas: *1a*, *1b*, *2a* atau *${manualNum} ${hint}*`);
   return lines.join('\n');
 }
 
@@ -152,8 +148,6 @@ async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brand
     { label: `Tren terbaru di industri ${brandName}`, prompt: `Tren terbaru di industri ${brandName}`, source: 'suggested' },
     { label: `FAQ seputar ${brandName}`, prompt: `FAQ seputar ${brandName}`, source: 'suggested' },
   ];
-  // Format labels as: Judul artikel "xxx"
-  const topicOpts: ContentOption[] = rawTopics.map(t => ({ ...t, label: `Judul artikel "${t.label}"` }));
   const defaultTopic = rawTopics[0]?.prompt || brandName;
   const lengthOpts: ContentOption[] = [
     { label: 'Short (s/d 500 karakter, cocok untuk X/LinkedIn)', prompt: defaultTopic, length: 'short' },
@@ -161,12 +155,13 @@ async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brand
     { label: 'Long (s/d 1500 kata)', prompt: defaultTopic, length: 'long' },
     { label: 'Very Long (s/d 3000 kata)', prompt: defaultTopic, length: 'very_long' },
   ];
+  const topicOpts: ContentOption[] = rawTopics.map(t => ({ ...t, label: `"${t.label}"` }));
   const sections: ContentSection[] = [
-    { num: 2, label: 'Pilih topik yang direkomendasikan hari ini', opts: topicOpts },
-    { num: 3, label: 'Pilih panjang artikel (topik otomatis)', opts: lengthOpts },
+    { num: 1, label: 'Pilih panjang artikel', opts: lengthOpts },
+    { num: 2, label: 'Pilih topik rekomendasi hari ini', opts: topicOpts },
   ];
   const sessionData: SessionData = { session_type: 'artikel', sections };
-  return { menu: buildMenuText('artikel', sections, `Memasak Nasi Goreng`), sessionData };
+  return { menu: buildMenuText('artikel', sections, `tips jualan online`), sessionData };
 }
 
 async function buildImageMenu(supabase: ReturnType<typeof createClient>, brandId: string, brandName: string): Promise<{ menu: string; sessionData: SessionData }> {
@@ -332,7 +327,7 @@ async function handleMessage(p: Record<string, unknown>) {
 
   // GROUP RULE: Only process messages with "@" mention
   // Exception: session replies (bare numbers, "2a", "1. topik") don't need @mention
-  const isSessionReply = /^[1-9]\.\s+\S/.test(message.trim()) || /^\d[a-f]$/i.test(message.trim()) || /^\d+$/.test(message.trim());
+  const isSessionReply = /^[1-9][\. ]\s*\S/.test(message.trim()) || /^\d[a-f]$/i.test(message.trim()) || /^\d+$/.test(message.trim());
   if (isGroup && !message.includes('@') && !isSessionReply) { console.log('[skip] No @ mention in group'); return; }
 
   const rawStatus = String(p.status ?? '');
