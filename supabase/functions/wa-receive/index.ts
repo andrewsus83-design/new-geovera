@@ -84,7 +84,7 @@ async function isAuthorized(supabase: ReturnType<typeof createClient>, brandId: 
 }
 
 // ─── Session types ─────────────────────────────────────────────────────────────
-interface ContentOption  { label: string; prompt: string; source?: string; source_id?: string; }
+interface ContentOption  { label: string; prompt: string; source?: string; source_id?: string; length?: string; }
 interface ContentSection { num: number; label: string; opts: ContentOption[]; }
 interface SessionData    { session_type: string; sections: ContentSection[]; }
 
@@ -154,7 +154,17 @@ async function buildArticleMenu(supabase: ReturnType<typeof createClient>, brand
   ];
   // Format labels as: Judul artikel "xxx"
   const topicOpts: ContentOption[] = rawTopics.map(t => ({ ...t, label: `Judul artikel "${t.label}"` }));
-  const sections: ContentSection[] = [{ num: 2, label: 'Pilih topik yang direkomendasikan hari ini', opts: topicOpts }];
+  const defaultTopic = rawTopics[0]?.prompt || brandName;
+  const lengthOpts: ContentOption[] = [
+    { label: 'Short (s/d 300 kata)', prompt: defaultTopic, length: 'short' },
+    { label: 'Medium (s/d 800 kata)', prompt: defaultTopic, length: 'medium' },
+    { label: 'Long (s/d 1500 kata)', prompt: defaultTopic, length: 'long' },
+    { label: 'Very Long (s/d 3000 kata)', prompt: defaultTopic, length: 'very_long' },
+  ];
+  const sections: ContentSection[] = [
+    { num: 2, label: 'Pilih topik yang direkomendasikan hari ini', opts: topicOpts },
+    { num: 3, label: 'Pilih panjang artikel (topik otomatis)', opts: lengthOpts },
+  ];
   const sessionData: SessionData = { session_type: 'artikel', sections };
   return { menu: buildMenuText('artikel', sections, `Memasak Nasi Goreng`), sessionData };
 }
@@ -233,8 +243,9 @@ async function fireContentGeneration(params: {
   supabase: ReturnType<typeof createClient>;
   deviceNumber: string;
   isGroup: boolean;
+  length?: string;
 }) {
-  const { cmd, prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup } = params;
+  const { cmd, prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup, length } = params;
   const actionMap: Record<string, { action: string; emoji: string; label: string }> = {
     GEN_ARTICLE: { action: 'generate_article', emoji: '📝', label: 'artikel' },
     GEN_IMAGE:   { action: 'generate_image',   emoji: '🎨', label: 'gambar' },
@@ -247,7 +258,7 @@ async function fireContentGeneration(params: {
   await sendWA(replyTo, waitMsg, token);
 
   const csPayload: Record<string, unknown> = { action, brand_id: brandId, prompt, wa_callback: replyTo, wa_token: token, requested_by: memberName || waNumber };
-  if (cmd === 'GEN_ARTICLE') { csPayload.topic = prompt; csPayload.objective = 'random'; csPayload.length = 'medium'; }
+  if (cmd === 'GEN_ARTICLE') { csPayload.topic = prompt; csPayload.objective = 'random'; csPayload.length = length || 'medium'; }
   if (cmd === 'GEN_IMAGE')   { csPayload.aspect_ratio = '1:1'; csPayload.num_images = 1; }
   if (cmd === 'GEN_VIDEO')   { csPayload.aspect_ratio = '16:9'; }
 
@@ -410,8 +421,8 @@ async function handleMessage(p: Record<string, unknown>) {
           const chosen = section.opts[subIdx];
           await deleteSession(supabase, session.id);
           const genCmd = session.session_type === 'artikel' ? 'GEN_ARTICLE' : session.session_type === 'gambar' ? 'GEN_IMAGE' : 'GEN_VIDEO';
-          console.log(`[SECTION_PICK] session:${session.session_type} sec:${num}${arg} chosen:"${chosen.label}"`);
-          await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: chosen.prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup });
+          console.log(`[SECTION_PICK] session:${session.session_type} sec:${num}${arg} chosen:"${chosen.label}" length:${chosen.length||'default'}`);
+          await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: chosen.prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup, length: chosen.length });
           return;
         }
       }
@@ -429,7 +440,7 @@ async function handleMessage(p: Record<string, unknown>) {
         await deleteSession(supabase, session.id);
         const genCmd = session.session_type === 'artikel' ? 'GEN_ARTICLE' : session.session_type === 'gambar' ? 'GEN_IMAGE' : 'GEN_VIDEO';
         console.log(`[NUM_PICK] session:${session.session_type} sec:${num} → first opt "${chosen.label}"`);
-        await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: chosen.prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup });
+        await fireContentGeneration({ cmd: genCmd as 'GEN_ARTICLE'|'GEN_IMAGE'|'GEN_VIDEO', prompt: chosen.prompt, brandId, brandName, replyTo, token, memberName, waNumber, supabase, deviceNumber, isGroup, length: chosen.length });
         return;
       }
     }
