@@ -537,51 +537,100 @@ Return ONLY a valid JSON array of ${count} prompt strings. No explanation, no ma
 
     // ── GENERATE IMAGE ───────────────────────────────────────────────────────
     if (action === "generate_image") {
-      const { prompt, aspect_ratio = "1:1", model = "kie-flux", negative_prompt = "", lora_model = "" } = data;
+      const { prompt, aspect_ratio = "1:1" } = data;
       if (!prompt) return json({ error: "prompt is required" }, 400);
 
-      const payload: Record<string, unknown> = { prompt, negative_prompt, aspect_ratio, model, num_images: 1 };
-      if (lora_model) payload.lora_model = lora_model;
+      let finalImageUrl: string | null = null;
+      let provider = "unknown";
 
-      const kieRes = await kiePost("/image/generate", payload);
-
-      const kieImageUrl = kieRes.image_url ?? kieRes.url ?? null;
-
-      // Optional: proxy image to R2 CDN
-      let finalImageUrl: string | null = kieImageUrl;
-      let r2Key: string | null = null;
-      if (kieImageUrl) {
-        const ext = kieImageUrl.split("?")[0].split(".").pop()?.toLowerCase() ?? "jpg";
-        const mimeMap: Record<string, string> = { jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp" };
-        const mime = mimeMap[ext] ?? "image/jpeg";
-        r2Key = `images/${brand_id}/${Date.now()}.${ext}`;
-        const r2Url = await proxyToR2(kieImageUrl, r2Key, mime);
-        if (r2Url) { finalImageUrl = r2Url; console.log(`[generate_image] R2 uploaded: ${r2Url}`); }
+      // Primary: Modal Flux Schnell H100 (base64 webp) — 30s timeout, skip if cold
+      const MODAL_SCHNELL_URL = Deno.env.get("MODAL_FLUX_SCHNELL_URL") || "";
+      if (MODAL_SCHNELL_URL) {
+        try {
+          const modalRes = await fetch(MODAL_SCHNELL_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt, aspect_ratio, num_images: 1 }),
+            signal: AbortSignal.timeout(30_000),
+          });
+          if (modalRes.ok) {
+            const modalData = await modalRes.json();
+            const b64Url: string | null = modalData.images?.[0]?.url ?? null;
+            if (b64Url && b64Url.startsWith("data:")) {
+              const r2 = getR2Config();
+              if (r2) {
+                const commaIdx = b64Url.indexOf(",");
+                const header = b64Url.slice(0, commaIdx);
+                const b64Data = b64Url.slice(commaIdx + 1);
+                const mime = header.match(/data:([^;]+)/)?.[1] ?? "image/webp";
+                const ext = mime.split("/")[1] ?? "webp";
+                const bytes = Uint8Array.from(atob(b64Data), (c) => c.charCodeAt(0));
+                const r2Key = `images/${brand_id}/${Date.now()}.${ext}`;
+                await uploadToR2(r2.accountId, r2.accessKeyId, r2.secretKey, r2.bucket, r2Key, bytes, mime);
+                finalImageUrl = `${r2.publicUrl}/${r2Key}`;
+                provider = "flux-schnell";
+                console.log(`[generate_image] Modal Flux Schnell → R2: ${finalImageUrl}`);
+              }
+            }
+          }
+        } catch (e) {
+          console.error("[generate_image] Modal Flux Schnell skipped (cold/timeout):", (e as Error).message);
+        }
       }
+
+      // Fallback: DALL-E 3 via OpenAI (reliable, ~5-10s)
+      if (!finalImageUrl) {
+        const OPENAI_KEY = Deno.env.get("OPENAI_API_KEY") || "";
+        if (OPENAI_KEY) {
+          try {
+            const sizeMap: Record<string, string> = { "1:1": "1024x1024", "16:9": "1792x1024", "9:16": "1024x1792" };
+            const dalleRes = await fetch("https://api.openai.com/v1/images/generations", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "Authorization": `Bearer ${OPENAI_KEY}` },
+              body: JSON.stringify({ model: "dall-e-3", prompt, n: 1, size: sizeMap[aspect_ratio] ?? "1024x1024", response_format: "url" }),
+              signal: AbortSignal.timeout(60_000),
+            });
+            if (dalleRes.ok) {
+              const dalleData = await dalleRes.json();
+              const dalleUrl: string | null = dalleData.data?.[0]?.url ?? null;
+              if (dalleUrl) {
+                const r2Key = `images/${brand_id}/${Date.now()}.png`;
+                const r2Url = await proxyToR2(dalleUrl, r2Key, "image/png");
+                finalImageUrl = r2Url ?? dalleUrl;
+                provider = "dall-e-3";
+                console.log(`[generate_image] DALL-E 3 → R2: ${finalImageUrl}`);
+              }
+            } else {
+              console.error("[generate_image] DALL-E 3 error:", dalleRes.status, await dalleRes.text());
+            }
+          } catch (e) {
+            console.error("[generate_image] DALL-E 3 failed:", e);
+          }
+        }
+      }
+
+      if (!finalImageUrl) return json({ error: "Image generation failed — all providers unavailable" }, 500);
 
       const { data: inserted, error: insertErr } = await supabase.from("gv_image_generations").insert({
         brand_id,
         prompt_text: prompt,
-        negative_prompt,
         aspect_ratio,
-        ai_provider: "kie",
-        ai_model: kieRes.model ?? model,
+        ai_provider: provider,
+        ai_model: provider === "flux-schnell" ? "flux-schnell-h100" : provider === "dall-e-3" ? "dall-e-3" : "kie-flux",
         image_url: finalImageUrl,
-        thumbnail_url: kieRes.thumbnail_url ?? null,
-        status: kieRes.status ?? "completed",
+        status: "completed",
         target_platform: data.platform ?? "instagram",
-        style_preset: lora_model || null,
+        metadata: { prompt, aspect_ratio, provider },
       }).select("id").single();
       if (insertErr) console.error("generate_image DB insert failed:", insertErr.message);
 
       return json({
         ok: true,
         success: true,
-        task_id: kieRes.task_id ?? kieRes.id ?? null,
-        url: finalImageUrl,                           // wa-receive checks result.url
+        url: finalImageUrl,
         image_url: finalImageUrl,
-        images: finalImageUrl ? [{ url: finalImageUrl }] : [],
-        status: kieRes.status ?? "completed",
+        images: [{ url: finalImageUrl }],
+        status: "completed",
         db_id: inserted?.id ?? null,
       });
     }
@@ -1114,9 +1163,10 @@ Return ONLY valid JSON:
           const r2Key = `articles/${brand_id}/${stored.id}.html`;
           const htmlContent = `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${String(articleData.meta_title ?? enrichedTopic).replace(/</g,"&lt;")}</title><meta name="description" content="${String(articleData.meta_description ?? "").replace(/"/g,"&quot;")}"></head><body><article><h1>${String(articleData.meta_title ?? enrichedTopic).replace(/</g,"&lt;")}</h1>${articleContent}</article></body></html>`;
           await uploadToR2(R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, r2Key, htmlContent, "text/html; charset=utf-8");
-          article_url = `${R2_PUBLIC_URL}/${r2Key}`;
+          const r2CdnUrl = `${R2_PUBLIC_URL}/${r2Key}`;
+          // Keep article_url as viewer page URL (app.geovera.xyz/articles/[id]?t=...) — never overwrite with raw R2 URL
           await supabase.from("gv_article_generations").update({ article_url, r2_key: r2Key }).eq("id", stored.id);
-          console.log(`[generate_article] Uploaded to R2: ${article_url}`);
+          console.log(`[generate_article] Uploaded to R2: ${r2CdnUrl} | viewer: ${article_url}`);
         } catch (r2Err) {
           console.error("[generate_article] R2 upload failed:", r2Err);
           await supabase.from("gv_article_generations").update({ article_url }).eq("id", articleId).then(() => {});
